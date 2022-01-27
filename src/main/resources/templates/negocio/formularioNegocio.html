@@ -1,0 +1,53 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" th:href="@{/css/formUser.css}" />
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<title>Registro</title>
+</head>
+<body>
+	<header id="main-header">
+
+		<a id="logo-header" href="/"> <img src="images/LOGO.png"
+			width="100" height="100" /></a>
+
+		<nav>
+			<ul>
+				<li><a href="/login">Iniciar Sesión</a></li>
+				<li><a href="/crearCliente">Registro de clientes</a></li>
+				<li><a href="/crearGerente">Registro de negocios</a></li>
+			</ul>
+		</nav>
+
+	</header>
+
+	
+	<form class="form-register" th:action="@{crearNegocio}" th:object="${negocio}" method="post">
+		<h4>Datos del negocio</h4>
+		<input type="hidden" th:field="*{id}" />
+		<input type="hidden" th:field="*{fk_usuario}" value="${id}"/>
+		
+		<input th:field="*{cif}" type="text" class="controls" placeholder="CIF" name="cif" />
+		<p class="alert alert-danger" role="alert" th:errors="*{cif}"></p>
+		
+		<input th:field="*{nombre}" type="text" class="controls" placeholder="nombre" name="nombre" />
+		<p class="alert alert-danger" role="alert" th:errors="*{nombre}"></p>
+		
+		<input th:field="*{localizacion}" type="text" class="controls" placeholder="Localización" name="localizacion" />
+		<p class="alert alert-danger" role="alert" th:errors="*{localizacion}"></p>
+		
+		<select th:field="*{tipo}" class="controls">
+    		<option th:value="RESTAURANTE" th:text="Restaurante"></option>
+    		<option th:value="BAR" th:text="Bar"></option>
+		</select>
+		
+		
+		<button type="submit" class="botons">  Registrar Negocio </button>
+
+	</form>
+
+	<footer id="main-footer"> </footer>
+</body>
+</html>

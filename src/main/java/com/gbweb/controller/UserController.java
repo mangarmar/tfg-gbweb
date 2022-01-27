@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gbweb.enums.ROL;
 import com.gbweb.service.UserService;
+import com.gbweb.entity.Negocio;
 import com.gbweb.entity.Usuario;
 
 @Controller
@@ -33,33 +34,60 @@ public class UserController {
 	}
 	
 	
-	@GetMapping("/crearUsuario")
-	public String crearUsuario(Model model) {
-		model.addAttribute("usuario", new Usuario());
-		model.addAttribute("rol_usuario", ROL.CLIENTE);
-		return "usuario/formularioUsuario";
+	@GetMapping("/crearCliente")
+	public String crearCliente(Model model) {
+		model.addAttribute("cliente", new Usuario());
+		return "cliente/formularioCliente";
 	}
 	
 	
-	
-	@PostMapping("/crearUsuario")
-	public String crearusuario(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult result, Model model
+	@PostMapping("/crearCliente")
+	public String nuevoCliente(@Valid @ModelAttribute("cliente") Usuario cliente, BindingResult result, Model model
 			,RedirectAttributes redirectAttributes) {
 
 
 		if (result.hasErrors()) {
-			model.addAttribute("usuario", usuario);
-			userService.creaUsuario(usuario);
-			return "usuario/formularioUsuario";
+			model.addAttribute("cliente", cliente);
+			return "cliente/formularioCliente";
 		} else {
 
-			userService.creaUsuario(usuario);
+			userService.creaCliente(cliente);
 			
 		}
 		redirectAttributes.addFlashAttribute("alert", 11);
 		return "redirect:";
 
 	}
+	
+	@GetMapping("/crearGerente")
+	public String crearGerente(Model model) {
+		model.addAttribute("gerente", new Usuario());
+		return "gerente/formularioGerente";
+	}
+	
+	
+	@PostMapping("/crearGerente")
+	public String nuevoGerente(@Valid @ModelAttribute("gerente") Usuario gerente, BindingResult result, Model model
+			,RedirectAttributes redirectAttributes) {
+		
+		if (result.hasErrors()) {
+			model.addAttribute("gerente", gerente);
+			return "gerente/formularioGerente";
+		} else {
+			
+			
+			userService.creaGerente(gerente);
+			
+		}
+
+		redirectAttributes.addFlashAttribute("id",gerente.getId());
+		return "redirect:/crearNegocio";
+
+	}
+	
+
+	}
+
 
 	
 	
@@ -76,5 +104,5 @@ public class UserController {
 //	}
 //	return user;
 //}
-	
-}
+
+

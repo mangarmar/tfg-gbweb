@@ -36,9 +36,17 @@ public class UserService implements UserDetailsService {
     	return userRepo.findByUsername(username);
     }
 
-	public void creaUsuario(@Valid Usuario usuario) {
-		usuario.setRol(ROL.CLIENTE);
-		userRepo.save(usuario);
+	public void creaCliente(@Valid Usuario cliente) {
+		
+		cliente.setNegocios(null);
+		cliente.setRol(ROL.CLIENTE);
+		userRepo.save(cliente);
+		
+	}
+
+	public void creaGerente(@Valid Usuario gerente) {
+		gerente.setRol(ROL.GERENTE);
+		userRepo.save(gerente);
 		
 	}
 

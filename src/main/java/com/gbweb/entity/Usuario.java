@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
@@ -49,8 +51,6 @@ public class Usuario implements UserDetails {
 	message = "La contraseña debe tener al menos 8 caracteres,un dígito,una minúscula y una mayúscula.")
 	private String password;
 	
-	private String confirmPassword;
-	
 	@NotEmpty(message = "Porfavor, introduzca un nombre")
 	@Length(max=41, message = "Este campo no puede contener mas de 41 caractéres") // El máximo es 41 caractéres por que la persona con el nombre mas largo del mundo tiene ese número
 	private String nombre;
@@ -77,15 +77,22 @@ public class Usuario implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private ROL rol;
 
-//	@NotNull
-	@OneToOne
-	@JoinColumn(name = "cliente_id")
-	private Cliente cliente;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+    private List<Negocio> negocios;
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> roles = new ArrayList<>();
         roles.add(new SimpleGrantedAuthority(rol.toString()));
         return roles;
+	}
+
+	public List<Negocio> getNegocios() {
+		return negocios;
+	}
+
+	public void setNegocios(List<Negocio> negocios) {
+		this.negocios = negocios;
 	}
 
 	@Override
@@ -196,9 +203,6 @@ public class Usuario implements UserDetails {
 		this.password = password;
 	}
 
-	public String getConfirmPassword() {
-		return confirmPassword;
-	}
-	
+
 	
 }

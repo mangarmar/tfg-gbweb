@@ -16,14 +16,14 @@
 		<nav>
 			<ul>
 				<li><a href="/login">Iniciar Sesión</a></li>
-				<li><a href="/crearUsuario">Registro de clientes</a></li>
-				<li><a href="#">Registro de negocios</a></li>
+				<li><a href="/crearCliente">Registro de clientes</a></li>
+				<li><a href="/crearGerente">Registro de negocios</a></li>
 			</ul>
 		</nav>
 
 	</header>
 
-	<form class="form-register" th:action="@{crearUsuario}" th:object="${usuario}" method="post">
+	<form class="form-register" th:action="@{crearCliente}" th:object="${cliente}" method="post">
 		<h4>Registro de nuevo cliente</h4>
 		<input type="hidden" th:field="*{id}" />
 		<input type="hidden" th:field="*{rol}" value="CLIENTE" />
@@ -51,9 +51,7 @@
 		
 		<input th:field="*{password}" type="password" class="controls" placeholder="Contraseña" name="password" />
 		<p class="alert alert-danger" role="alert" th:errors="*{password}"></p>
-		
-		<input th:field="*{confirmPassword}" type="password" class="controls" placeholder="Confirmar contraseña" name="confirmPassword" />
-		<p class="alert alert-danger" role="alert" th:errors="*{confirmPassword}"></p>
+
 		
 		<button type="submit" class="botons">  Registrar Usuario </button>
 
