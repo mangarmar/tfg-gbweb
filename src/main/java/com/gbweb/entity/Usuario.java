@@ -12,6 +12,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -20,9 +22,11 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 
 import com.gbweb.enums.ROL;
 
@@ -45,6 +49,8 @@ public class Usuario implements UserDetails {
 	message = "La contraseña debe tener al menos 8 caracteres,un dígito,una minúscula y una mayúscula.")
 	private String password;
 	
+	private String confirmPassword;
+	
 	@NotEmpty(message = "Porfavor, introduzca un nombre")
 	@Length(max=41, message = "Este campo no puede contener mas de 41 caractéres") // El máximo es 41 caractéres por que la persona con el nombre mas largo del mundo tiene ese número
 	private String nombre;
@@ -58,6 +64,7 @@ public class Usuario implements UserDetails {
 	private String dni;
 	
 	@Past
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaNacimiento;
 	
 	@NotEmpty(message = "Porfavor, introduzca una dirección")
@@ -68,9 +75,12 @@ public class Usuario implements UserDetails {
 	private String email;
 	
 	@Enumerated(EnumType.STRING)
-	@NotNull
 	private ROL rol;
 
+//	@NotNull
+	@OneToOne
+	@JoinColumn(name = "cliente_id")
+	private Cliente cliente;
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> roles = new ArrayList<>();
@@ -184,6 +194,10 @@ public class Usuario implements UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getConfirmPassword() {
+		return confirmPassword;
 	}
 	
 	

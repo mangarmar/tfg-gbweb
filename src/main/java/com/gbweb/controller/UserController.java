@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -18,45 +19,48 @@ import com.gbweb.enums.ROL;
 import com.gbweb.service.UserService;
 import com.gbweb.entity.Usuario;
 
+@Controller
 public class UserController {
 	
-	
+		
 	@Autowired
 	UserService userService;
 	
 	
 	@GetMapping("/")
 	public String index() {
-		return "index";
+		return "inicio/index";
 	}
 	
 	
 	@GetMapping("/crearUsuario")
 	public String crearUsuario(Model model) {
 		model.addAttribute("usuario", new Usuario());
-		return "templates/usuario/formularioUsuario";
+		model.addAttribute("rol_usuario", ROL.CLIENTE);
+		return "usuario/formularioUsuario";
 	}
 	
 	
 	
 	@PostMapping("/crearUsuario")
-	public String postUserForm(@Valid Usuario usuario, BindingResult result, ModelMap model) {
-			if(result.hasErrors()) {
-				model.addAttribute("usuario", usuario);
-				model.addAttribute("formTab","active");
-			}else {
-				try {
-					userService.creaUsuario(usuario);
-					model.addAttribute("usuario", new Usuario());
-				} catch (Exception e) {
-					model.addAttribute("formError",e.getMessage());
-					model.addAttribute("userForm", usuario);
-					model.addAttribute("formTab","active");
-				}
-			}
+	public String crearusuario(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult result, Model model
+			,RedirectAttributes redirectAttributes) {
 
-			return "templates/usuario/formularioUsuario";
+
+		if (result.hasErrors()) {
+			model.addAttribute("usuario", usuario);
+			userService.creaUsuario(usuario);
+			return "usuario/formularioUsuario";
+		} else {
+
+			userService.creaUsuario(usuario);
+			
 		}
+		redirectAttributes.addFlashAttribute("alert", 11);
+		return "redirect:";
+
+	}
+
 	
 	
 //	private Usuario usuarioActual() {
@@ -72,4 +76,5 @@ public class UserController {
 //	}
 //	return user;
 //}
+	
 }
