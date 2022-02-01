@@ -34,8 +34,8 @@ public class Negocio {
 	@NotEmpty(message = "Introduzca la localizacion de su negocio")
 	private String localizacion;
 	
-	@ManyToOne
-    @JoinColumn(name = "FK_USUARIO", nullable = false, updatable = false)
+	@ManyToOne()
+	@JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
 	public Long getId() {

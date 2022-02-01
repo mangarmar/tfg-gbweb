@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-    xmlns:sec="http://www.thymeleaf.org">
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="utf-8">
-<title>Inicio</title> 
+<title>Inicio</title>
 <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 
@@ -11,13 +11,15 @@
 
 	<header id="main-header">
 
-		<a id="logo-header" href="/"> <img src="images/LOGO.png" width="100" height="100"/></a>
+		<a id="logo-header" href="/"> <img src="images/LOGO.png"
+			width="100" height="100" /></a>
 
 		<nav>
 			<ul>
-				<li><a href="/login">Iniciar Sesión</a></li>
-				<li><a href="/crearCliente">Registro de clientes</a></li>
-				<li><a href="/crearGerente">Registro de negocios</a></li>
+				<li sec:authorize="isAuthenticated()">
+					<li><a href="/login">Iniciar Sesión</a></li>
+					<li><a href="/crearCliente">Registro de clientes</a></li>
+					<li><a href="/crearGerente">Registro de negocios</a></li>
 			</ul>
 		</nav>
 
@@ -29,10 +31,32 @@
 
 		<article>
 			<header>
-				<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>				
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
+				<br>
 			</header>
 
-			
+
 
 
 
@@ -42,9 +66,7 @@
 
 
 
-	<footer id="main-footer">
-
-	</footer>
+	<footer id="main-footer"> </footer>
 
 
 

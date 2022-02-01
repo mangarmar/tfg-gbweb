@@ -8,6 +8,7 @@
 <title>Registro</title>
 </head>
 <body>
+
 	<header id="main-header">
 
 		<a id="logo-header" href="/"> <img src="images/LOGO.png"
@@ -22,11 +23,15 @@
 		</nav>
 
 	</header>
-
+		
+	
+		
+	
+	
 	<form class="form-register" th:action="@{crearGerente}" th:object="${gerente}" method="post">
 		<h4>Datos personales del gerente</h4>
 		<input type="hidden" th:field="*{id}" />
-		<input type="hidden" th:field="*{rol}" value="CLIENTE" />
+		<input type="hidden" th:field="*{rol}" value="GERENTE" />
 		
 		<input th:field="*{nombre}" type="text" class="controls" placeholder="Nombre" name="nombre" />
 		<p class="alert alert-danger" role="alert" th:errors="*{nombre}"></p>

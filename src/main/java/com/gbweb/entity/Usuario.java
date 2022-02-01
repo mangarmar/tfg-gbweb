@@ -80,12 +80,12 @@ public class Usuario implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private List<Negocio> negocios;
 	
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority(rol.toString()));
-        return roles;
-	}
+	 @Override
+	    public Collection<? extends GrantedAuthority> getAuthorities() {
+	        List<GrantedAuthority> roles = new ArrayList<>();
+	        roles.add(new SimpleGrantedAuthority(rol.toString()));
+	        return roles;
+	    }
 
 	public List<Negocio> getNegocios() {
 		return negocios;
@@ -98,37 +98,37 @@ public class Usuario implements UserDetails {
 	@Override
 	public String getPassword() {
 		// TODO Auto-generated method stub
-		return null;
+		return password;
 	}
 
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
-		return null;
+		return username;
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public Long getId() {
