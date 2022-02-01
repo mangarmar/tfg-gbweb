@@ -17,21 +17,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.gbweb.enums.ROL;
 import com.gbweb.service.UserService;
 
-
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-	
+
 	@Autowired
 	DataSource dataSource;
-	
+
 	@Bean
 	public UserDetailsService userDetailsService() {
 		return new UserService();
 	}
 
-	
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -52,31 +49,25 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(userDetailsService());
 	}
 
-
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-	    		.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-				.antMatchers("/resources/**","/webjars/**","/h2-console/**").permitAll()
-				.antMatchers("/crearCliente", "/crearGerente/**", "/queUsuario").permitAll()
-				.antMatchers("/crearNegocio/**").hasRole("GERENTE")
-				.antMatchers("/").permitAll()
-				.anyRequest().denyAll()
-				.and()
-				 	.formLogin()
-				 	/*.loginPage("/login")*/
-				 	.failureUrl("/login-error")
-				.and()
-					.logout()
-						.logoutSuccessUrl("/"); 
+		http.authorizeRequests().requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+				.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()
+				.antMatchers("/crearCliente", "/crearGerente/**").permitAll()
+				.antMatchers("/crearNegocio/**").hasAuthority("GERENTE")
+				.antMatchers("/").permitAll().anyRequest().denyAll()
+				
+				
+				
+				.and().formLogin()
+				.defaultSuccessUrl("/", true).failureUrl("/login?error=true").usernameParameter("username")
+				.passwordParameter("password").and().logout().logoutSuccessUrl("/");
 
 	}
-	
+
 	@Override
 	public void configure(WebSecurity web) {
-	    web.ignoring()
-	        .antMatchers("/**/*.{js,html,css}");
+		web.ignoring().antMatchers("/**/*.{js,html,css}");
 	}
-
 
 }
