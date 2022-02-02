@@ -23,11 +23,20 @@
 				<li><a href="/logout">Cerrar Sesión</a></li>
 			</ul>
 		</div>
-		
+
 		<div sec:authorize="hasAuthority('GERENTE')">
 			<ul>
 				<li><a href="/logout">Cerrar Sesión</a></li>
-				<li><a href="/crearNegocio">Registra un nuevo negocio</a></li>
+				<li class="dropdown">
+					<button class="dropbtn">
+						Gestiona tus negocios <i class="fa fa-caret-down"></i>
+					</button>
+					<div class="dropdown-content">
+						<a href="/listaNegocios">Negocios</a>
+						<a href="/crearNegocio">Registra uno nuevo</a>
+					</div>
+				</li>
+				
 			</ul>
 		</div>
 	</nav>
