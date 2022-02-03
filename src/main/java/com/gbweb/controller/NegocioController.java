@@ -1,5 +1,7 @@
 package com.gbweb.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,8 @@ import com.gbweb.entity.Negocio;
 import com.gbweb.entity.Usuario;
 import com.gbweb.service.NegocioService;
 import com.gbweb.service.UserService;
+
+
 
 @Controller
 public class NegocioController {
@@ -51,6 +55,16 @@ public class NegocioController {
 		return "redirect:";
 
 
+	}
+	
+	@GetMapping("/listarNegocios")
+	public String listarNegocios(Model model) {
+		
+		List<Negocio> negociosPorUsuario = negocioService.findNegociosByUserId(usuarioActual().getId());
+		model.addAttribute("negocios", negociosPorUsuario);
+		
+		return "negocio/listaNegocios";
+		
 	}
 	
 	public Usuario usuarioActual() {

@@ -1,10 +1,14 @@
 package com.gbweb.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
@@ -37,6 +41,10 @@ public class Negocio {
 	@ManyToOne()
 	@JoinColumn(name = "usuario_id")
     private Usuario usuario;
+	
+	@JoinTable(name = "prodNeg", joinColumns = @JoinColumn(name = "idNegocio"), inverseJoinColumns = @JoinColumn(name = "idProducto"))
+	@ManyToMany()
+	private List<Producto> productos;
 
 	public Long getId() {
 		return id;
@@ -84,6 +92,14 @@ public class Negocio {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
+	}
+
+	public List<Producto> getProductos() {
+		return productos;
+	}
+
+	public void setProductos(List<Producto> productos) {
+		this.productos = productos;
 	}
 	
 	

@@ -5,27 +5,24 @@
 <meta charset="utf-8">
 <link rel="stylesheet" th:href="@{/css/formUser.css}" />
 <link rel="stylesheet" th:href="@{/css/style.css}" />
-<title>Tus negocios</title>
+<title>Productos</title>
 </head>
 <body>
 
 	<header th:replace="comun/header.html::header"></header>
-	<h1>Lista de tus negocios registrados en el sistema</h1>
-
+	<h1>Productos registrados en el sistema</h1>
 	<table id="customers">
 		<tr>
-			<th>CIF</th>
 			<th>Nombre</th>
-			<th>Localización</th>
+			<th>Precio</th>
 			<th>Tipo</th>
-			<th>Productos</th>
+			<th>Opciones</th>
 		</tr>
-		<tr th:each="negocio : ${negocios}">
-			<td th:text="${negocio.cif}"></td>
-			<td th:text="${negocio.nombre}"></td>
-			<td th:text="${negocio.localizacion}"></td>
-			<td th:text="${negocio.tipo}"></td>
-			<td><a th:href="@{/crearProducto}">Productos</a></td>
+		<tr th:each="producto : ${productos}">
+			<td th:text="${producto.nombre}"></td>
+			<td th:text="${producto.precio}"></td>
+			<td th:text="${producto.tipo}"></td>
+			<td></td>
 		</tr>
 
 	</table>

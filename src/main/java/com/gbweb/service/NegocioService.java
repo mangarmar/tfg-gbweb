@@ -1,5 +1,9 @@
 package com.gbweb.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +47,14 @@ public class NegocioService {
 		
 	}
 
-
+	public List<Negocio> findNegociosByUserId(Long id){
+		List<Negocio> negocios  = (List<Negocio>) this.negocioRepo.findAll();
+		List<Negocio> negociosPorUsuario = negocios.stream().filter(x->x.getUsuario().getId().equals(id)).collect(Collectors.toList());
+		return negociosPorUsuario;
+		
+	}
+	
+	public Negocio findNegocioById(Long idNegocio) {
+		return negocioRepo.findById(idNegocio).get();
+	}
 }

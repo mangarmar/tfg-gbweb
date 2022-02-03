@@ -26,16 +26,26 @@
 
 		<div sec:authorize="hasAuthority('GERENTE')">
 			<ul>
+				<li class="dropdown">
+					<button class="dropbtn">
+						Productos <i class="fa fa-caret-down"></i>
+					</button>
+					<div class="dropdown-content">
+						<a href="/listarProductos">Productos</a>
+						<a href="/crearProducto">Nuevo producto</a>
+					</div>
+				</li>
 				<li><a href="/logout">Cerrar Sesión</a></li>
 				<li class="dropdown">
 					<button class="dropbtn">
 						Gestiona tus negocios <i class="fa fa-caret-down"></i>
 					</button>
 					<div class="dropdown-content">
-						<a href="/listaNegocios">Negocios</a>
-						<a href="/crearNegocio">Registra uno nuevo</a>
+						<a href="/listarNegocios">Negocios</a>
+						<a href="/crearNegocio">Registra nuevo negocio</a>
 					</div>
 				</li>
+				
 				
 			</ul>
 		</div>
