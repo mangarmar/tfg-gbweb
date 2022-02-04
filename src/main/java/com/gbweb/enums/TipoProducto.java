@@ -2,6 +2,6 @@ package com.gbweb.enums;
 
 public enum TipoProducto {
 	
-	Alcohol, Refresco, Comida, Snack
+	Alcohol, Refresco, Ración, Media, Tapa, Snack
 
 }

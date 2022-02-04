@@ -12,7 +12,7 @@
 	<header th:replace="comun/header.html::header"></header>
 
 
-	<form class="form-register" th:action="@{crearProducto}"
+	<form class="form-register" th:action="${idNegocio}"
 		th:object="${producto}" method="post">
 		<h4>Datos del producto</h4>
 		<input type="hidden" th:field="*{id}" /> <input th:field="*{nombre}"
@@ -26,7 +26,9 @@
 		<select th:field="*{tipo}" class="controls">
 			<option th:value="Refresco" th:text="Refresco"></option>
 			<option th:value="Alcohol" th:text="Alcohol"></option>
-			<option th:value="Comida" th:text="Comida"></option>
+			<option th:value="Racion" th:text="Racion"></option>
+			<option th:value="Media" th:text="Media"></option>
+			<option th:value="Tapa" th:text="Tapa"></option>
 			<option th:value="Snack" th:text="Snack"></option>
 		</select>
 

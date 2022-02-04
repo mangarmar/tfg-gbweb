@@ -7,10 +7,16 @@
 <link rel="stylesheet" th:href="@{/css/style.css}" />
 <title>Productos</title>
 </head>
+
 <body>
 
 	<header th:replace="comun/header.html::header"></header>
-	<h1>Productos registrados en el sistema</h1>
+	<div>
+		<h1 th:text="${nombreNegocio}"></h1>
+	</div>
+			<a class="back-button" th:href="@{/listarNegocios}">Volver</a>
+			<a class="button" th:href="@{/añadirProducto/} + ${idNegocio}">Añadir producto</a>
+			
 	<table id="customers">
 		<tr>
 			<th>Nombre</th>

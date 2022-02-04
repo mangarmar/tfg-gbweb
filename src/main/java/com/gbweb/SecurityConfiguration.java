@@ -54,7 +54,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 				.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()
 				.antMatchers("/crearCliente", "/crearGerente/**").permitAll()
-				.antMatchers("/crearNegocio/**", "/listarNegocios/**", "/crearProducto/**", "/listarProductos/**").hasAuthority("GERENTE")
+				.antMatchers("/crearNegocio/**", "/listarNegocios/**", "/crearProducto/**", "/listarProductos/**",
+						"/añadirProducto/**").hasAuthority("GERENTE")
+				.antMatchers("/images/**").anonymous()
 				.antMatchers("/").permitAll().anyRequest().denyAll()
 				
 				
