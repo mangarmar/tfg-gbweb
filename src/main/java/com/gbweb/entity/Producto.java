@@ -33,6 +33,8 @@ public class Producto {
 	@NotNull(message = "Indique el precio del producto")
 	private Double precio;
 	
+	private Boolean visibilidad;
+	
 	
 	@ManyToMany(mappedBy = "productos")
 	private List<Negocio> negocios;
@@ -76,6 +78,16 @@ public class Producto {
 	public void setNegocios(List<Negocio> negocios) {
 		this.negocios = negocios;
 	}
+
+	public Boolean getVisibilidad() {
+		return visibilidad;
+	}
+
+	public void setVisibilidad(Boolean visibilidad) {
+		this.visibilidad = visibilidad;
+	}
+
+
 
 
 	

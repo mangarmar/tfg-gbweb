@@ -14,21 +14,29 @@
 	<div>
 		<h1 th:text="${nombreNegocio}"></h1>
 	</div>
-			<a class="back-button" th:href="@{/listarNegocios}">Volver</a>
-			<a class="button" th:href="@{/añadirProducto/} + ${idNegocio}">Añadir producto</a>
-			
+	<a class="back-button" th:href="@{/listarNegocios}">Volver</a>
+	<a class="button" th:href="@{/añadirProducto/} + ${idNegocio}">Añadir
+		producto</a>
+
 	<table id="customers">
 		<tr>
 			<th>Nombre</th>
 			<th>Precio</th>
 			<th>Tipo</th>
+			<th>Visible</th>
 			<th>Opciones</th>
 		</tr>
 		<tr th:each="producto : ${productos}">
 			<td th:text="${producto.nombre}"></td>
 			<td th:text="${producto.precio}"></td>
-			<td th:text="${producto.tipo}"></td>
-			<td></td>
+			<td	th:text="${producto.tipo}"></td>
+			<td th:text="${producto.visibilidad}"></td>
+			<td><a class=center-button
+				th:href="@{/editarProducto/} + ${idNegocio} + '/' + ${producto.id}">Editar</a>
+				<a class=center-button
+				th:href="@{/eliminarProducto/} + ${idNegocio} + '/' + ${producto.id}">Eliminar</a>
+				<a class=center-button
+				th:href="@{/cambiarVisibilidad/} + ${idNegocio} + '/' + ${producto.id}">Cambiar visibilidad</a></td>
 		</tr>
 
 	</table>

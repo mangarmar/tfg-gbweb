@@ -24,6 +24,15 @@ public class ProductoService {
 		
 		return (List<Producto>) productoRepo.findAll();
 	}
+	
+	public Producto findById(Long id) {
+		return productoRepo.findById(id).get();
+	}
+	
+	public void remove(Producto producto) {
+		
+		productoRepo.delete(producto);
+	}
 
 
 }

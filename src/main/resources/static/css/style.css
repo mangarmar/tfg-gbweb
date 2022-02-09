@@ -117,6 +117,20 @@ nav ul li a:hover {
 	border-radius: 10px;
 }
 
+.center-button {
+	background-color: rgb(177, 18, 38);
+	border: none;
+	color: white;
+	padding: 8px;
+	float: center;
+	text-align: center;
+	text-decoration: none;
+	font-size: 1em;
+	margin: 2px 2px;
+	cursor: pointer;
+	border-radius: 10px;
+}
+
 
 #main-content {
 	background: white;
