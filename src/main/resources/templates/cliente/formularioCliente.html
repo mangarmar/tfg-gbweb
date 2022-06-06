@@ -30,7 +30,8 @@
 		
 		<input th:field="*{email}" type="email" class="controls" placeholder="Email" name="email" />
 		<p class="alert alert-danger" role="alert" th:errors="*{email}"></p>
-		
+
+		<label for="username"><h3>Fecha de nacimiento</h3></label>		
 		<input th:field="*{fechaNacimiento}" type="date" class="controls" placeholder="Fecha de nacimiento" name="fechaNacimiento" />
 		<p class="alert alert-danger" role="alert" th:errors="*{fechaNacimiento}"></p>
 		
@@ -41,7 +42,7 @@
 		<p class="alert alert-danger" role="alert" th:errors="*{password}"></p>
 
 		
-		<button type="submit" class="botons">  Registrar Usuario </button>
+		<button type="submit" class="buttons">  Registrar Usuario </button>
 
 	</form>
 

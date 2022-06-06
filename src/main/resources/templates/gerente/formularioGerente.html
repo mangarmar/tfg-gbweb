@@ -1,53 +1,54 @@
-<!DOCTYPE html >
-<html xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org">
-<head>
-<meta charset="utf-8">
-<link rel="stylesheet" th:href="@{/css/formUser.css}" />
-<link rel="stylesheet" th:href="@{/css/style.css}" />
-<title>Registro</title>
-</head>
-<body>
-
-	<header th:replace="comun/header.html::header"></header>
+	<!DOCTYPE html >
+	<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org">
+	<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" th:href="@{/css/formUser.css}" />
+	<link rel="stylesheet" th:href="@{/css/style.css}" />
+	<title>Registro</title>
+	</head>
+	<body>
 	
+		<header th:replace="comun/header.html::header"></header>
 		
+			
+		
+		
+		<form class="form-register" th:action="@{crearGerente}" th:object="${gerente}" method="post">
+			<h4>Datos personales del gerente</h4>
+			<input type="hidden" th:field="*{id}" />
+			<input type="hidden" th:field="*{rol}" value="GERENTE" />
+			
+			<input th:field="*{nombre}" type="text" class="controls" placeholder="Nombre" name="nombre" />
+			<p class="alert alert-danger" role="alert" th:errors="*{nombre}"></p>
+			
+			<input th:field="*{apellidos}" type="text" class="controls" placeholder="Apellidos" name="apellidos" />
+			<p class="alert alert-danger" role="alert" th:errors="*{apellidos}"></p>
+			
+			<input th:field="*{dni}" type="text" class="controls" placeholder="DNI" name="dni" />
+			<p class="alert alert-danger" role="alert" th:errors="*{dni}"></p>
+			
+			<input th:field="*{direccion}" type="text" class="controls" placeholder="Domicilio" name="direccion" />
+			<p class="alert alert-danger" role="alert" th:errors="*{direccion}"></p>
+			
+			<input th:field="*{email}" type="email" class="controls" placeholder="Email" name="email" />
+			<p class="alert alert-danger" role="alert" th:errors="*{email}"></p>
+			
+			<label for="username"><h3>Fecha de nacimiento</h3></label>
+			<input th:field="*{fechaNacimiento}" type="date" class="controls" placeholder="Fecha de nacimiento" name="fechaNacimiento" />
+			<p class="alert alert-danger" role="alert" th:errors="*{fechaNacimiento}"></p>
+			
+			<input th:field="*{username}" type="text" class="controls" placeholder="Usuario" name="username" />
+			<p class="alert alert-danger" role="alert" th:errors="*{username}"></p>
+			
+			<input th:field="*{password}" type="password" class="controls" placeholder="Contraseña" name="password" />
+			<p class="alert alert-danger" role="alert" th:errors="*{password}"></p>
+	
+			
+			<button type="submit" class="buttons">  Registrar Usuario </button>
+	
+		</form>
 	
 	
-	<form class="form-register" th:action="@{crearGerente}" th:object="${gerente}" method="post">
-		<h4>Datos personales del gerente</h4>
-		<input type="hidden" th:field="*{id}" />
-		<input type="hidden" th:field="*{rol}" value="GERENTE" />
-		
-		<input th:field="*{nombre}" type="text" class="controls" placeholder="Nombre" name="nombre" />
-		<p class="alert alert-danger" role="alert" th:errors="*{nombre}"></p>
-		
-		<input th:field="*{apellidos}" type="text" class="controls" placeholder="Apellidos" name="apellidos" />
-		<p class="alert alert-danger" role="alert" th:errors="*{apellidos}"></p>
-		
-		<input th:field="*{dni}" type="text" class="controls" placeholder="DNI" name="dni" />
-		<p class="alert alert-danger" role="alert" th:errors="*{dni}"></p>
-		
-		<input th:field="*{direccion}" type="text" class="controls" placeholder="Domicilio" name="direccion" />
-		<p class="alert alert-danger" role="alert" th:errors="*{direccion}"></p>
-		
-		<input th:field="*{email}" type="email" class="controls" placeholder="Email" name="email" />
-		<p class="alert alert-danger" role="alert" th:errors="*{email}"></p>
-		
-		<input th:field="*{fechaNacimiento}" type="date" class="controls" placeholder="Fecha de nacimiento" name="fechaNacimiento" />
-		<p class="alert alert-danger" role="alert" th:errors="*{fechaNacimiento}"></p>
-		
-		<input th:field="*{username}" type="text" class="controls" placeholder="Usuario" name="username" />
-		<p class="alert alert-danger" role="alert" th:errors="*{username}"></p>
-		
-		<input th:field="*{password}" type="password" class="controls" placeholder="Contraseña" name="password" />
-		<p class="alert alert-danger" role="alert" th:errors="*{password}"></p>
-
-		
-		<button type="submit" class="botons">  Registrar Usuario </button>
-
-	</form>
-
-
-</body>
-</html>
+	</body>
+	</html>

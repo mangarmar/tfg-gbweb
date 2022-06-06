@@ -2,6 +2,9 @@
 
 INSERT INTO `usuarios` VALUES (100000,'gerentes','calle gerente','12345678G','gerente@gerente.com','1999-07-18','gerente','$2a$12$Bzs5tApq5iEJ9sVdt1mjy.zSiEUODsKajscptpMoISNpesaVAt6bG','GERENTE','gerente');
 
+INSERT INTO `usuarios` VALUES (100001,'García Marchena','C/Prim 26','21150678Q','manuelgarciamarchena99@gmail.com','1999-07-18','Manuel','$2a$12$LuaWW0lIg6gR7Me2DGWTn.pZXClrE/j5OqgouV4Dv8o4sDClPP.dG','CLIENTE','mangarmar17');
+
+
 INSERT INTO `negocios` VALUES (100000,'A12345678','Plz San Fernando','Forum',1, 100000);
 
 INSERT INTO `productos` VALUES (100000, 'Botellin de Cerveza', 1.00, '0',1), (100001,  'Fanta de naranja', 1.80, '1', 1), (100002,  'Fanta de limón', 1.80, '1',1)

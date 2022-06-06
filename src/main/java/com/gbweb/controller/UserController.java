@@ -51,7 +51,7 @@ public class UserController {
 
 		}
 		redirectAttributes.addFlashAttribute("alert", 11);
-		return "redirect:";
+		return "redirect:/login";
 
 	}
 

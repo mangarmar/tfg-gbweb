@@ -8,9 +8,11 @@
 
 
 	<nav>
-	
+		
+			
 		<div sec:authorize="!isAuthenticated()">
 			<ul>
+				<li style="float:left"><h2><a href="/">GBWEB</a></h2></li>
 				<li><a href="/login">Iniciar Sesión</a></li>
 				<li><a href="/crearCliente">Registro clientes</a></li>
 				<li><a href="/crearGerente">Registro gerentes</a></li>
@@ -19,12 +21,14 @@
 
 		<div sec:authorize="hasAuthority('CLIENTE')">
 			<ul>
+				<li style="float:left"><h2><a href="/">GBWEB</a></h2></li>
 				<li><a href="/logout">Cerrar Sesión</a></li>
 			</ul>
 		</div>
 
 		<div sec:authorize="hasAuthority('GERENTE')">
 			<ul>
+				<li style="float:left"><h2><a href="/">GBWEB</a></h2></li>
 				<li><a href="/logout">Cerrar Sesión</a></li>
 				<li class="dropdown">
 					<button class="dropbtn">

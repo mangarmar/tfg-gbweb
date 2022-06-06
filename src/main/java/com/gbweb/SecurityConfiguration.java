@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.*;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.gbweb.enums.ROL;
 import com.gbweb.service.UserService;
@@ -58,12 +59,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 						"/añadirProducto/**", "/eliminarProducto/**", "/editarProducto/**", "/cambiarVisibilidad/**").hasAuthority("GERENTE")
 				.antMatchers("/images/**").anonymous()
 				.antMatchers("/").permitAll().anyRequest().denyAll()
-				
-				
-				
-				.and().formLogin()
-				.defaultSuccessUrl("/", true).failureUrl("/login?error=true").usernameParameter("username")
-				.passwordParameter("password").and().logout().logoutSuccessUrl("/");
+		          .and()
+	              .formLogin()
+	              .loginPage("/login")
+	              .defaultSuccessUrl("/")
+	              .failureUrl("/login?error=true")
+	              .permitAll()
+	          .and()
+	              .logout()
+	              .logoutSuccessUrl("/login")
+	              .invalidateHttpSession(true)
+	              .permitAll().and().csrf().disable();
+			
 
 	}
 
