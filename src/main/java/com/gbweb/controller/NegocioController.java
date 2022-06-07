@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gbweb.entity.Negocio;
+import com.gbweb.entity.Producto;
 import com.gbweb.entity.Usuario;
+import com.gbweb.enums.ROL;
 import com.gbweb.service.NegocioService;
 import com.gbweb.service.UserService;
 
@@ -57,15 +59,61 @@ public class NegocioController {
 
 	}
 	
+	@GetMapping("/editarNegocio/{idNegocio}")
+	public String editarNegocio(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
+
+		model.addAttribute("negocio", negocioService.findNegocioById(idNegocio));
+		return "negocio/editarNegocio";
+	}
+
+	@PostMapping("/editarNegocio/{idNegocio}")
+	public String editar(@PathVariable(value = "idNegocio") Long idNegocio,
+			@Valid @ModelAttribute("negocio") Negocio negocio,
+			BindingResult result, Model model) {
+
+		if (result.hasErrors()) {
+			model.addAttribute("negocio", negocio);
+			return "negocio/editarNegocio";
+		} else {
+
+			negocioService.editarNegocio(negocio, idNegocio);
+
+		}
+		return listarNegocios(model);
+
+	}
+	
 	@GetMapping("/listarNegocios")
 	public String listarNegocios(Model model) {
 		
-		List<Negocio> negociosPorUsuario = negocioService.findNegociosByUserId(usuarioActual().getId());
-		model.addAttribute("negocios", negociosPorUsuario);
+		if(usuarioActual()==null) {
+			List<Negocio> negocios = negocioService.findAll();
+			model.addAttribute("negocios", negocios);
+			return "negocio/listaNegociosClientes";
+		}else if(usuarioActual().getRol().equals(ROL.CLIENTE) || usuarioActual().getRol().equals(ROL.ADMIN)) {
+			List<Negocio> negocios = negocioService.findAll();
+			model.addAttribute("negocios", negocios);
+			return "negocio/listaNegociosClientes";
+		}else{
+			List<Negocio> negociosPorUsuario = negocioService.findNegociosByUserId(usuarioActual().getId());
+			model.addAttribute("negocios", negociosPorUsuario);
+			return "negocio/listaNegocios";
+		}
 		
-		return "negocio/listaNegocios";
+		
 		
 	}
+	
+//	@GetMapping()
+//	public String listarNegociosCliente(Model model) {
+//		List<Negocio> negocios = negocioService.findAll();
+//		System.out.println("=========================================================================");
+//		System.out.println(negocios);
+//		model.addAttribute("negocios", negocioService.findAll());
+//		
+//		return "negocio/listaNegocios";
+//		
+//	}
 	
 	public Usuario usuarioActual() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

@@ -46,6 +46,22 @@ public class NegocioService {
 		negocioRepo.save(negocio);
 		
 	}
+	
+	public void editarNegocio(@Valid Negocio negocio, Long idNegocio) {
+		
+		Negocio negocioAct = findNegocioById(idNegocio);
+		negocioAct.setCapacidad(negocio.getCapacidad());
+		negocioAct.setCif(negocio.getCif());
+		negocioAct.setDescripcion(negocio.getDescripcion());
+		negocioAct.setEmail(negocio.getEmail());
+		negocioAct.setLocalizacion(negocio.getLocalizacion());
+		negocioAct.setNombre(negocio.getNombre());
+		negocioAct.setProductos(negocio.getProductos());
+		negocioAct.setTipo(negocio.getTipo());
+		negocioAct.setUsuario(usuarioActual());
+		negocioRepo.save(negocioAct);
+		
+	}
 
 	public List<Negocio> findNegociosByUserId(Long id){
 		List<Negocio> negocios  = (List<Negocio>) this.negocioRepo.findAll();
@@ -56,5 +72,9 @@ public class NegocioService {
 	
 	public Negocio findNegocioById(Long idNegocio) {
 		return negocioRepo.findById(idNegocio).get();
+	}
+	
+	public List<Negocio> findAll(){
+		return (List<Negocio>) negocioRepo.findAll();
 	}
 }

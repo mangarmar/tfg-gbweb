@@ -2,6 +2,7 @@ package com.gbweb.entity;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,8 +12,12 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import com.gbweb.enums.Tipo;
 
@@ -28,6 +33,23 @@ public class Negocio {
 	
 	@NotEmpty(message="Introduzca el nombre de su negocio")
 	private String nombre;
+	
+
+	@Size(min = 25, max = 250)
+	private String descripcion;
+	
+
+	private String imagen = "/resources/static/images/default-image.png";
+	
+
+	@NotNull
+	@Min(1)
+	private Integer capacidad;
+	
+
+	@Email
+	@NotEmpty
+	private String email;
 
 	private Tipo tipo;
 	
@@ -101,6 +123,39 @@ public class Negocio {
 	public void setProductos(List<Producto> productos) {
 		this.productos = productos;
 	}
+
+	public String getDescripcion() {
+		return descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
+	}
+
+	public String getImagen() {
+		return imagen;
+	}
+
+	public void setImagen(String imagen) {
+		this.imagen = imagen;
+	}
+
+	public Integer getCapacidad() {
+		return capacidad;
+	}
+
+	public void setCapacidad(Integer capacidad) {
+		this.capacidad = capacidad;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
 	
 	
 

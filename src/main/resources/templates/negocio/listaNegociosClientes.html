@@ -1,0 +1,26 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" th:href="@{/css/formUser.css}" />
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+	
+<title>Bares disponibles</title>
+</head>
+<body>
+
+	<header th:replace="comun/header.html::header"></header>
+	<h1>¡Tus pedidos a un solo click!</h1>
+		
+	<div th:each="negocio : ${negocios}" class="card">
+	  <img src="/resources/static/images/cafeteria-forum.png" alt="Imagen" style="width:100%; justify-content: center;">
+	  <div class="container">
+	    <h4><b th:text="${negocio.nombre}"></b></h4>
+	    <p th:text="${negocio.descripcion}"></p>
+	  </div>
+	</div>
+	
+
+</body>
+</html>
