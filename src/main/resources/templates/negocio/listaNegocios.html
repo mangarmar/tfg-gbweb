@@ -26,6 +26,7 @@
 			<td th:text="${negocio.localizacion}"></td>
 			<td th:text="${negocio.tipo}"></td>
 			<td><a class=center-button th:href="@{/listarProductos/} + ${negocio.id}">Listar productos</a>
+				<a class=center-button th:href="@{/mesas/} + ${negocio.id}">Mesas</a>
 				<a class=center-button th:href="@{/editarNegocio/} + ${negocio.id}">Detalles</a></td>
 		</tr>
 

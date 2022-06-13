@@ -1,0 +1,46 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" th:href="@{/css/formUser.css}" />
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<title>Productos</title>
+</head>
+
+<body>
+
+	<header th:replace="comun/header.html::header"></header>
+	<div>
+		<h1 th:text="${nombreNegocio}"></h1>
+	</div>
+	<a class="back-button" th:href="@{/listarNegocios}">Volver</a>
+	<a class="button" th:href="@{/mesas/añadirMesa/} + ${idNegocio}">Añadir
+		mesa</a>
+
+	<table id="customers">
+		<tr>
+			<th>Código</th>
+			<th>Estado</th>
+			<th>Cambiar estado</th>
+			<th>Otros</th>
+		</tr>
+		<tr th:each="mesa : ${mesas}">
+			<td th:text="${mesa.codigo}"></td>
+			<td th:text="${mesa.estado}"></td>
+			<td><a class=center-button
+				th:href="@{/mesas/mesaLibre/} + ${idNegocio} + '/' + ${mesa.id}">Libre</a>
+				<a class=center-button
+				th:href="@{/mesas/mesaOcupada/} + ${idNegocio} + '/' + ${mesa.id}">Ocupado</a>
+				<a class=center-button
+				th:href="@{/mesas/mesaPendiente/} + ${idNegocio} + '/' + ${mesa.id}">Pendiente</a></td>
+			<td>
+				<a class=center-button
+				th:href="@{/mesas/eliminarMesa/} + ${idNegocio} + '/' + ${mesa.id}">Eliminar</a></td>
+			
+		</tr>
+
+	</table>
+
+</body>
+</html>
