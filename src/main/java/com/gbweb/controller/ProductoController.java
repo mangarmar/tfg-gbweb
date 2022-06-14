@@ -1,11 +1,20 @@
 package com.gbweb.controller;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,8 +26,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.gbweb.entity.Negocio;
 import com.gbweb.entity.Producto;
+import com.gbweb.entity.Usuario;
+import com.gbweb.enums.ROL;
+import com.gbweb.enums.TipoProducto;
 import com.gbweb.service.NegocioService;
 import com.gbweb.service.ProductoService;
+import com.gbweb.service.UserService;
 
 @Controller
 public class ProductoController {
@@ -28,14 +41,29 @@ public class ProductoController {
 
 	@Autowired
 	NegocioService negocioService;
+	
+	@Autowired
+	UserService userService;
 
 	@RequestMapping("/listarProductos/{idNegocio}")
 	public String listarProductos(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
 		List<Producto> productos = negocioService.findNegocioById(idNegocio).getProductos();
+		List<Producto> refrescos = productos.stream().filter(x->x.getTipo() ==  TipoProducto.Refresco).collect(Collectors.toList());
+		List<Producto> alcohol =  productos.stream().filter(x->x.getTipo() ==  TipoProducto.Alcohol).collect(Collectors.toList());
+		List<Producto> racion =  productos.stream().filter(x->x.getTipo() ==  TipoProducto.Ración).collect(Collectors.toList());
+		List<Producto> media =  productos.stream().filter(x->x.getTipo() ==  TipoProducto.Media).collect(Collectors.toList());
+		List<Producto> tapa =  productos.stream().filter(x->x.getTipo() ==  TipoProducto.Tapa).collect(Collectors.toList());
+		List<Producto> snack =  productos.stream().filter(x->x.getTipo() ==  TipoProducto.Snack).collect(Collectors.toList());
 
+		
 		model.addAttribute("nombreNegocio", negocioService.findNegocioById(idNegocio).getNombre());
 		model.addAttribute("idNegocio", idNegocio);
-		model.addAttribute("productos", productos);
+		model.addAttribute("refrescos", refrescos);
+		model.addAttribute("alcohol", alcohol);
+		model.addAttribute("racion", racion);
+		model.addAttribute("media", media);
+		model.addAttribute("tapa", tapa);
+		model.addAttribute("snack", snack);
 
 		return "producto/listaProductos";
 
@@ -61,7 +89,7 @@ public class ProductoController {
 			productoService.nuevoProducto(producto);
 
 		}
-		return listarProductos(idNegocio, model);
+		return "redirect:/listarProductos/"+idNegocio;
 
 	}
 
@@ -72,7 +100,8 @@ public class ProductoController {
 		Producto productoAEliminar = productoService.findById(idProducto);
 		negocioService.findNegocioById(idNegocio).getProductos().remove(productoAEliminar);
 		productoService.remove(productoAEliminar);
-		return listarProductos(idNegocio, model);
+		
+		return "redirect:/listarProductos/"+idNegocio;
 
 	}
 
@@ -98,7 +127,7 @@ public class ProductoController {
 			productoService.nuevoProducto(producto);
 
 		}
-		return listarProductos(idNegocio, model);
+		return "redirect:/listarProductos/"+idNegocio;
 
 	}
 
@@ -116,8 +145,26 @@ public class ProductoController {
 			productoService.nuevoProducto(producto);
 		}
 
-		return listarProductos(idNegocio, model);
+		return "redirect:/listarProductos/"+idNegocio;
 
 	}
+
+	
+	public Usuario usuarioActual() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserDetails userDetails = null;
+		Usuario user = null;
+		if (principal instanceof UserDetails) {
+			userDetails = (UserDetails) principal;
+			String userName = userDetails.getUsername();
+			user = this.userService.findByUsername(userName);
+		} else {
+			user = null;
+		}
+		return user;
+	}
+	
+		
+
 
 }

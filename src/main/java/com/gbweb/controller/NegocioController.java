@@ -1,10 +1,17 @@
 package com.gbweb.controller;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -14,10 +21,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.gbweb.entity.Mesa;
 import com.gbweb.entity.Negocio;
-import com.gbweb.entity.Producto;
 import com.gbweb.entity.Usuario;
 import com.gbweb.enums.ROL;
 import com.gbweb.service.NegocioService;
@@ -33,6 +41,9 @@ public class NegocioController {
 	
 	@Autowired
 	NegocioService negocioService;
+	
+	@Autowired
+	ProductoController productoController;
 	
 	@GetMapping("/crearNegocio")
 	public String crearNegocio(Model model) {
@@ -90,7 +101,7 @@ public class NegocioController {
 			List<Negocio> negocios = negocioService.findAll();
 			model.addAttribute("negocios", negocios);
 			return "negocio/listaNegociosClientes";
-		}else if(usuarioActual().getRol().equals(ROL.CLIENTE) || usuarioActual().getRol().equals(ROL.ADMIN)) {
+		}else if(usuarioActual().getRol().equals(ROL.CLIENTE_CONFIRMADO) ||usuarioActual().getRol().equals(ROL.CLIENTE) || usuarioActual().getRol().equals(ROL.ADMIN)) {
 			List<Negocio> negocios = negocioService.findAll();
 			model.addAttribute("negocios", negocios);
 			return "negocio/listaNegociosClientes";
@@ -99,21 +110,10 @@ public class NegocioController {
 			model.addAttribute("negocios", negociosPorUsuario);
 			return "negocio/listaNegocios";
 		}
-		
-		
-		
+			
 	}
 	
-//	@GetMapping()
-//	public String listarNegociosCliente(Model model) {
-//		List<Negocio> negocios = negocioService.findAll();
-//		System.out.println("=========================================================================");
-//		System.out.println(negocios);
-//		model.addAttribute("negocios", negocioService.findAll());
-//		
-//		return "negocio/listaNegocios";
-//		
-//	}
+
 	
 	public Usuario usuarioActual() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -127,5 +127,49 @@ public class NegocioController {
 			user = null;
 		}
 		return user;
+	}
+	
+	@GetMapping("/confirmarMesa/{idNegocio}")
+	public String confirmarMesa(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
+		model.addAttribute("idNegocio", idNegocio);
+		model.addAttribute("mesa", new Mesa());
+		return "negocio/añadirMesa";
+	}
+	
+	@PostMapping("/confirmarMesa/{idNegocio}")
+	public String confirmarMesa(@PathVariable(value = "idNegocio") Long idNegocio,
+			@Valid @ModelAttribute("mesa") Mesa mesa, BindingResult result, Model model) {
+		
+		List<String> mesasDelRestaurante = negocioService.findNegocioById(idNegocio).getMesas().stream().map(x->x.getCodigo()).collect(Collectors.toList());
+
+		if (!mesasDelRestaurante.contains(mesa.getCodigo())) {
+			model.addAttribute("mesa", mesa);
+			model.addAttribute("message", "Esta mesa no pertenece al restaurante");
+			return "negocio/añadirMesa";
+		} else {
+			
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();	
+			Set<GrantedAuthority> authorities = new HashSet<>();
+			authorities.add(new SimpleGrantedAuthority("CLIENTE_CONFIRMADO"));
+			Authentication reAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(),auth.getCredentials(),authorities);  
+			SecurityContextHolder.getContext().setAuthentication(reAuth);
+			
+			
+			return "redirect:/listarProductos/"+idNegocio;
+		}
+		
+
+	}
+	
+	@RequestMapping("/salir/{idNegocio}")
+	public String salir(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
+	
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();	
+		Set<GrantedAuthority> authorities = new HashSet<>();
+		authorities.add(new SimpleGrantedAuthority("CLIENTE"));
+		Authentication reAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(),auth.getCredentials(),authorities);  
+		SecurityContextHolder.getContext().setAuthentication(reAuth);
+	
+		return "redirect:/listarProductos/"+idNegocio;
 	}
 }

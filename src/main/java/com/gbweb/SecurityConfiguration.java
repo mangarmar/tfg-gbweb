@@ -55,22 +55,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 				.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()
 				.antMatchers("/crearCliente", "/crearGerente/**").permitAll()
-				.antMatchers("/crearNegocio/**","/editarNegocio/**", "/crearProducto/**", "/listarProductos/**",
-						"/añadirProducto/**", "/eliminarProducto/**", "/editarProducto/**", "/cambiarVisibilidad/**").hasAuthority("GERENTE")
+				.antMatchers("/crearNegocio/**","/editarNegocio/**", "/crearProducto/**",
+						"/añadirProducto/**", "/eliminarProducto/**", "/editarProducto/**", "/cambiarVisibilidad/**", "/añadirMesa/**", "/mesas/**").hasAuthority("GERENTE")
+				.antMatchers("/confirmarMesa/**").hasAuthority("CLIENTE")
+				.antMatchers("/salir/**").hasAuthority("CLIENTE_CONFIRMADO")
 				.antMatchers("/images/**").anonymous()
-				.antMatchers("/listarNegocios/**").permitAll()
+				.antMatchers("/listarNegocios/**", "/listarProductos/**").permitAll()
 				.antMatchers("/").permitAll().anyRequest().denyAll()
 		          .and()
 	              .formLogin()
-	              .loginPage("/login")	
+	              .loginPage("/login")
 	              .defaultSuccessUrl("/listarNegocios")
-	              .failureUrl("/login?error=true")
-	              .permitAll()
-	              .and()
-	              .logout()
-	              .logoutSuccessUrl("/login")
-	              .invalidateHttpSession(true)
-	              .permitAll().and().csrf().disable();
+	              .failureUrl("/login?error").permitAll()
+	      .and().logout()
+	              .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+	              .logoutSuccessUrl("/login?logout")
+	              .deleteCookies("JSESSIONID")
+	              .invalidateHttpSession(true).permitAll();
 			
 
 	}

@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
@@ -67,6 +68,19 @@ public class Negocio {
 	@JoinTable(name = "prodNeg", joinColumns = @JoinColumn(name = "idNegocio"), inverseJoinColumns = @JoinColumn(name = "idProducto"))
 	@ManyToMany()
 	private List<Producto> productos;
+	
+    @OneToMany(mappedBy="negocio")
+    private List<Mesa> mesas;
+
+    
+    
+	public List<Mesa> getMesas() {
+		return mesas;
+	}
+
+	public void setMesas(List<Mesa> mesas) {
+		this.mesas = mesas;
+	}
 
 	public Long getId() {
 		return id;

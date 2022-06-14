@@ -73,14 +73,24 @@ public class Usuario implements UserDetails {
 	@NotEmpty(message = "Porfavor, introduzca un email")
 	@Email(message = "Porfavor, introduzca un email válido")
 	private String email;
-	
+
 	@Enumerated(EnumType.STRING)
 	private ROL rol;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private List<Negocio> negocios;
+    
+    private String permiso;
 	
-	 @Override
+	 public String getPermisos() {
+		return permiso;
+	}
+
+	public void setPermisos(String permiso) {
+		this.permiso = permiso;
+	}
+
+	@Override
 	    public Collection<? extends GrantedAuthority> getAuthorities() {
 	        List<GrantedAuthority> roles = new ArrayList<>();
 	        roles.add(new SimpleGrantedAuthority(rol.toString()));
