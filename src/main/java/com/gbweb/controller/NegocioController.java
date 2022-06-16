@@ -21,13 +21,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gbweb.entity.Mesa;
 import com.gbweb.entity.Negocio;
 import com.gbweb.entity.Usuario;
+import com.gbweb.enums.Estado;
 import com.gbweb.enums.ROL;
+import com.gbweb.service.MesaService;
 import com.gbweb.service.NegocioService;
 import com.gbweb.service.UserService;
 
@@ -41,6 +44,9 @@ public class NegocioController {
 	
 	@Autowired
 	NegocioService negocioService;
+	
+	@Autowired
+	MesaService mesaService;
 	
 	@Autowired
 	ProductoController productoController;
@@ -129,37 +135,73 @@ public class NegocioController {
 		return user;
 	}
 	
-	@GetMapping("/confirmarMesa/{idNegocio}")
-	public String confirmarMesa(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
-		model.addAttribute("idNegocio", idNegocio);
-		model.addAttribute("mesa", new Mesa());
-		return "negocio/añadirMesa";
-	}
+//	@GetMapping("/confirmarMesa/{idNegocio}")
+//	public String confirmarMesa(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
+//		model.addAttribute("idNegocio", idNegocio);
+//		model.addAttribute("mesa", new Mesa());
+//		return "negocio/añadirMesa";
+//	}
+//	
+//	@PostMapping("/confirmarMesa/{idNegocio}")
+//	public String confirmarMesa(@PathVariable(value = "idNegocio") Long idNegocio,
+//			@Valid @ModelAttribute("mesa") Mesa mesa, BindingResult result, Model model) {
+//		
+//		List<String> mesasDelRestaurante = negocioService.findNegocioById(idNegocio).getMesas().stream().map(x->x.getCodigo()).collect(Collectors.toList());
+//
+//		if (!mesasDelRestaurante.contains(mesa.getCodigo())) {
+//			model.addAttribute("mesa", mesa);
+//			model.addAttribute("message", "Esta mesa no pertenece al restaurante");
+//			return "negocio/añadirMesa";
+//		} else {
+//			Authentication auth = SecurityContextHolder.getContext().getAuthentication();	
+//			Set<GrantedAuthority> authorities = new HashSet<>();
+//			authorities.add(new SimpleGrantedAuthority("CLIENTE_CONFIRMADO"));
+//			Authentication reAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(),auth.getCredentials(),authorities);  
+//			SecurityContextHolder.getContext().setAuthentication(reAuth);
+//			mesa.setEstado(Estado.PENDIENTE);
+//			mesa.setNegocio(negocioService.findNegocioById(idNegocio));
+//			mesaService.actualizarEstado(mesa);
+//			
+//			return "redirect:/listarProductos/"+idNegocio+"/mesa/"+mesa.getCodigo();
+//		}
+//		
+//
+//	}
 	
-	@PostMapping("/confirmarMesa/{idNegocio}")
-	public String confirmarMesa(@PathVariable(value = "idNegocio") Long idNegocio,
-			@Valid @ModelAttribute("mesa") Mesa mesa, BindingResult result, Model model) {
-		
-		List<String> mesasDelRestaurante = negocioService.findNegocioById(idNegocio).getMesas().stream().map(x->x.getCodigo()).collect(Collectors.toList());
-
-		if (!mesasDelRestaurante.contains(mesa.getCodigo())) {
-			model.addAttribute("mesa", mesa);
-			model.addAttribute("message", "Esta mesa no pertenece al restaurante");
-			return "negocio/añadirMesa";
-		} else {
-			
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();	
-			Set<GrantedAuthority> authorities = new HashSet<>();
-			authorities.add(new SimpleGrantedAuthority("CLIENTE_CONFIRMADO"));
-			Authentication reAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(),auth.getCredentials(),authorities);  
-			SecurityContextHolder.getContext().setAuthentication(reAuth);
-			
-			
-			return "redirect:/listarProductos/"+idNegocio;
-		}
-		
-
-	}
+//	@GetMapping("/confirmarMesa/{idNegocio}")
+//	public String confirmarMesa(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
+//		model.addAttribute("idNegocio", idNegocio);
+//		model.addAttribute("mesa", new Mesa());
+//		return "negocio/añadirMesa";
+//	}
+//	
+//	@PostMapping("/confirmarMesa/{idNegocio}")
+//	public String confirmarMesa(@PathVariable(value = "idNegocio") Long idNegocio,
+//			@Valid @ModelAttribute("mesa") Mesa mesa, BindingResult result, Model model) {
+//		
+//		List<String> mesasDelRestaurante = negocioService.findNegocioById(idNegocio).getMesas().stream().map(x->x.getCodigo()).collect(Collectors.toList());
+//
+//		if (!mesasDelRestaurante.contains(mesa.getCodigo())) {
+//			model.addAttribute("mesa", mesa);
+//			model.addAttribute("message", "Esta mesa no pertenece al restaurante");
+//			return "negocio/añadirMesa";
+//		} else {
+//			Authentication auth = SecurityContextHolder.getContext().getAuthentication();	
+//			Set<GrantedAuthority> authorities = new HashSet<>();
+//			authorities.add(new SimpleGrantedAuthority("CLIENTE_CONFIRMADO"));
+//			Authentication reAuth = new UsernamePasswordAuthenticationToken(auth.getPrincipal(),auth.getCredentials(),authorities);  
+//			SecurityContextHolder.getContext().setAuthentication(reAuth);
+//			mesa.setEstado(Estado.PENDIENTE);
+//			mesa.setNegocio(negocioService.findNegocioById(idNegocio));
+//			mesaService.actualizarEstado(mesa);
+//			
+//			return "redirect:/listarProductos/"+idNegocio+"/mesa/"+mesa.getCodigo();
+//		}
+//		
+//
+//	}
+	
+	
 	
 	@RequestMapping("/salir/{idNegocio}")
 	public String salir(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {

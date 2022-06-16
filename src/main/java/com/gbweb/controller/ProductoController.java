@@ -64,6 +64,32 @@ public class ProductoController {
 		model.addAttribute("media", media);
 		model.addAttribute("tapa", tapa);
 		model.addAttribute("snack", snack);
+		model.addAttribute("usuario", usuarioActual());
+
+		return "producto/listaProductos";
+
+	}
+	
+	@RequestMapping("/listarProductos/{idNegocio}/mesa/{idMesa}")
+	public String listarProductosParaPedir(@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") String idMesa,
+			Model model) {
+		List<Producto> productos = negocioService.findNegocioById(idNegocio).getProductos();
+		List<Producto> refrescos = productos.stream().filter(x->x.getTipo() ==  TipoProducto.Refresco).collect(Collectors.toList());
+		List<Producto> alcohol =  productos.stream().filter(x->x.getTipo() ==  TipoProducto.Alcohol).collect(Collectors.toList());
+		List<Producto> racion =  productos.stream().filter(x->x.getTipo() ==  TipoProducto.Ración).collect(Collectors.toList());
+		List<Producto> media =  productos.stream().filter(x->x.getTipo() ==  TipoProducto.Media).collect(Collectors.toList());
+		List<Producto> tapa =  productos.stream().filter(x->x.getTipo() ==  TipoProducto.Tapa).collect(Collectors.toList());
+		List<Producto> snack =  productos.stream().filter(x->x.getTipo() ==  TipoProducto.Snack).collect(Collectors.toList());
+
+		
+		model.addAttribute("nombreNegocio", negocioService.findNegocioById(idNegocio).getNombre());
+		model.addAttribute("idNegocio", idNegocio);
+		model.addAttribute("refrescos", refrescos);
+		model.addAttribute("alcohol", alcohol);
+		model.addAttribute("racion", racion);
+		model.addAttribute("media", media);
+		model.addAttribute("tapa", tapa);
+		model.addAttribute("snack", snack);
 
 		return "producto/listaProductos";
 

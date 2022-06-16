@@ -1,10 +1,13 @@
 package com.gbweb.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,9 +22,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.gbweb.entity.Mesa;
 import com.gbweb.entity.Negocio;
 import com.gbweb.entity.Producto;
+import com.gbweb.entity.Usuario;
 import com.gbweb.enums.Estado;
 import com.gbweb.service.MesaService;
 import com.gbweb.service.NegocioService;
+import com.gbweb.service.UserService;
 
 @Controller
 @RequestMapping("/mesas")
@@ -33,6 +38,9 @@ public class MesaController {
 	@Autowired
 	MesaService mesaService;
 	
+	@Autowired
+	UserService userService;
+	
 	
 	@RequestMapping("/{idNegocio}")
 	public String listarMesas(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
@@ -42,6 +50,35 @@ public class MesaController {
 		model.addAttribute("nombreNegocio", negocio.getNombre());
 		model.addAttribute("idNegocio", idNegocio);
 		model.addAttribute("mesas", mesas);
+
+		return "negocio/listarMesas";
+
+	}
+	
+	@RequestMapping("/libres/{idNegocio}")
+	public String listarMesasLibres(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
+		Negocio negocio = negocioService.findNegocioById(idNegocio);
+		List<Mesa> mesas = negocio.getMesas();
+		
+		model.addAttribute("nombreNegocio", negocio.getNombre());
+		model.addAttribute("idNegocio", idNegocio);
+		model.addAttribute("mesas", mesas.stream().filter(x->x.getEstado().equals(Estado.LIBRE) || x.getEstado().equals(Estado.PENDIENTE)).collect(Collectors.toList()));
+
+		return "negocio/listarMesas";
+
+	}
+	
+	@RequestMapping("/estado/{idNegocio}")
+	public String miMesa(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
+		Negocio negocio = negocioService.findNegocioById(idNegocio);
+		List<Mesa> mesas = negocio.getMesas();
+		Usuario usuario = usuarioActual();
+		System.out.println(usuario.getMesa());
+		Mesa mesa = mesas.stream().filter(x->x.getCodigo().equals(usuario.getMesa())).findFirst().get();
+		model.addAttribute("nombreNegocio", negocio.getNombre());
+		model.addAttribute("idNegocio", idNegocio);
+		model.addAttribute("mesas", mesa);
+		model.addAttribute("usuario", usuario);
 
 		return "negocio/listarMesas";
 
@@ -91,14 +128,6 @@ public class MesaController {
 		return "redirect:/mesas/"+idNegocio;
 	}
 	
-	@GetMapping("/mesaPendiente/{idNegocio}/{idMesa}")
-	public String mesaPendiente(@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value="idMesa") Long idMesa, Model model) {
-					
-		Mesa mesa = mesaService.findById(idMesa);
-		mesaService.actualizarEstado(mesa, idNegocio, Estado.PENDIENTE);
-		
-		return "redirect:/mesas/"+idNegocio;
-	}
 	
 	@GetMapping("/eliminarMesa/{idNegocio}/{idMesa}")
 	public String eliminarMesa(@PathVariable(value = "idMesa") Long idMesa,
@@ -110,6 +139,37 @@ public class MesaController {
 		
 		return "redirect:/mesas/"+idNegocio;
 
+	}
+	
+	@GetMapping("/solicitar/{idNegocio}/{idMesa}")
+	public String solicitarMesa(@PathVariable(value = "idMesa") Long idMesa,
+			@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
+
+		if(usuarioActual().getMesa()==null) {
+		Mesa mesa = mesaService.findById(idMesa);
+		mesaService.actualizarEstado(mesa, idNegocio, Estado.PENDIENTE);
+		usuarioActual().setMesa(mesa.getCodigo());
+		userService.save(usuarioActual());
+		}else {
+			return "redirect:/mesas/libres/"+idNegocio;
+		}
+		
+		return "redirect:/listarProductos/"+idNegocio;
+
+	}
+	
+	public Usuario usuarioActual() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserDetails userDetails = null;
+		Usuario user = null;
+		if (principal instanceof UserDetails) {
+			userDetails = (UserDetails) principal;
+			String userName = userDetails.getUsername();
+			user = this.userService.findByUsername(userName);
+		} else {
+			user = null;
+		}
+		return user;
 	}
 
 }

@@ -80,9 +80,21 @@ public class Usuario implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private List<Negocio> negocios;
     
+    private String mesa;
+    
     private String permiso;
+    
+    
 	
-	 public String getPermisos() {
+	 public String getMesa() {
+		return mesa;
+	}
+
+	public void setMesa(String mesa) {
+		this.mesa = mesa;
+	}
+
+	public String getPermisos() {
 		return permiso;
 	}
 
