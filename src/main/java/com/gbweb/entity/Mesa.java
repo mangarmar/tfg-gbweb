@@ -1,11 +1,14 @@
 package com.gbweb.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -15,7 +18,7 @@ import com.gbweb.enums.Tipo;
 
 @Entity
 @Table(name = "mesas")
-public class Mesa {
+public class Mesa implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -32,6 +35,8 @@ public class Mesa {
 	@ManyToOne
     @JoinColumn(name="negocio_id", nullable=false)
     private Negocio negocio;
+	
+	
 
 	public Long getId() {
 		return id;

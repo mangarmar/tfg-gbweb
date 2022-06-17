@@ -56,9 +56,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/resources/**", "/webjars/**", "/h2-console/**").permitAll()
 				.antMatchers("/crearCliente", "/crearGerente/**").permitAll()
 				.antMatchers("/crearNegocio/**","/editarNegocio/**", "/crearProducto/**",
-						"/añadirProducto/**", "/eliminarProducto/**", "/editarProducto/**", "/cambiarVisibilidad/**", "/añadirMesa/**", "/mesas/**").hasAuthority("GERENTE")
+						"/añadirProducto/**", "/eliminarProducto/**", "/editarProducto/**", "/cambiarVisibilidad/**", "/añadirMesa/**", "/mesas/**", "/mesas/mesaOcupada/**").hasAuthority("GERENTE")
 				.antMatchers("/confirmarMesa/**", "/mesas/**").hasAnyAuthority("CLIENTE", "GERENTE", "CLIENTE_CONFIRMADO")
 				.antMatchers("/salir/**").hasAuthority("CLIENTE_CONFIRMADO")
+				.antMatchers("/pedir/**").hasAuthority("CLIENTE")
 				.antMatchers("/images/**").anonymous()
 				.antMatchers("/listarNegocios/**", "/listarProductos/**").permitAll()
 				.antMatchers("/").permitAll().anyRequest().denyAll()

@@ -29,6 +29,7 @@ import com.gbweb.entity.Producto;
 import com.gbweb.entity.Usuario;
 import com.gbweb.enums.ROL;
 import com.gbweb.enums.TipoProducto;
+import com.gbweb.service.MesaService;
 import com.gbweb.service.NegocioService;
 import com.gbweb.service.ProductoService;
 import com.gbweb.service.UserService;
@@ -41,6 +42,10 @@ public class ProductoController {
 
 	@Autowired
 	NegocioService negocioService;
+	
+	@Autowired
+	MesaService mesaService;
+	
 	
 	@Autowired
 	UserService userService;
@@ -70,8 +75,8 @@ public class ProductoController {
 
 	}
 	
-	@RequestMapping("/listarProductos/{idNegocio}/mesa/{idMesa}")
-	public String listarProductosParaPedir(@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") String idMesa,
+	@RequestMapping("/pedir/{idNegocio}/mesa/{idMesa}")
+	public String listarProductosParaPedir(@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") Long idMesa,
 			Model model) {
 		List<Producto> productos = negocioService.findNegocioById(idNegocio).getProductos();
 		List<Producto> refrescos = productos.stream().filter(x->x.getTipo() ==  TipoProducto.Refresco).collect(Collectors.toList());
@@ -90,8 +95,15 @@ public class ProductoController {
 		model.addAttribute("media", media);
 		model.addAttribute("tapa", tapa);
 		model.addAttribute("snack", snack);
+		model.addAttribute("usuario", usuarioActual());
+		model.addAttribute("codigoMesa", mesaService.findById(idMesa).getCodigo());
+		model.addAttribute("idNegocio", idNegocio);
+		
+		System.out.println(usuarioActual().getMesa());
+		System.out.println(mesaService.findById(idMesa).getCodigo());
 
-		return "producto/listaProductos";
+
+		return "producto/carta";
 
 	}
 

@@ -80,17 +80,18 @@ public class Usuario implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
     private List<Negocio> negocios;
     
-    private String mesa;
-    
+
     private String permiso;
     
+    @OneToOne
+    @JoinColumn(name="codigo_mesa", referencedColumnName = "codigo")
+    private Mesa mesa;
     
-	
-	 public String getMesa() {
+	 public Mesa getMesa() {
 		return mesa;
 	}
 
-	public void setMesa(String mesa) {
+	public void setMesa(Mesa mesa) {
 		this.mesa = mesa;
 	}
 

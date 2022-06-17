@@ -1,11 +1,17 @@
 package com.gbweb.controller;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -73,8 +79,7 @@ public class MesaController {
 		Negocio negocio = negocioService.findNegocioById(idNegocio);
 		List<Mesa> mesas = negocio.getMesas();
 		Usuario usuario = usuarioActual();
-		System.out.println(usuario.getMesa());
-		Mesa mesa = mesas.stream().filter(x->x.getCodigo().equals(usuario.getMesa())).findFirst().get();
+		Mesa mesa = mesas.stream().filter(x->x.getCodigo().equals(usuario.getMesa().getCodigo())).findFirst().get();
 		model.addAttribute("nombreNegocio", negocio.getNombre());
 		model.addAttribute("idNegocio", idNegocio);
 		model.addAttribute("mesas", mesa);
@@ -121,8 +126,14 @@ public class MesaController {
 	
 	@GetMapping("/mesaOcupada/{idNegocio}/{idMesa}")
 	public String mesaOcupada(@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value="idMesa") Long idMesa, Model model) {
-					
+		
 		Mesa mesa = mesaService.findById(idMesa);
+		Usuario user = userService.findAllUsers().stream().filter(x->x.getMesa()!=null).filter(x->x.getMesa().getCodigo().equals(mesa.getCodigo())).findFirst().get();
+		
+		user.setPermisos("Aceptado");
+		userService.save(usuarioActual());
+		
+		mesa.setNegocio(negocioService.findNegocioById(idNegocio));
 		mesaService.actualizarEstado(mesa, idNegocio, Estado.OCUPADA);
 		
 		return "redirect:/mesas/"+idNegocio;
@@ -148,7 +159,7 @@ public class MesaController {
 		if(usuarioActual().getMesa()==null) {
 		Mesa mesa = mesaService.findById(idMesa);
 		mesaService.actualizarEstado(mesa, idNegocio, Estado.PENDIENTE);
-		usuarioActual().setMesa(mesa.getCodigo());
+		usuarioActual().setMesa(mesa);
 		userService.save(usuarioActual());
 		}else {
 			return "redirect:/mesas/libres/"+idNegocio;

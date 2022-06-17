@@ -1,10 +1,10 @@
 
 
-INSERT INTO `usuarios` VALUES (100000,'gerentes','calle gerente','12345678G','gerente@gerente.com','1999-07-18',null,'gerente','$2a$12$Bzs5tApq5iEJ9sVdt1mjy.zSiEUODsKajscptpMoISNpesaVAt6bG',null,'GERENTE','gerente');
+INSERT INTO `usuarios` VALUES (100000,'gerentes','calle gerente','12345678G','gerente@gerente.com','1999-07-18','gerente','$2a$12$Bzs5tApq5iEJ9sVdt1mjy.zSiEUODsKajscptpMoISNpesaVAt6bG',null,'GERENTE','gerente',null);
 
-INSERT INTO `usuarios` VALUES (100001,'García Marchena','C/Prim 26','21150678Q','manuelgarciamarchena99@gmail.com','1999-07-18',null,'Manuel','$2a$12$LuaWW0lIg6gR7Me2DGWTn.pZXClrE/j5OqgouV4Dv8o4sDClPP.dG',null,'CLIENTE','mangarmar17');
+INSERT INTO `usuarios` VALUES (100001,'García Marchena','C/Prim 26','21150678Q','manuelgarciamarchena99@gmail.com','1999-07-18','Manuel','$2a$12$LuaWW0lIg6gR7Me2DGWTn.pZXClrE/j5OqgouV4Dv8o4sDClPP.dG',null,'CLIENTE','mangarmar17',null);
 
-INSERT INTO `usuarios` VALUES (100002,'García','C/Prim 26','21150678Q','manuelgarciamarchena@gmail.com','1999-07-18',null,'Manuel','$2a$12$LuaWW0lIg6gR7Me2DGWTn.pZXClrE/j5OqgouV4Dv8o4sDClPP.dG',null,'CLIENTE_CONFIRMADO','mangarmar');
+INSERT INTO `usuarios` VALUES (100002,'García','C/Prim 26','21150678Q','manuelgarciamarchena@gmail.com','1999-07-18','Manuel','$2a$12$LuaWW0lIg6gR7Me2DGWTn.pZXClrE/j5OqgouV4Dv8o4sDClPP.dG',null,'CLIENTE_CONFIRMADO','mangarmar',null);
 
 INSERT INTO `negocios` VALUES (100000,'100','A12345678','Bar cafetería donde encontrarás un buen ambiente cofrade','forum@gmail.com','/resources/static/images/cafeteria-forum.png','Plz San Fernando','Forum',1, 100000);
 
