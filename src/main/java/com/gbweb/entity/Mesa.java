@@ -1,6 +1,7 @@
 package com.gbweb.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
@@ -36,7 +38,16 @@ public class Mesa implements Serializable {
     @JoinColumn(name="negocio_id", nullable=false)
     private Negocio negocio;
 	
-	
+    @OneToMany(mappedBy="mesa")
+    private List<Pedido> pedidos;
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
 
 	public Long getId() {
 		return id;

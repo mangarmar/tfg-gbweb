@@ -35,9 +35,21 @@ public class Producto {
 	
 	private Boolean visibilidad;
 	
+	@ManyToMany(mappedBy = "productos")
+	private List<Pedido> pedidos;
 	
 	@ManyToMany(mappedBy = "productos")
 	private List<Negocio> negocios;
+
+	
+	
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
 
 	public Long getId() {
 		return id;

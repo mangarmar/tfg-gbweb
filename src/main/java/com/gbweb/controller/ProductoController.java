@@ -24,13 +24,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.gbweb.entity.Mesa;
 import com.gbweb.entity.Negocio;
+import com.gbweb.entity.Pedido;
 import com.gbweb.entity.Producto;
 import com.gbweb.entity.Usuario;
+import com.gbweb.enums.EstadoPedido;
 import com.gbweb.enums.ROL;
 import com.gbweb.enums.TipoProducto;
 import com.gbweb.service.MesaService;
 import com.gbweb.service.NegocioService;
+import com.gbweb.service.PedidoService;
 import com.gbweb.service.ProductoService;
 import com.gbweb.service.UserService;
 
@@ -46,9 +50,11 @@ public class ProductoController {
 	@Autowired
 	MesaService mesaService;
 	
-	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	PedidoService pedidoService;
 
 	@RequestMapping("/listarProductos/{idNegocio}")
 	public String listarProductos(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
@@ -86,7 +92,15 @@ public class ProductoController {
 		List<Producto> tapa =  productos.stream().filter(x->x.getTipo() ==  TipoProducto.Tapa).collect(Collectors.toList());
 		List<Producto> snack =  productos.stream().filter(x->x.getTipo() ==  TipoProducto.Snack).collect(Collectors.toList());
 
+		Mesa mesa = mesaService.findById(idMesa);
+		boolean pedidoActivo = mesa.getPedidos().stream().anyMatch(x->x.getEstadoPedido().equals(EstadoPedido.ACTIVO));
 		
+		if(pedidoActivo==false) {
+			Pedido pedido = new Pedido();
+			pedido.setEstadoPedido(EstadoPedido.ACTIVO);
+			pedido.setMesa(mesaService.findById(idMesa));
+			pedidoService.nuevoPedido(pedido);
+		}
 		model.addAttribute("nombreNegocio", negocioService.findNegocioById(idNegocio).getNombre());
 		model.addAttribute("idNegocio", idNegocio);
 		model.addAttribute("refrescos", refrescos);
@@ -98,6 +112,7 @@ public class ProductoController {
 		model.addAttribute("usuario", usuarioActual());
 		model.addAttribute("codigoMesa", mesaService.findById(idMesa).getCodigo());
 		model.addAttribute("idNegocio", idNegocio);
+		
 		
 		System.out.println(usuarioActual().getMesa());
 		System.out.println(mesaService.findById(idMesa).getCodigo());
@@ -130,6 +145,25 @@ public class ProductoController {
 		return "redirect:/listarProductos/"+idNegocio;
 
 	}
+	
+	@PostMapping("/añadirAlPedido/pedir/{idNegocio}/mesa/{idMesa}/producto/{idProducto}")
+	public String añadirAlPedido(@Valid @ModelAttribute("cantidad") Long cantidad, @PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") Long idMesa,
+			@PathVariable(value = "idProducto") Long idProducto,Model model) {
+		
+		Pedido pedido = mesaService.findById(idMesa).getPedidos().stream().filter(x->x.getEstadoPedido().equals(EstadoPedido.ACTIVO)).findFirst().orElse(null);
+		Producto producto = productoService.findById(idProducto);
+		
+		if(pedido != null) {
+			for (int i = 0; i < cantidad; i++) {
+				pedido.getProductos().add(producto);
+			}	
+			pedidoService.nuevoPedido(pedido);
+		}
+		
+		return "redirect:/pedir/"+idNegocio+"/mesa/"+idMesa;
+
+	}
+		
 
 	@GetMapping("/eliminarProducto/{idNegocio}/{idProducto}")
 	public String eliminarProducto(@PathVariable(value = "idProducto") Long idProducto,
@@ -202,7 +236,8 @@ public class ProductoController {
 		return user;
 	}
 	
-		
+	
+
 
 
 }
