@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gbweb.enums.TipoProducto;
 
 
@@ -39,6 +40,7 @@ public class Producto {
 	private List<Pedido> pedidos;
 	
 	@ManyToMany(mappedBy = "productos")
+	@JsonIgnore
 	private List<Negocio> negocios;
 
 	

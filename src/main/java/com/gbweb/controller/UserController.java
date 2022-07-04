@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gbweb.service.UserService;
 import com.gbweb.entity.Usuario;
+import com.gbweb.enums.ROL;
 
 @Controller
 public class UserController {
@@ -29,7 +30,15 @@ public class UserController {
 
 	@GetMapping("/")
 	public String index() {
-		return "inicio/index";
+		
+		Usuario user = usuarioActual();
+		
+		if(user == null || user.getRol().toString() == ROL.CLIENTE.toString()) {
+			return "negocio/listaNegociosClientes";
+		}else {
+			return "negocio/listaNegocios";
+		}
+		
 	}
 
 	@GetMapping("/crearCliente")

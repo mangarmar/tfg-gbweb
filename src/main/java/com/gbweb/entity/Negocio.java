@@ -20,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gbweb.enums.Tipo;
 
 @Entity
@@ -59,17 +60,29 @@ public class Negocio {
 	private String cif;
 	
 	@NotEmpty(message = "Introduzca la localizacion de su negocio")
-	private String localizacion;
+	private String calle;
+	
+	@NotEmpty(message = "Introduzca el numero de su dirección")
+	private String numero;
+	
+	@NotEmpty(message = "Introduzca la ciudad")
+	private String ciudad;
+	
+	@NotEmpty(message = "Introduzca la provincia")
+	private String provincia;
 	
 	@ManyToOne()
+	@JsonIgnore
 	@JoinColumn(name = "usuario_id")
     private Usuario usuario;
 	
 	@JoinTable(name = "prodNeg", joinColumns = @JoinColumn(name = "idNegocio"), inverseJoinColumns = @JoinColumn(name = "idProducto"))
+	@JsonIgnore
 	@ManyToMany()
 	private List<Producto> productos;
 	
     @OneToMany(mappedBy="negocio")
+    @JsonIgnore
     private List<Mesa> mesas;
 
     
@@ -112,14 +125,6 @@ public class Negocio {
 
 	public void setCif(String cif) {
 		this.cif = cif;
-	}
-
-	public String getLocalizacion() {
-		return localizacion;
-	}
-
-	public void setLocalizacion(String localizacion) {
-		this.localizacion = localizacion;
 	}
 
 	public Usuario getUsuario() {
@@ -168,6 +173,38 @@ public class Negocio {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getCalle() {
+		return calle;
+	}
+
+	public void setCalle(String calle) {
+		this.calle = calle;
+	}
+
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+	public String getCiudad() {
+		return ciudad;
+	}
+
+	public void setCiudad(String ciudad) {
+		this.ciudad = ciudad;
+	}
+
+	public String getProvincia() {
+		return provincia;
+	}
+
+	public void setProvincia(String provincia) {
+		this.provincia = provincia;
 	}
 	
 	

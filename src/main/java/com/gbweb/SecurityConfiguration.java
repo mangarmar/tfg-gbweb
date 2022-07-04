@@ -62,17 +62,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/pedir/**", "/añadirAlPedido/**").hasAuthority("CLIENTE")
 				.antMatchers("/images/**").anonymous()
 				.antMatchers("/listarNegocios/**", "/listarProductos/**").permitAll()
-				.antMatchers("/").permitAll().anyRequest().denyAll()
-		          .and()
+				.antMatchers("/").permitAll().anyRequest().permitAll()
+		        .and()
 	              .formLogin()
 	              .loginPage("/login")
 	              .defaultSuccessUrl("/listarNegocios").permitAll()
-	              .failureUrl("/login?error").permitAll()
-	      .and().logout()
-	              .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-	              .logoutSuccessUrl("/login?logout")
-	              .deleteCookies("JSESSIONID")
-	              .invalidateHttpSession(true).permitAll();
+					.failureUrl("/login").and().logout().logoutSuccessUrl("/login");
+
+			http.csrf().disable();
 			
 
 	}

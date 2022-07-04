@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gbweb.enums.Estado;
 import com.gbweb.enums.Tipo;
 
@@ -35,6 +36,7 @@ public class Mesa implements Serializable {
 	private Estado estado;
 	
 	@ManyToOne
+	@JsonIgnore
     @JoinColumn(name="negocio_id", nullable=false)
     private Negocio negocio;
 	

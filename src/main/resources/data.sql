@@ -4,9 +4,8 @@ INSERT INTO `usuarios` VALUES (100000,'gerentes','calle gerente','12345678G','ge
 
 INSERT INTO `usuarios` VALUES (100001,'García Marchena','C/Prim 26','21150678Q','manuelgarciamarchena99@gmail.com','1999-07-18','Manuel','$2a$12$LuaWW0lIg6gR7Me2DGWTn.pZXClrE/j5OqgouV4Dv8o4sDClPP.dG',null,'CLIENTE','mangarmar17',null);
 
-INSERT INTO `usuarios` VALUES (100002,'García','C/Prim 26','21150678Q','manuelgarciamarchena@gmail.com','1999-07-18','Manuel','$2a$12$LuaWW0lIg6gR7Me2DGWTn.pZXClrE/j5OqgouV4Dv8o4sDClPP.dG',null,'CLIENTE_CONFIRMADO','mangarmar',null);
 
-INSERT INTO `negocios` VALUES (100000,'100','A12345678','Bar cafetería donde encontrarás un buen ambiente cofrade','forum@gmail.com','/resources/static/images/cafeteria-forum.png','Plz San Fernando','Forum',1, 100000);
+INSERT INTO `negocios` VALUES (100000,'Calle Prim','100','A12345678','Carmona','Bar cafetería donde encontrarás un buen ambiente cofrade','forum@gmail.com','/resources/static/images/cafeteria-forum.png','Forum','26','Sevilla',1, 100000);
 
 INSERT INTO `productos` VALUES (100000, 'Botellin de Cerveza', 1.00, '0',1), (100001,  'Fanta de naranja', 1.80, '1', 1), (100002,  'Fanta de limón', 1.80, '1',1)
 								,(100003,  'Gintonic', 5.00, '0',1),(100004,  'Ron Cola', 5.00, '0',1),(100005,  'Solomillo Whisky', 6.00, '2',1),(100006,  'Montadito de Filete', 2.50, '2',1)

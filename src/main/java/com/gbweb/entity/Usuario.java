@@ -29,7 +29,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gbweb.enums.ROL;
 
 @Entity
@@ -78,6 +78,7 @@ public class Usuario implements UserDetails {
 	private ROL rol;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+    @JsonIgnore
     private List<Negocio> negocios;
     
 

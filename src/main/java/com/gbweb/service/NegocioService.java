@@ -1,16 +1,22 @@
 package com.gbweb.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.gbweb.entity.Localizacion;
 import com.gbweb.entity.Negocio;
 import com.gbweb.entity.Usuario;
 import com.gbweb.repository.NegocioRepository;
@@ -19,11 +25,19 @@ import com.gbweb.repository.UserRepository;
 @Service
 public class NegocioService {
 	
+	@Autowired
+	private RestTemplate restTemplate;
+	
 	@Autowired 
 	NegocioRepository negocioRepo;
 	
 	@Autowired
 	UserService userService;
+	
+	@Bean
+	public RestTemplate restTemplate(RestTemplateBuilder builder) {
+	    return builder.build();
+	}
 
 	public Usuario usuarioActual() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -54,7 +68,10 @@ public class NegocioService {
 		negocioAct.setCif(negocio.getCif());
 		negocioAct.setDescripcion(negocio.getDescripcion());
 		negocioAct.setEmail(negocio.getEmail());
-		negocioAct.setLocalizacion(negocio.getLocalizacion());
+		negocioAct.setCalle(negocio.getCalle());
+		negocioAct.setNumero(negocio.getNumero());
+		negocioAct.setCiudad(negocio.getCiudad());
+		negocioAct.setProvincia(negocio.getProvincia());
 		negocioAct.setNombre(negocio.getNombre());
 		negocioAct.setProductos(negocio.getProductos());
 		negocioAct.setTipo(negocio.getTipo());
@@ -75,6 +92,7 @@ public class NegocioService {
 	}
 	
 	public List<Negocio> findAll(){
-		return (List<Negocio>) negocioRepo.findAll();
+		return negocioRepo.findAll();
 	}
+
 }

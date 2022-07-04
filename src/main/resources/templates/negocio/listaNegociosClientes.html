@@ -42,10 +42,29 @@
 		    initialZoomLevel: 17
 		}).addTo(map);
 		
+		L.marker([37.47254112573115, -5.638665440677341],{draggable: false}).addTo(map);
+
+		
 		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-		maxZoom: 18
+		maxZoom: 7
 		}).addTo(map);
+		
+		let geojson_url = "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_geography_regions_points.geojson";
+		
+		fetch(
+				geojson_url
+			).then(
+				res => res.json()
+			).then(
+				data => {
+				let geojsonlayer = L.geoJson(data,{
+					onEachFeature: function(feature, layer){
+						layer.bindPopup(layer.feature.properties.name+'<br><br><br>'+'<a href="/listarProductos/'+layer.feature.properties.name+'"><button class="center-button">Ver carta</button></a>')
+					}
+				}).addTo(map)
+				}  
+			)
 	</script>
 
 	

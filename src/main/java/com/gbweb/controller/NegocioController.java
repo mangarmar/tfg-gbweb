@@ -1,13 +1,19 @@
 package com.gbweb.controller;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,9 +28,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.gbweb.entity.Localizacion;
 import com.gbweb.entity.Mesa;
 import com.gbweb.entity.Negocio;
 import com.gbweb.entity.Usuario;
@@ -33,6 +41,7 @@ import com.gbweb.enums.ROL;
 import com.gbweb.service.MesaService;
 import com.gbweb.service.NegocioService;
 import com.gbweb.service.UserService;
+
 
 
 
@@ -51,6 +60,9 @@ public class NegocioController {
 	@Autowired
 	ProductoController productoController;
 	
+	
+
+	
 	@GetMapping("/crearNegocio")
 	public String crearNegocio(Model model) {
 		model.addAttribute("negocio", new Negocio());
@@ -68,13 +80,14 @@ public class NegocioController {
 		} else {
 			
 			negocioService.creaNegocio(negocio);
-			
+		
 		}
 		redirectAttributes.addFlashAttribute("alert", 11);
 		return "redirect:";
 
 
 	}
+	
 	
 	@GetMapping("/editarNegocio/{idNegocio}")
 	public String editarNegocio(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
@@ -107,7 +120,7 @@ public class NegocioController {
 			List<Negocio> negocios = negocioService.findAll();
 			model.addAttribute("negocios", negocios);
 			return "negocio/listaNegociosClientes";
-		}else if(usuarioActual().getRol().equals(ROL.CLIENTE_CONFIRMADO) ||usuarioActual().getRol().equals(ROL.CLIENTE) || usuarioActual().getRol().equals(ROL.ADMIN)) {
+		}else if(usuarioActual().getRol().equals(ROL.CLIENTE) || usuarioActual().getRol().equals(ROL.ADMIN)) {
 			List<Negocio> negocios = negocioService.findAll();
 			model.addAttribute("negocios", negocios);
 			return "negocio/listaNegociosClientes";
