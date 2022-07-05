@@ -31,9 +31,17 @@
 		<input th:field="*{email}" type="text" class="controls" placeholder="Correo electrónico" name="email" />
 		<p class="alert alert-danger" role="alert" th:errors="*{email}"></p>
 		
-		<input th:field="*{localizacion}" type="text" class="controls" placeholder="Localización" name="localizacion" />
-		<p class="alert alert-danger" role="alert" th:errors="*{localizacion}"></p>
+		<input th:field="*{calle}" type="text" class="controls" placeholder="Calle" name="calle" />
+		<p class="alert alert-danger" role="alert" th:errors="*{calle}"></p>
 		
+		<input th:field="*{numero}" type="text" class="controls" placeholder="Numero" name="numero" />
+		<p class="alert alert-danger" role="alert" th:errors="*{numero}"></p>
+
+		<input th:field="*{ciudad}" type="text" class="controls" placeholder="Ciudad" name="ciudad" />
+		<p class="alert alert-danger" role="alert" th:errors="*{ciudad}"></p>
+		
+		<input th:field="*{provincia}" type="text" class="controls" placeholder="Provincia" name="provincia" />
+		<p class="alert alert-danger" role="alert" th:errors="*{provincia}"></p>		
 		<select th:field="*{tipo}" class="controls">
     		<option th:value="RESTAURANTE" th:text="Restaurante"></option>
     		<option th:value="BAR" th:text="Bar"></option>
@@ -41,7 +49,6 @@
 		
 		
 		<button type="submit" class="buttons">  Guardar negocio </button>
-
 	</form>
 
 

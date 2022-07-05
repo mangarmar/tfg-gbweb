@@ -30,15 +30,7 @@ public class UserController {
 
 	@GetMapping("/")
 	public String index() {
-		
-		Usuario user = usuarioActual();
-		
-		if(user == null || user.getRol().toString() == ROL.CLIENTE.toString()) {
-			return "negocio/listaNegociosClientes";
-		}else {
-			return "negocio/listaNegocios";
-		}
-		
+		return "negocio/listaNegociosClientes";	
 	}
 
 	@GetMapping("/crearCliente")

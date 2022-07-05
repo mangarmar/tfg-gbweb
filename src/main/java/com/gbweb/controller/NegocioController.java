@@ -83,7 +83,7 @@ public class NegocioController {
 		
 		}
 		redirectAttributes.addFlashAttribute("alert", 11);
-		return "redirect:";
+		return "redirect:/listarNegocios";
 
 
 	}

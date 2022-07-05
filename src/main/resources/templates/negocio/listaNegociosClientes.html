@@ -42,28 +42,36 @@
 		    initialZoomLevel: 17
 		}).addTo(map);
 		
-		L.marker([37.47254112573115, -5.638665440677341],{draggable: false}).addTo(map);
-
-		
 		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-		maxZoom: 7
+		maxZoom: 18
 		}).addTo(map);
 		
-		let geojson_url = "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_geography_regions_points.geojson";
+		let geojson_url = "http://localhost:8000/api/negocios";
 		
 		fetch(
 				geojson_url
 			).then(
 				res => res.json()
 			).then(
-				data => {
-				let geojsonlayer = L.geoJson(data,{
-					onEachFeature: function(feature, layer){
-						layer.bindPopup(layer.feature.properties.name+'<br><br><br>'+'<a href="/listarProductos/'+layer.feature.properties.name+'"><button class="center-button">Ver carta</button></a>')
-					}
-				}).addTo(map)
-				}  
+				data=> {
+					   let mygeojson = {"type": "FeatureCollection", "features": []}
+
+					    for(let point of data){
+					      let coordinate = [parseFloat(point.longitud), parseFloat(point.latitud)];
+					      let properties = point;
+					      delete properties.longitude;
+					      delete properties.latitude;          
+					      let feature = {"type": "Feature", "geometry": {"type": "Point", "coordinates": coordinate}, "properties": properties}
+					      mygeojson.features.push(feature);
+					    }
+					   let geojsonlayer = L.geoJson(mygeojson,{
+							onEachFeature: function(feature, layer){
+								layer.bindPopup('<h2>'+layer.feature.properties.nombre+'</h2>'+'<br>'+'<h5>'+layer.feature.properties.descripcion+'</h5>'+'<br><br><br>'+'<a href="/listarProductos/'+layer.feature.properties.id+'"><button class="center-button">Ver carta</button></a>')
+							}
+						}).addTo(map)
+					  console.log(mygeojson);
+				}
 			)
 	</script>
 

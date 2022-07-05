@@ -57,6 +57,9 @@ public class NegocioService {
 		
 		usuarioActual().getNegocios().add(negocio);
 		negocio.setUsuario(usuarioActual());
+		Localizacion localizacion = getLocalizacion(negocio.getCalle(), negocio.getNumero(), negocio.getCiudad(), negocio.getProvincia());
+		negocio.setLatitud(localizacion.getLat());
+		negocio.setLongitud(localizacion.getLon());
 		negocioRepo.save(negocio);
 		
 	}
@@ -74,6 +77,13 @@ public class NegocioService {
 		negocioAct.setProvincia(negocio.getProvincia());
 		negocioAct.setNombre(negocio.getNombre());
 		negocioAct.setProductos(negocio.getProductos());
+		
+
+		Localizacion localizacion = getLocalizacion(negocio.getCalle(), negocio.getNumero(), negocio.getCiudad(), negocio.getProvincia());
+		System.out.println(localizacion.getLat());
+		negocioAct.setLatitud(localizacion.getLat());
+        negocioAct.setLongitud(localizacion.getLon());
+		
 		negocioAct.setTipo(negocio.getTipo());
 		negocioAct.setUsuario(usuarioActual());
 		negocioRepo.save(negocioAct);
@@ -95,4 +105,17 @@ public class NegocioService {
 		return negocioRepo.findAll();
 	}
 
+	
+    public Localizacion getLocalizacion(String calle, String numero, String ciudad, String provincia){
+        
+        String direccion = calle + "," + numero + "," + ciudad + "," + provincia;
+        System.out.println(direccion);
+        ResponseEntity<Localizacion[]> response = restTemplate.getForEntity("https://geocode.maps.co/search?q=" + direccion, Localizacion[].class);
+        Localizacion[] localizaciones = response.getBody();
+        List<Localizacion> l = Arrays.asList(localizaciones);
+        Localizacion localizacion = l.get(0);    
+        
+    return  localizacion;
+}
+    
 }
