@@ -18,7 +18,6 @@
 	<a sec:authorize="hasAuthority('GERENTE')" class="button" th:href="@{/añadirProducto/} + ${idNegocio}">Añadir producto</a>
 	<a sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/mesas/libres/} + ${idNegocio}">Mesas libres</a>
 	<a th:if="${usuario.mesa!=null}" sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/mesas/estado/} + ${idNegocio}">Mi mesa</a>
-	<a sec:authorize="hasAuthority('CLIENTE_CONFIRMADO')" class="button" th:href="@{/salir/} + ${idNegocio}">Salir</a>
 		
 	<div th:if="${snacks!=null and !snacks.isEmpty()}">
 	<br><br><br>

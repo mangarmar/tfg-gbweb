@@ -1,7 +1,10 @@
 package com.gbweb.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.gbweb.entity.LineaPedido;
 import com.gbweb.entity.Mesa;
 import com.gbweb.entity.Negocio;
 import com.gbweb.entity.Pedido;
@@ -119,6 +123,46 @@ public class ProductoController {
 
 
 		return "producto/carta";
+
+	}
+	
+	@GetMapping("/pedido/negocio/{idNegocio}/mesa/{idMesa}")
+	public String listarPedido(@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") Long idMesa,
+			Model model) {
+		Pedido pedidoActivo = mesaService.findById(idMesa).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
+		if(pedidoActivo!=null) {
+			Double precioTotal = 0.0;
+			List<Producto> productos = pedidoActivo.getProductos();
+			Map<Producto, Integer> numeroProductos = new HashMap<>();
+			Map<Producto, Double> precioUnitario = new HashMap<>();
+			List<LineaPedido> lineaPedidos = new ArrayList<LineaPedido>();
+			for (int i = 0; i < productos.size(); i++) {
+				if(!numeroProductos.containsKey(productos.get(i))) {
+					numeroProductos.put(productos.get(i), 1);
+					precioUnitario.put(productos.get(i), productos.get(i).getPrecio());
+					precioTotal+=productos.get(i).getPrecio();
+				}else {
+					numeroProductos.put(productos.get(i), numeroProductos.get(productos.get(i))+1);
+					precioTotal+=productos.get(i).getPrecio();
+				}
+			}
+			List<Producto> listaProductos = numeroProductos.keySet().stream().collect(Collectors.toList());
+			System.out.println(listaProductos);
+			for(int j = 0; j<listaProductos.size();j++) {
+				LineaPedido lp = new LineaPedido();
+				lp.setProducto(listaProductos.get(j));
+				lp.setCantidad(numeroProductos.values().stream().collect(Collectors.toList()).get(j));
+				lp.setPrecio(listaProductos.get(j).getPrecio());
+				lineaPedidos.add(lp);
+			}
+
+			model.addAttribute("lineaPedidos", lineaPedidos);
+			model.addAttribute("precioTotal", precioTotal);
+		} else {
+			System.out.println("TONTO");
+		}
+
+		return "negocio/listaNegociosClienteV2";
 
 	}
 

@@ -1,6 +1,7 @@
 package com.gbweb.entity;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,7 +21,7 @@ import com.gbweb.enums.TipoProducto;
 
 @Entity
 @Table(name = "productos")
-public class Producto {
+public class Producto implements Comparable<Producto> {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -99,6 +100,29 @@ public class Producto {
 
 	public void setVisibilidad(Boolean visibilidad) {
 		this.visibilidad = visibilidad;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(nombre);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Producto other = (Producto) obj;
+		return Objects.equals(nombre, other.nombre);
+	}
+
+	@Override
+	public int compareTo(Producto o) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 
