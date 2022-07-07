@@ -1,5 +1,7 @@
 package com.gbweb.service;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,12 @@ public class PedidoService {
 	PedidoRepository pedidoRepo;
 	
 	public void nuevoPedido(@Valid Pedido pedido) {
+		pedidoRepo.save(pedido);
+	}
+	
+	public void borrarProductosPedido(List<Producto> productos, Long idPedido) {
+		Pedido pedido = pedidoRepo.findById(idPedido).get();
+		pedido.getProductos().clear();
 		pedidoRepo.save(pedido);
 	}
 	

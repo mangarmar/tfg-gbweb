@@ -11,8 +11,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gbweb.enums.EstadoPedido;
 
 @Entity
@@ -35,8 +37,21 @@ public class Pedido implements Serializable {
     private Mesa mesa;
 		
 	private EstadoPedido estadoPedido;
+	
+	@OneToMany(mappedBy="pedido")
+    private List<LineaPedido> lineaPedidos;
 
 	
+	
+	
+	public List<LineaPedido> getLineaPedidos() {
+		return lineaPedidos;
+	}
+
+	public void setLineaPedidos(List<LineaPedido> lineaPedidos) {
+		this.lineaPedidos = lineaPedidos;
+	}
+
 	public Long getId() {
 		return id;
 	}

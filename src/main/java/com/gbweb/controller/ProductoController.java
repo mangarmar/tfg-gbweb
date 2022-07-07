@@ -3,6 +3,7 @@ package com.gbweb.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +37,7 @@ import com.gbweb.entity.Usuario;
 import com.gbweb.enums.EstadoPedido;
 import com.gbweb.enums.ROL;
 import com.gbweb.enums.TipoProducto;
+import com.gbweb.service.LineaPedidoService;
 import com.gbweb.service.MesaService;
 import com.gbweb.service.NegocioService;
 import com.gbweb.service.PedidoService;
@@ -44,6 +46,9 @@ import com.gbweb.service.UserService;
 
 @Controller
 public class ProductoController {
+	
+	@Autowired
+	LineaPedidoService lineaPedidoService;
 
 	@Autowired
 	ProductoService productoService;
@@ -131,15 +136,14 @@ public class ProductoController {
 			Model model) {
 		Pedido pedidoActivo = mesaService.findById(idMesa).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
 		if(pedidoActivo!=null) {
+			lineaPedidoService.borraTodosNoConfirmadosPorPedido(pedidoActivo);
 			Double precioTotal = 0.0;
 			List<Producto> productos = pedidoActivo.getProductos();
 			Map<Producto, Integer> numeroProductos = new HashMap<>();
-			Map<Producto, Double> precioUnitario = new HashMap<>();
 			List<LineaPedido> lineaPedidos = new ArrayList<LineaPedido>();
 			for (int i = 0; i < productos.size(); i++) {
 				if(!numeroProductos.containsKey(productos.get(i))) {
 					numeroProductos.put(productos.get(i), 1);
-					precioUnitario.put(productos.get(i), productos.get(i).getPrecio());
 					precioTotal+=productos.get(i).getPrecio();
 				}else {
 					numeroProductos.put(productos.get(i), numeroProductos.get(productos.get(i))+1);
@@ -150,22 +154,71 @@ public class ProductoController {
 			System.out.println(listaProductos);
 			for(int j = 0; j<listaProductos.size();j++) {
 				LineaPedido lp = new LineaPedido();
-				lp.setProducto(listaProductos.get(j));
+				lp.setNombre(listaProductos.get(j).getNombre());
 				lp.setCantidad(numeroProductos.values().stream().collect(Collectors.toList()).get(j));
 				lp.setPrecio(listaProductos.get(j).getPrecio());
+				lp.setPedido(pedidoActivo);
 				lineaPedidos.add(lp);
+				lineaPedidoService.save(lp);
 			}
 
 			model.addAttribute("lineaPedidos", lineaPedidos);
 			model.addAttribute("precioTotal", precioTotal);
 		} else {
-			System.out.println("TONTO");
+		//	System.out.println("TONTO");
 		}
-
-		return "negocio/listaNegociosClienteV2";
-
+		return "negocio/comanda";
+	}
+	
+	@GetMapping("/pedido/confirmar/negocio/{idNegocio}/mesa/{idMesa}")
+	public String confirmarComanda(@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") Long idMesa,
+			Model model) {
+		Pedido pedidoActivo = mesaService.findById(idMesa).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
+		List<LineaPedido> lineaPedidos= lineaPedidoService.findTodosPorPedido(pedidoActivo);
+		List<LineaPedido> comanda = new ArrayList<LineaPedido>();
+		for (int i = 0; i < lineaPedidos.size(); i++) {
+			Boolean servido = lineaPedidos.get(i).getServido();
+			if(servido == null) {
+				comanda.add(lineaPedidos.get(i));
+				lineaPedidos.get(i).setServido(false);
+				lineaPedidoService.save(lineaPedidos.get(i));
+			}
+		}
+		pedidoService.borrarProductosPedido(pedidoActivo.getProductos(), pedidoActivo.getId());
+		model.addAttribute("idMesa", idMesa);
+		return "negocio/comanda";
 	}
 
+	@RequestMapping("/pedido/cuenta/{idNegocio}/mesa/{idMesa}")
+	public String cuenta(@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") Long idMesa,
+			Model model) {
+		
+		Pedido pedidoActivo = mesaService.findById(idMesa).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
+		List<LineaPedido> lineaPedidos = pedidoActivo.getLineaPedidos();
+		List<LineaPedido> productos = new ArrayList<LineaPedido>();
+		Double precioTotal = 0.0;
+		
+		for(int i = 0; i<lineaPedidos.size();i++){
+			LineaPedido lp = lineaPedidos.get(i);
+			if(lp.getServido()!=null) {
+				precioTotal+=lineaPedidos.get(i).getPrecio()*lineaPedidos.get(i).getCantidad();
+				productos.add(lp);
+			}
+		}
+		
+		model.addAttribute("nombreNegocio", negocioService.findNegocioById(idNegocio).getNombre());
+		model.addAttribute("productos", productos);
+		model.addAttribute("precioTotal", precioTotal);
+		model.addAttribute("usuario", usuarioActual());
+		model.addAttribute("idNegocio", idNegocio);
+		
+
+
+		return "negocio/cuenta";
+
+	}
+	
+	
 	@RequestMapping("/añadirProducto/{idNegocio}")
 	public String añadirProducto(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
 		model.addAttribute("idNegocio", idNegocio);
