@@ -51,6 +51,10 @@ public class LineaPedidoService {
 		 return lps.stream().filter(x->x.getPedido().equals(pedidoActivo)).collect(Collectors.toList());
 	}
 	
+	public LineaPedido findById(Long idProducto) {
+		return lineaPedidoRepo.findById(idProducto).orElse(null);
+	}
+	
 	
 	
 

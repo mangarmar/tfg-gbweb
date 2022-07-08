@@ -83,6 +83,10 @@ public class Mesa implements Serializable {
 		this.negocio = negocio;
 	}
 	
-	
+	public int compareTo(Mesa o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 
 }

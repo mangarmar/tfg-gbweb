@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.gbweb.entity.LineaPedido;
@@ -218,6 +219,20 @@ public class ProductoController {
 
 	}
 	
+	
+	@RequestMapping("/pedido/servir/{idNegocio}/{idMesa}/{idProducto}")
+	public String servirProducto(@PathVariable(value = "idProducto") Long idProducto,@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") Long idMesa,
+			Model model) {
+		
+		LineaPedido lp = lineaPedidoService.findById(idProducto);
+		lp.setServido(true);
+		lineaPedidoService.save(lp);
+
+
+		
+		return "redirect:/mesas/pedido/"+idNegocio+"/"+idMesa;
+
+	}
 	
 	@RequestMapping("/añadirProducto/{idNegocio}")
 	public String añadirProducto(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {

@@ -18,32 +18,43 @@
 	<a class="back-button" th:href="@{/listarNegocios}">Volver</a>
 	<a sec:authorize="hasAuthority('GERENTE')" class="button" th:href="@{/mesas/añadirMesa/} + ${idNegocio}">Añadir
 		mesa</a>
+		
+		
 
 	<table id="customers">
 		<tr>
 			<th>Código</th>
 			<th>Estado</th>
 			<th sec:authorize="hasAuthority('GERENTE')">Cambiar estado</th>
+			<th sec:authorize="hasAuthority('GERENTE')">Pedidos actuales</th>
 			<th sec:authorize="hasAuthority('GERENTE')">Otros</th>
 			<th sec:authorize="hasAuthority('CLIENTE')">Opciones</th>
 		</tr>
-		<tr th:each="mesa : ${mesas}">
-			<td th:text="${mesa.codigo}"></td>
-			<td th:text="${mesa.estado}"></td>
+		<tr th:each="mesa : ${pedidosPorMesa}">
+			<td th:text="${mesa.key.codigo}"></td>
+			
+			<td th:text="${mesa.key.estado}"></td>
+			
 			<td sec:authorize="hasAuthority('GERENTE')">
-				<a th:if="${mesa.estado.toString()}=='OCUPADA' or ${mesa.estado.toString()}=='PENDIENTE'" class=center-button
-				th:href="@{/mesas/mesaLibre/} + ${idNegocio} + '/' + ${mesa.id}">Libre</a>
-				<a th:if="${mesa.estado.toString()}=='PENDIENTE'" class=center-button
-				th:href="@{/mesas/mesaOcupada/} + ${idNegocio} + '/' + ${mesa.id}">Ocupada</a></td>
+				<a th:if="${mesa.key.estado.toString()}=='OCUPADA' or ${mesa.key.estado.toString()}=='PENDIENTE'" class=center-button
+				th:href="@{/mesas/mesaLibre/} + ${idNegocio} + '/' + ${mesa.key.id}">Libre</a>
+				<a th:if="${mesa.key.estado.toString()}=='PENDIENTE'" class=center-button
+				th:href="@{/mesas/mesaOcupada/} + ${idNegocio} + '/' + ${mesa.key.id}">Ocupada</a></td>
+				
+			<td sec:authorize="hasAuthority('GERENTE')" th:if="${mesa.value}!=null">
+			<a class=center-button
+				th:href="@{/mesas/pedido/} + ${idNegocio} + '/' + ${mesa.key.id}">Pedido</a></td>
+			<td sec:authorize="hasAuthority('GERENTE')" th:if="${mesa.value}==null"></td>
+			
 			<td sec:authorize="hasAuthority('GERENTE')">
 				<a class=center-button
-				th:href="@{/mesas/eliminarMesa/} + ${idNegocio} + '/' + ${mesa.id}">Eliminar</a></td>
+				th:href="@{/mesas/eliminarMesa/} + ${idNegocio} + '/' + ${mesa.key.id}">Eliminar</a></td>
 			<td sec:authorize="hasAuthority('CLIENTE')">
-				<a th:if="${mesa.estado.toString()} == 'LIBRE'" class=center-button
-				th:href="@{/mesas/solicitar/} + ${idNegocio} + '/' + ${mesa.id}">Solicitar mesa</a>
-				<h4 th:if="${mesa.estado.toString()} == 'PENDIENTE'">Mesa pendiente de aprobación</h4>
-				<a th:if="${mesa.estado.toString()} == 'OCUPADA'" class=center-button
-				th:href="@{/pedir/} + ${idNegocio} + '/mesa/' + ${mesa.id}">Pedir</a></td>
+				<a th:if="${mesa.key.estado.toString()} == 'LIBRE'" class=center-button
+				th:href="@{/mesas/solicitar/} + ${idNegocio} + '/' + ${mesa.key	.id}">Solicitar mesa</a>
+				<h4 th:if="${mesa.key.estado.toString()} == 'PENDIENTE'">Mesa pendiente de aprobación</h4>
+				<a th:if="${mesa.key.estado.toString()} == 'OCUPADA'" class=center-button
+				th:href="@{/pedir/} + ${idNegocio} + '/mesa/' + ${mesa.key.id}">Pedir</a></td>
 			
 		</tr>
 

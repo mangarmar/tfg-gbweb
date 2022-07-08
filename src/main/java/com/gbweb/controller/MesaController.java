@@ -1,7 +1,11 @@
 package com.gbweb.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,8 +29,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.gbweb.entity.LineaPedido;
 import com.gbweb.entity.Mesa;
 import com.gbweb.entity.Negocio;
+import com.gbweb.entity.Pedido;
 import com.gbweb.entity.Producto;
 import com.gbweb.entity.Usuario;
 import com.gbweb.enums.Estado;
@@ -52,10 +58,15 @@ public class MesaController {
 	public String listarMesas(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
 		Negocio negocio = negocioService.findNegocioById(idNegocio);
 		List<Mesa> mesas = negocio.getMesas();
+		Map<Mesa, Pedido> pedidosPorMesa = new LinkedHashMap<>();
+		for(int i = 0;i<mesas.size();i++) {
+			Pedido pedido = mesas.get(i).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
+			pedidosPorMesa.put(mesas.get(i), pedido);
+		}
 		
 		model.addAttribute("nombreNegocio", negocio.getNombre());
 		model.addAttribute("idNegocio", idNegocio);
-		model.addAttribute("mesas", mesas);
+		model.addAttribute("pedidosPorMesa", pedidosPorMesa);
 
 		return "negocio/listarMesas";
 
@@ -65,10 +76,17 @@ public class MesaController {
 	public String listarMesasLibres(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
 		Negocio negocio = negocioService.findNegocioById(idNegocio);
 		List<Mesa> mesas = negocio.getMesas();
+		Map<Mesa, Pedido> pedidosPorMesa = new LinkedHashMap<>();
+		for(int i = 0;i<mesas.size();i++) {
+			if(mesas.get(i).getEstado().toString().equals("LIBRE")) {
+				Pedido pedido = mesas.get(i).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
+				pedidosPorMesa.put(mesas.get(i), pedido);
+			}
+		}
 		
 		model.addAttribute("nombreNegocio", negocio.getNombre());
 		model.addAttribute("idNegocio", idNegocio);
-		model.addAttribute("mesas", mesas.stream().filter(x->x.getEstado().equals(Estado.LIBRE) || x.getEstado().equals(Estado.PENDIENTE)).collect(Collectors.toList()));
+		model.addAttribute("pedidosPorMesa", pedidosPorMesa);
 
 		return "negocio/listarMesas";
 
@@ -78,11 +96,19 @@ public class MesaController {
 	public String miMesa(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
 		Negocio negocio = negocioService.findNegocioById(idNegocio);
 		List<Mesa> mesas = negocio.getMesas();
+		Map<Mesa, Pedido> pedidosPorMesa = new LinkedHashMap<>();
 		Usuario usuario = usuarioActual();
-		Mesa mesa = mesas.stream().filter(x->x.getCodigo().equals(usuario.getMesa().getCodigo())).findFirst().get();
+
+		for(int i = 0;i<mesas.size();i++) {
+			if(usuario.getMesa().getCodigo().equals(mesas.get(i).getCodigo())) {
+				Pedido pedido = mesas.get(i).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
+				pedidosPorMesa.put(mesas.get(i), pedido);
+			}
+		}
+		
 		model.addAttribute("nombreNegocio", negocio.getNombre());
 		model.addAttribute("idNegocio", idNegocio);
-		model.addAttribute("mesas", mesa);
+		model.addAttribute("pedidosPorMesa", pedidosPorMesa);
 		model.addAttribute("usuario", usuario);
 
 		return "negocio/listarMesas";
@@ -166,6 +192,44 @@ public class MesaController {
 		}
 		
 		return "redirect:/listarProductos/"+idNegocio;
+
+	}
+	
+	@RequestMapping("/pedido/{idNegocio}/{idMesa}")
+	public String cuenta(@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") Long idMesa,
+			Model model) {
+		
+		Pedido pedidoActivo = mesaService.findById(idMesa).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
+		List<LineaPedido> lineaPedidos = pedidoActivo.getLineaPedidos();
+		List<LineaPedido> productosNoServidos = new ArrayList<LineaPedido>();
+		List<LineaPedido> productosServidos = new ArrayList<LineaPedido>();
+		Double precioTotalServido = 0.0;
+		Double precioTotalNoServido = 0.0;
+		for(int i = 0; i<lineaPedidos.size();i++){
+			LineaPedido lp = lineaPedidos.get(i);
+			if(lp.getServido()!=null) {
+				if(lp.getServido()==false) {
+					precioTotalNoServido+=lineaPedidos.get(i).getPrecio()*lineaPedidos.get(i).getCantidad();
+					productosNoServidos.add(lp);
+				}else if(lp.getServido()==true) {
+					precioTotalServido+=lineaPedidos.get(i).getPrecio()*lineaPedidos.get(i).getCantidad();
+					productosServidos.add(lp);
+				}
+			}
+		}
+		
+		model.addAttribute("nombreNegocio", negocioService.findNegocioById(idNegocio).getNombre());
+		model.addAttribute("productosNoServidos", productosNoServidos);
+		model.addAttribute("productosServidos",productosServidos);
+		model.addAttribute("precioTotalNoServido", precioTotalNoServido);
+		model.addAttribute("precioTotalServido", precioTotalServido);
+		model.addAttribute("usuario", usuarioActual());
+		model.addAttribute("idNegocio", idNegocio);
+		model.addAttribute("idMesa", idMesa);
+		
+
+
+		return "negocio/cuenta";
 
 	}
 	
