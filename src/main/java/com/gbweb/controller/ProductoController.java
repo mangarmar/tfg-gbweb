@@ -1,22 +1,19 @@
 package com.gbweb.controller;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -26,17 +23,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.gbweb.entity.LineaPedido;
 import com.gbweb.entity.Mesa;
-import com.gbweb.entity.Negocio;
 import com.gbweb.entity.Pedido;
 import com.gbweb.entity.Producto;
 import com.gbweb.entity.Usuario;
 import com.gbweb.enums.EstadoPedido;
-import com.gbweb.enums.ROL;
 import com.gbweb.enums.TipoProducto;
 import com.gbweb.service.LineaPedidoService;
 import com.gbweb.service.MesaService;
@@ -44,6 +38,7 @@ import com.gbweb.service.NegocioService;
 import com.gbweb.service.PedidoService;
 import com.gbweb.service.ProductoService;
 import com.gbweb.service.UserService;
+
 
 @Controller
 public class ProductoController {
@@ -196,28 +191,38 @@ public class ProductoController {
 		
 		Pedido pedidoActivo = mesaService.findById(idMesa).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
 		List<LineaPedido> lineaPedidos = pedidoActivo.getLineaPedidos();
-		List<LineaPedido> productos = new ArrayList<LineaPedido>();
-		Double precioTotal = 0.0;
-		
+		List<LineaPedido> productosNoServidos = new ArrayList<LineaPedido>();
+		List<LineaPedido> productosServidos = new ArrayList<LineaPedido>();
+		Double precioTotalServido = 0.0;
+		Double precioTotalNoServido = 0.0;
 		for(int i = 0; i<lineaPedidos.size();i++){
 			LineaPedido lp = lineaPedidos.get(i);
 			if(lp.getServido()!=null) {
-				precioTotal+=lineaPedidos.get(i).getPrecio()*lineaPedidos.get(i).getCantidad();
-				productos.add(lp);
+				if(lp.getServido()==false) {
+					precioTotalNoServido+=lineaPedidos.get(i).getPrecio()*lineaPedidos.get(i).getCantidad();
+					productosNoServidos.add(lp);
+				}else if(lp.getServido()==true) {
+					precioTotalServido+=lineaPedidos.get(i).getPrecio()*lineaPedidos.get(i).getCantidad();
+					productosServidos.add(lp);
+				}
 			}
 		}
 		
 		model.addAttribute("nombreNegocio", negocioService.findNegocioById(idNegocio).getNombre());
-		model.addAttribute("productos", productos);
-		model.addAttribute("precioTotal", precioTotal);
+		model.addAttribute("productosNoServidos", productosNoServidos);
+		model.addAttribute("productosServidos",productosServidos);
+		model.addAttribute("precioTotalNoServido", precioTotalNoServido);
+		model.addAttribute("precioTotalServido", precioTotalServido);
 		model.addAttribute("usuario", usuarioActual());
 		model.addAttribute("idNegocio", idNegocio);
+		model.addAttribute("idMesa", idMesa);
 		
 
 
 		return "negocio/cuenta";
 
 	}
+	
 	
 	
 	@RequestMapping("/pedido/servir/{idNegocio}/{idMesa}/{idProducto}")

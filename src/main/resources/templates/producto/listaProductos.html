@@ -32,7 +32,7 @@
 			<th style="width: 30%">Opciones</th>
 		</tr>
 		<tr th:each="producto : ${snacks}">
-			<td style="width: 18.75%" th:text="${producto.nombre}"></td>
+			<td th:if="producto.visibilidad == true" style="width: 18.75%" th:text="${producto.nombre}"></td>
 			<td style="width: 18.75%" th:text="${producto.precio}"></td>
 			<td	style="width: 18.75%" th:text="${producto.tipo}"></td>
 			<td style="width: 18.75%" sec:authorize="hasAuthority('GERENTE')"  th:text="${producto.visibilidad}"></td>

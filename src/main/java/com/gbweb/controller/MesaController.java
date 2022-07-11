@@ -1,5 +1,10 @@
 package com.gbweb.controller;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,9 +14,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,6 +38,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gbweb.entity.LineaPedido;
@@ -36,13 +48,19 @@ import com.gbweb.entity.Pedido;
 import com.gbweb.entity.Producto;
 import com.gbweb.entity.Usuario;
 import com.gbweb.enums.Estado;
+import com.gbweb.service.LineaPedidoService;
 import com.gbweb.service.MesaService;
 import com.gbweb.service.NegocioService;
 import com.gbweb.service.UserService;
+import com.gbweb.util.GeneratePdfReport;
 
 @Controller
 @RequestMapping("/mesas")
 public class MesaController {
+	
+	
+	@Autowired
+	LineaPedidoService lineaPedidoService;
 	
 	@Autowired
 	NegocioService negocioService;
@@ -53,6 +71,7 @@ public class MesaController {
 	@Autowired
 	UserService userService;
 	
+
 	
 	@RequestMapping("/{idNegocio}")
 	public String listarMesas(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
@@ -232,6 +251,38 @@ public class MesaController {
 		return "negocio/cuenta";
 
 	}
+
+	 @RequestMapping(value = "/cuenta/{idMesa}", method = RequestMethod.GET,
+	            produces = MediaType.APPLICATION_PDF_VALUE)
+	    public ResponseEntity<InputStreamResource> cuentaPDF(@PathVariable(value = "idMesa") Long idMesa, Model model) {
+		 
+		Pedido pedidoActivo = mesaService.findById(idMesa).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
+		 List<LineaPedido> lineaPedidos = pedidoActivo.getLineaPedidos();
+			List<LineaPedido> productosServidos = new ArrayList<LineaPedido>();
+			Double precioTotalServido = 0.0;
+			for(int i = 0; i<lineaPedidos.size();i++){
+				LineaPedido lp = lineaPedidos.get(i);
+				if(lp.getServido()!=null) {
+					 if(lp.getServido()==true) {
+						precioTotalServido+=lineaPedidos.get(i).getPrecio()*lineaPedidos.get(i).getCantidad();
+						productosServidos.add(lp);
+					}
+				}
+			
+			}
+	        ByteArrayInputStream bis = GeneratePdfReport.cuentaPDF(productosServidos);
+
+	        var headers = new HttpHeaders();
+	        headers.add("Content-Disposition", "inline; filename=cuenta.pdf");
+
+			 return ResponseEntity
+		                .ok()
+		                .headers(headers)
+		                .contentType(MediaType.APPLICATION_PDF)
+		                .body(new InputStreamResource(bis));
+	    }
+
+	 
 	
 	public Usuario usuarioActual() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

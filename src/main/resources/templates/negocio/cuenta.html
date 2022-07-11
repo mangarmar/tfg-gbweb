@@ -38,12 +38,14 @@
 				<td style="width: 18.75%; border: 0px;" th:text="${precioTotalServido}"></td>
 			</tr>
 		</table>
-		<br><br><br><br>
+		
 	</div>
 	
-	<a sec:authorize="hasAuthority('CLIENTE')" class="button">Pagar</a>	
+	<a sec:authorize="hasAuthority('CLIENTE')" class="button">Solicitar cuenta</a>		
+	<a target="_blank" th:href="@{/mesas/cuenta/} + ${idMesa}">Exportar a PDF</a>	
 	
 	<div th:if="${productosNoServidos!=null and !productosNoServidos.isEmpty()}">
+	<br><br><br><br>
 		<table id="customers">
 		<h2>No servido</h2>
 			<br>
@@ -52,7 +54,7 @@
 				<th style="width: 18.75%">Cantidad</th>
 				<th style="width: 18.75%">Precio unitario</th>
 				<th style="width: 18.75%">Servido</th>
-				<th style="width: 18.75%">Opciones</th>
+				<th sec:authorize="hasAuthority('GERENTE')" style="width: 18.75%">Opciones</th>
 			</tr>
 			<tr  th:each="producto : ${productosNoServidos}">
 				<td style="width: 18.75%" th:text="${producto.nombre}"></td>
