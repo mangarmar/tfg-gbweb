@@ -169,7 +169,8 @@ public class ProductoController {
 	@GetMapping("/pedido/confirmar/negocio/{idNegocio}/mesa/{idMesa}")
 	public String confirmarComanda(@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") Long idMesa,
 			Model model) {
-		Pedido pedidoActivo = mesaService.findById(idMesa).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
+		Mesa mesa = mesaService.findById(idMesa);
+		Pedido pedidoActivo = mesa.getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
 		List<LineaPedido> lineaPedidos= lineaPedidoService.findTodosPorPedido(pedidoActivo);
 		List<LineaPedido> comanda = new ArrayList<LineaPedido>();
 		for (int i = 0; i < lineaPedidos.size(); i++) {
@@ -182,7 +183,8 @@ public class ProductoController {
 		}
 		pedidoService.borrarProductosPedido(pedidoActivo.getProductos(), pedidoActivo.getId());
 		model.addAttribute("idMesa", idMesa);
-		return "negocio/comanda";
+		return "redirect:/pedir/"+mesa.getNegocio().getId()+"/mesa/"+idMesa;
+
 	}
 
 	@RequestMapping("/pedido/cuenta/{idNegocio}/mesa/{idMesa}")
@@ -190,6 +192,7 @@ public class ProductoController {
 			Model model) {
 		
 		Pedido pedidoActivo = mesaService.findById(idMesa).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
+		Long idPedido = pedidoActivo.getId();
 		List<LineaPedido> lineaPedidos = pedidoActivo.getLineaPedidos();
 		List<LineaPedido> productosNoServidos = new ArrayList<LineaPedido>();
 		List<LineaPedido> productosServidos = new ArrayList<LineaPedido>();
@@ -215,7 +218,7 @@ public class ProductoController {
 		model.addAttribute("precioTotalServido", precioTotalServido);
 		model.addAttribute("usuario", usuarioActual());
 		model.addAttribute("idNegocio", idNegocio);
-		model.addAttribute("idMesa", idMesa);
+		model.addAttribute("idPedido", idPedido);
 		
 
 

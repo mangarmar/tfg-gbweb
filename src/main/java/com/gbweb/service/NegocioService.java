@@ -21,6 +21,7 @@ import com.gbweb.entity.Negocio;
 import com.gbweb.entity.Usuario;
 import com.gbweb.repository.NegocioRepository;
 import com.gbweb.repository.UserRepository;
+import com.itextpdf.text.log.SysoCounter;
 
 @Service
 public class NegocioService {
@@ -76,8 +77,6 @@ public class NegocioService {
 		negocioAct.setCiudad(negocio.getCiudad());
 		negocioAct.setProvincia(negocio.getProvincia());
 		negocioAct.setNombre(negocio.getNombre());
-		negocioAct.setProductos(negocio.getProductos());
-		
 
 		Localizacion localizacion = getLocalizacion(negocio.getCalle(), negocio.getNumero(), negocio.getCiudad(), negocio.getProvincia());
 		System.out.println(localizacion.getLat());

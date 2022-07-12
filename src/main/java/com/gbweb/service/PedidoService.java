@@ -26,6 +26,11 @@ public class PedidoService {
 		pedido.getProductos().clear();
 		pedidoRepo.save(pedido);
 	}
-	
+
+	public Pedido findById(Long idPedido) {
+		
+		return pedidoRepo.findById(idPedido).orElse(null);
+	}
+
 
 }

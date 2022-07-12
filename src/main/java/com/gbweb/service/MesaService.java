@@ -36,6 +36,7 @@ public class MesaService {
 		mesaRepo.save(mesa);
 	}
 	
+	
 	public Mesa findById(Long id) {
 		return mesaRepo.findById(id).get();
 	}
@@ -43,6 +44,11 @@ public class MesaService {
 	public void eliminarMesa(Mesa mesa) {
 		
 		mesaRepo.delete(mesa);
+	}
+
+	public Mesa save(Mesa mesa) {
+		return mesaRepo.save(mesa);
+		
 	}
 
 	

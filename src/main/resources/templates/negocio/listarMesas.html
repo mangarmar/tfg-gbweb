@@ -43,7 +43,9 @@
 				
 			<td sec:authorize="hasAuthority('GERENTE')" th:if="${mesa.value}!=null">
 			<a class=center-button
-				th:href="@{/mesas/pedido/} + ${idNegocio} + '/' + ${mesa.key.id}">Pedido</a></td>
+				th:href="@{/mesas/pedido/} + ${idNegocio} + '/' + ${mesa.key.id}">Pedido</a>
+			<a class=center-button
+				th:if="${mesa.value.estadoPedido.toString()}=='PENDIENTE_PAGO'" th:href="@{/mesas/pago/cuenta/} + ${mesa.key.id} + '/' + ${mesa.value.id}">Pagado</a></td>
 			<td sec:authorize="hasAuthority('GERENTE')" th:if="${mesa.value}==null"></td>
 			
 			<td sec:authorize="hasAuthority('GERENTE')">

@@ -48,9 +48,11 @@ import com.gbweb.entity.Pedido;
 import com.gbweb.entity.Producto;
 import com.gbweb.entity.Usuario;
 import com.gbweb.enums.Estado;
+import com.gbweb.enums.EstadoPedido;
 import com.gbweb.service.LineaPedidoService;
 import com.gbweb.service.MesaService;
 import com.gbweb.service.NegocioService;
+import com.gbweb.service.PedidoService;
 import com.gbweb.service.UserService;
 import com.gbweb.util.GeneratePdfReport;
 
@@ -71,6 +73,10 @@ public class MesaController {
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+	PedidoService pedidoService;
+	
+	
 
 	
 	@RequestMapping("/{idNegocio}")
@@ -79,7 +85,7 @@ public class MesaController {
 		List<Mesa> mesas = negocio.getMesas();
 		Map<Mesa, Pedido> pedidosPorMesa = new LinkedHashMap<>();
 		for(int i = 0;i<mesas.size();i++) {
-			Pedido pedido = mesas.get(i).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
+			Pedido pedido = mesas.get(i).getPedidos().stream().filter(x->(x.getEstadoPedido().toString().equals("ACTIVO")) || x.getEstadoPedido().toString().equals("PENDIENTE_PAGO")).findFirst().orElse(null);
 			pedidosPorMesa.put(mesas.get(i), pedido);
 		}
 		
@@ -162,9 +168,15 @@ public class MesaController {
 	
 	@GetMapping("/mesaLibre/{idNegocio}/{idMesa}")
 	public String mesaLibre(@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value="idMesa") Long idMesa, Model model) {
-					
 		Mesa mesa = mesaService.findById(idMesa);
+		Pedido pedidoActivo = mesa.getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);	
+		pedidoActivo.setEstadoPedido(EstadoPedido.CANCELADO);
+		pedidoService.nuevoPedido(pedidoActivo);
+		mesaService.save(mesa);
 		mesaService.actualizarEstado(mesa, idNegocio, Estado.LIBRE);
+		usuarioActual().setPermisos(null);
+		usuarioActual().setMesa(null);
+		userService.save(usuarioActual());
 		
 		return "redirect:/mesas/"+idNegocio;
 	}
@@ -218,7 +230,7 @@ public class MesaController {
 	public String cuenta(@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") Long idMesa,
 			Model model) {
 		
-		Pedido pedidoActivo = mesaService.findById(idMesa).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
+		Pedido pedidoActivo = mesaService.findById(idMesa).getPedidos().stream().filter(x->(x.getEstadoPedido().toString().equals("ACTIVO")) || x.getEstadoPedido().toString().equals("PENDIENTE_PAGO")).findFirst().orElse(null);
 		List<LineaPedido> lineaPedidos = pedidoActivo.getLineaPedidos();
 		List<LineaPedido> productosNoServidos = new ArrayList<LineaPedido>();
 		List<LineaPedido> productosServidos = new ArrayList<LineaPedido>();
@@ -256,7 +268,7 @@ public class MesaController {
 	            produces = MediaType.APPLICATION_PDF_VALUE)
 	    public ResponseEntity<InputStreamResource> cuentaPDF(@PathVariable(value = "idMesa") Long idMesa, Model model) {
 		 
-		Pedido pedidoActivo = mesaService.findById(idMesa).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
+		Pedido pedidoActivo = mesaService.findById(idMesa).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("PENDIENTE_PAGO")).findFirst().orElse(null);
 		 List<LineaPedido> lineaPedidos = pedidoActivo.getLineaPedidos();
 			List<LineaPedido> productosServidos = new ArrayList<LineaPedido>();
 			Double precioTotalServido = 0.0;
@@ -280,6 +292,84 @@ public class MesaController {
 		                .headers(headers)
 		                .contentType(MediaType.APPLICATION_PDF)
 		                .body(new InputStreamResource(bis));
+	    }
+	 
+	 @RequestMapping(value = "/factura/{idPedido}", method = RequestMethod.GET,
+	            produces = MediaType.APPLICATION_PDF_VALUE)
+	    public ResponseEntity<InputStreamResource> descargarFactura(@PathVariable(value = "idPedido") Long idPedido, Model model) {
+		 
+		Pedido pedidoActivo = pedidoService.findById(idPedido);
+		 List<LineaPedido> lineaPedidos = pedidoActivo.getLineaPedidos();
+			List<LineaPedido> productosServidos = new ArrayList<LineaPedido>();
+			Double precioTotalServido = 0.0;
+			for(int i = 0; i<lineaPedidos.size();i++){
+				LineaPedido lp = lineaPedidos.get(i);
+				if(lp.getServido()!=null) {
+					 if(lp.getServido()==true) {
+						precioTotalServido+=lineaPedidos.get(i).getPrecio()*lineaPedidos.get(i).getCantidad();
+						productosServidos.add(lp);
+					}
+				}
+			
+			}
+	        ByteArrayInputStream bis = GeneratePdfReport.cuentaPDF(productosServidos);
+
+	        var headers = new HttpHeaders();
+	        headers.add("Content-Disposition", "inline; filename=cuenta.pdf");
+
+			 return ResponseEntity
+		                .ok()
+		                .headers(headers)
+		                .contentType(MediaType.APPLICATION_PDF)
+		                .body(new InputStreamResource(bis));
+	    }
+
+	 
+	 @GetMapping("/solicitar/cuenta/{idMesa}/{idPedido}")
+	    public String solicitarCuenta(@PathVariable(value = "idMesa") Long idMesa,@PathVariable(value = "idPedido") Long idPedido, Model model) {
+		 Mesa mesa = mesaService.findById(idMesa);
+		 Pedido pedido = pedidoService.findById(idPedido);
+		 pedido.setEstadoPedido(EstadoPedido.PENDIENTE_PAGO);
+		 pedidoService.nuevoPedido(pedido);
+		 usuarioActual().setPermisos(null);
+		 usuarioActual().setMesa(null);
+		 userService.save(usuarioActual());
+//		 mesaService.actualizarEstado(mesa, mesa.getNegocio().getId(), Estado.LIBRE);
+		 model.addAttribute("idMesa", idMesa);
+		 model.addAttribute("idPedido", idPedido);
+		 
+		return "negocio/finPedido";
+		 
+	    }
+	 
+	 @GetMapping("/cancelar/cuenta/{idMesa}/{idPedido}")
+	    public String cancelarCuenta(@PathVariable(value = "idMesa") Long idMesa,@PathVariable(value = "idPedido") Long idPedido, Model model) {
+		 Pedido pedido = pedidoService.findById(idPedido);
+		 Mesa mesa = mesaService.findById(idMesa);
+		 pedido.setEstadoPedido(EstadoPedido.ACTIVO);
+		 pedidoService.nuevoPedido(pedido);
+		 usuarioActual().setPermisos("Aceptado");
+		 usuarioActual().setMesa(mesa);
+		 userService.save(usuarioActual());
+		 mesaService.actualizarEstado(mesa, mesa.getNegocio().getId(), Estado.OCUPADA);
+		 model.addAttribute("idMesa", idMesa);
+		 model.addAttribute("idPedido", idPedido);
+		 
+		return "redirect:/pedir/"+mesa.getNegocio().getId()+"/mesa/"+idMesa;
+		 
+	    }
+	 
+	 @GetMapping("/pago/cuenta/{idMesa}/{idPedido}")
+	    public String pagoCuenta(@PathVariable(value = "idMesa") Long idMesa,@PathVariable(value = "idPedido") Long idPedido, Model model) {
+		 Mesa mesa = mesaService.findById(idMesa);
+		 Pedido pedido = pedidoService.findById(idPedido);
+		 pedido.setEstadoPedido(EstadoPedido.PAGADO);
+		 mesaService.actualizarEstado(mesa, mesa.getNegocio().getId(), Estado.LIBRE);
+		 model.addAttribute("idMesa", idMesa);
+		 model.addAttribute("idPedido", idPedido);
+		 
+		return "redirect:/mesas/"+mesa.getNegocio().getId();
+		 
 	    }
 
 	 

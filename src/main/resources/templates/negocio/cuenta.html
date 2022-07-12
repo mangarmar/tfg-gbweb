@@ -34,15 +34,13 @@
 			</tr>
 			<tr style="background-color:#f2f2f2;">
 				<td style="border: 0px;"></td>
-				<td style="float:right; border: 0px;">Total</td>
-				<td style="width: 18.75%; border: 0px;" th:text="${precioTotalServido}"></td>
+				<td style="float:right; border:0px;" th:text="Total"></td>
+				<td style="border: 0px;" th:text="${precioTotal}"></td>
 			</tr>
 		</table>
-		
+			<a sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/mesas/solicitar/cuenta/} + ${idMesa} + '/' + ${idPedido}">Solicitar cuenta</a>		
 	</div>
 	
-	<a sec:authorize="hasAuthority('CLIENTE')" class="button">Solicitar cuenta</a>		
-	<a target="_blank" th:href="@{/mesas/cuenta/} + ${idMesa}">Exportar a PDF</a>	
 	
 	<div th:if="${productosNoServidos!=null and !productosNoServidos.isEmpty()}">
 	<br><br><br><br>

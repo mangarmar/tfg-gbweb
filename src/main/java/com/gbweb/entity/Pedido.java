@@ -85,7 +85,10 @@ public class Pedido implements Serializable {
 	}
 
 
-	
+	public int compareTo(Pedido o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 
 }

@@ -1,0 +1,32 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" th:href="@{/css/formUser.css}" />
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<title>¡Gracias!</title>
+</head>
+
+<body>
+
+	<header th:replace="comun/header.html::header"></header>
+	
+	
+		<h1>Muchas gracias por usar GBWEB</h1><br><br><br>
+		<h2 style="padding-left: 10%;">El personal del local pasará a traerle su cuenta.<br><br>
+		Si desea puede descargar su ticket a través del siguiente enlace:
+		<a target="_blank" th:href="@{/mesas/cuenta/} + ${idMesa}">Pulse aquí</a><br><br><br><br><br>
+		Si dió por error en Solicitar Cuenta vuelva a su pedido a través del siguiente enlace: 
+	<a sec:authorize="hasAuthority('CLIENTE')" th:href="@{/mesas/cancelar/cuenta/} + ${idMesa} + '/' + ${idPedido}">Volver</a>		
+	</h2><br><br>
+	
+		
+		
+				
+		
+		
+
+
+</body>
+</html>
