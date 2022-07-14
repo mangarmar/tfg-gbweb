@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name = "linea_pedido")
@@ -28,6 +30,19 @@ public class LineaPedido {
 	@ManyToOne
     @JoinColumn(name="pedido_id", nullable=false)
     private Pedido pedido;
+	
+	@ManyToOne
+    @JoinColumn(name="producto_id")
+    private Producto producto;
+
+	
+	public Producto getProducto() {
+		return producto;
+	}
+
+	public void setProducto(Producto producto) {
+		this.producto = producto;
+	}
 
 	public String getNombre() {
 		return nombre;

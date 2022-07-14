@@ -68,6 +68,34 @@ img {
 	border-radius: 10px;
 }
 
+.add-button {
+	background-color: rgb(177, 18, 38);
+	border: none;
+	color: white;
+	padding: 10px;
+	float: center;
+	text-align: center;
+	text-decoration: none;
+	font-size: 1em;
+	margin: 2px 2px;
+	cursor: pointer;
+	border-radius: 10px;
+}
+
+.nuevo-pedido {
+	background-color: rgb(0, 128, 64);
+	border: none;
+	color: white;
+	padding: 8px;
+	float: center;
+	text-align: center;
+	text-decoration: none;
+	font-size: 1em;
+	margin: 2px 2px;
+	cursor: pointer;
+	border-radius: 10px;
+}
+
 ul {
   list-style-type: none;
   margin: 0;

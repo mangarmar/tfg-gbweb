@@ -40,9 +40,8 @@ public class Pedido implements Serializable {
 	
 	@OneToMany(mappedBy="pedido")
     private List<LineaPedido> lineaPedidos;
-
 	
-	
+	private Boolean porServir;
 	
 	public List<LineaPedido> getLineaPedidos() {
 		return lineaPedidos;
@@ -83,7 +82,17 @@ public class Pedido implements Serializable {
 	public void setProductos(List<Producto> productos) {
 		this.productos = productos;
 	}
+	
 
+
+	public Boolean getPorServir() {
+		porServir = this.lineaPedidos.stream().filter(x->x.getServido()!=null).anyMatch(x->x.getServido().equals(false));
+		return porServir;
+	}
+
+	public void setPorServir(Boolean porServir) {
+		this.porServir = porServir;
+	}
 
 	public int compareTo(Pedido o) {
 		// TODO Auto-generated method stub

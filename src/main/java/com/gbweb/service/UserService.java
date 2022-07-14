@@ -79,6 +79,20 @@ public class UserService implements UserDetailsService {
 	public Usuario findById(Long id) {
 		return userRepo.findById(id).orElse(null);
 	}
+	
+	public Usuario findByMesa(String codigo) {
+		
+		List<Usuario> usuarios = (List<Usuario>) userRepo.findAll();
+		List<Usuario> usuariosValidos = new ArrayList<Usuario>();
+		for(int i=0;i<usuarios.size();i++) {
+			if(usuarios.get(i).getMesa()!=null) {
+				if(usuarios.get(i).getMesa().getCodigo().equals(codigo)) {
+					usuariosValidos.add(usuarios.get(i));
+				}			
+			}
+		}
+		return usuariosValidos.get(0);
+	}
 
 	public void save(Usuario u) {
 		this.userRepo.save(u);

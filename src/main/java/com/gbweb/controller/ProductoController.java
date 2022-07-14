@@ -154,6 +154,7 @@ public class ProductoController {
 				lp.setCantidad(numeroProductos.values().stream().collect(Collectors.toList()).get(j));
 				lp.setPrecio(listaProductos.get(j).getPrecio());
 				lp.setPedido(pedidoActivo);
+				lp.setProducto(listaProductos.get(j));
 				lineaPedidos.add(lp);
 				lineaPedidoService.save(lp);
 			}
@@ -186,6 +187,30 @@ public class ProductoController {
 		return "redirect:/pedir/"+mesa.getNegocio().getId()+"/mesa/"+idMesa;
 
 	}
+	
+	@GetMapping("/pedido/sumar/{idPedido}")
+	public String sumarProductoAComanda(@PathVariable(value = "idPedido") Long idPedido, Model model) {
+		
+		LineaPedido lineaPedido = lineaPedidoService.findById(idPedido);
+		Pedido nuevoPedido = lineaPedido.getPedido();
+		nuevoPedido.getProductos().add(lineaPedido.getProducto());
+		pedidoService.nuevoPedido(nuevoPedido);
+		
+		return "redirect:/pedido/negocio/"+lineaPedido.getPedido().getMesa().getNegocio().getId()+"/mesa/"+lineaPedido.getPedido().getMesa().getId();
+
+	}
+	
+	@GetMapping("/pedido/restar/{idPedido}")
+	public String restarProductoAComanda(@PathVariable(value = "idPedido") Long idPedido, Model model) {
+		
+		LineaPedido lineaPedido = lineaPedidoService.findById(idPedido);
+		Pedido nuevoPedido = lineaPedido.getPedido();
+		nuevoPedido.getProductos().remove(lineaPedido.getProducto());
+		pedidoService.nuevoPedido(nuevoPedido);
+		
+		return "redirect:/pedido/negocio/"+lineaPedido.getPedido().getMesa().getNegocio().getId()+"/mesa/"+lineaPedido.getPedido().getMesa().getId();
+
+	}
 
 	@RequestMapping("/pedido/cuenta/{idNegocio}/mesa/{idMesa}")
 	public String cuenta(@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") Long idMesa,
@@ -215,7 +240,7 @@ public class ProductoController {
 		model.addAttribute("productosNoServidos", productosNoServidos);
 		model.addAttribute("productosServidos",productosServidos);
 		model.addAttribute("precioTotalNoServido", precioTotalNoServido);
-		model.addAttribute("precioTotalServido", precioTotalServido);
+		model.addAttribute("precioTotal", precioTotalServido);
 		model.addAttribute("usuario", usuarioActual());
 		model.addAttribute("idNegocio", idNegocio);
 		model.addAttribute("idPedido", idPedido);

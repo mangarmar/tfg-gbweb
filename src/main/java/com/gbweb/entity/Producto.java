@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -44,8 +45,19 @@ public class Producto implements Comparable<Producto> {
 	@JsonIgnore
 	private List<Negocio> negocios;
 
+    @OneToMany(mappedBy="producto")
+    @JsonIgnore
+    private List<LineaPedido> lineaPedidos;
 	
 	
+	public List<LineaPedido> getLineaPedidos() {
+		return lineaPedidos;
+	}
+
+	public void setLineaPedidos(List<LineaPedido> lineaPedidos) {
+		this.lineaPedidos = lineaPedidos;
+	}
+
 	public List<Pedido> getPedidos() {
 		return pedidos;
 	}

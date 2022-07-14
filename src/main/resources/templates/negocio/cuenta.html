@@ -14,6 +14,7 @@
 	<h1 sec:authorize="hasAuthority('CLIENTE')">Cuenta</h1>
 	<h1 sec:authorize="hasAuthority('GERENTE')">Pedido</h1>
 	
+	<a sec:authorize="hasAuthority('GERENTE')" class="back-button" th:href="@{/mesas/}+${idNegocio}">Volver</a><br><br><br>
 
 	<div th:if="${productosServidos!=null and !productosServidos.isEmpty()}">
 
