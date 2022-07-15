@@ -1,0 +1,35 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" th:href="@{/css/formUser.css}" />
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<title>Pedidos</title>
+</head>
+<body>
+
+	<header th:replace="comun/header.html::header"></header>
+	
+		
+	<h1 th:text="'Pedidos de '+${negocio.nombre}"></h1>
+
+	<table id="customers">
+		<tr>
+			<th>ID</th>
+			<th>Mesa</th>
+			<th>Estado</th>
+			<th>Productos</th>
+		</tr>
+		<tr th:each="pedido : ${pedidos}">
+			<td th:text="${pedido.id}"></td>
+			<td th:text="${pedido.mesa.codigo}"></td>
+			<td th:text="${pedido.estadoPedido.toString()}"></td>
+			<td><a class=center-button
+				th:href="@{/pedidos/} + ${negocio.id} + '/' + ${pedido.id}">Listar productos</a></td>
+		</tr>
+
+	</table>
+
+</body>
+</html>

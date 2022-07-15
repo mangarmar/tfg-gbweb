@@ -1,0 +1,56 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" th:href="@{/css/formUser.css}" />
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<title>Registro</title>
+</head>
+<body>
+
+	<header th:replace="comun/header.html::header"></header>
+
+	
+	<form class="form-register" th:action="${idNegocio}" th:object="${negocio}" method="post">
+		<h4>Datos del negocio</h4>
+		<input type="hidden" th:field="*{id}" />
+		
+		<input th:field="*{cif}" type="text" class="controls" placeholder="CIF" name="cif" />
+		<p class="alert alert-danger" role="alert" th:errors="*{cif}"></p>
+		
+		<input th:field="*{nombre}" type="text" class="controls" placeholder="Nombre" name="nombre" />
+		<p class="alert alert-danger" role="alert" th:errors="*{nombre}"></p>
+		
+		<input th:field="*{descripcion}" type="text" class="controls" placeholder="Descripción" name="descripcion" />
+		<p class="alert alert-danger" role="alert" th:errors="*{descripcion}"></p>
+		
+		<input th:field="*{capacidad}" type="text" class="controls" placeholder="Capacidad" name="capacidad" />
+		<p class="alert alert-danger" role="alert" th:errors="*{capacidad}"></p>
+		
+		<input th:field="*{email}" type="text" class="controls" placeholder="Correo electrónico" name="email" />
+		<p class="alert alert-danger" role="alert" th:errors="*{email}"></p>
+		
+		<input th:field="*{calle}" type="text" class="controls" placeholder="Calle" name="calle" />
+		<p class="alert alert-danger" role="alert" th:errors="*{calle}"></p>
+		
+		<input th:field="*{numero}" type="text" class="controls" placeholder="Numero" name="numero" />
+		<p class="alert alert-danger" role="alert" th:errors="*{numero}"></p>
+
+		<input th:field="*{ciudad}" type="text" class="controls" placeholder="Ciudad" name="ciudad" />
+		<p class="alert alert-danger" role="alert" th:errors="*{ciudad}"></p>
+		
+		<input th:field="*{provincia}" type="text" class="controls" placeholder="Provincia" name="provincia" />
+		<p class="alert alert-danger" role="alert" th:errors="*{provincia}"></p>		
+		<select th:field="*{tipo}" class="controls">
+    		<option th:value="RESTAURANTE" th:text="Restaurante"></option>
+    		<option th:value="BAR" th:text="Bar"></option>
+		</select>
+		
+		
+		<button type="submit" class="buttons">  Guardar negocio </button>
+	</form>
+
+
+</body>
+</html>

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,6 +13,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -20,10 +24,12 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gbweb.enums.ROL;
 
 @Entity
@@ -58,6 +64,7 @@ public class Usuario implements UserDetails {
 	private String dni;
 	
 	@Past
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaNacimiento;
 	
 	@NotEmpty(message = "Porfavor, introduzca una dirección")
@@ -66,52 +73,86 @@ public class Usuario implements UserDetails {
 	@NotEmpty(message = "Porfavor, introduzca un email")
 	@Email(message = "Porfavor, introduzca un email válido")
 	private String email;
-	
+
 	@Enumerated(EnumType.STRING)
-	@NotNull
 	private ROL rol;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario")
+    @JsonIgnore
+    private List<Negocio> negocios;
+    
+
+    private String permiso;
+    
+    @OneToOne
+    @JoinColumn(name="codigo_mesa", referencedColumnName = "codigo")
+    private Mesa mesa;
+    
+	 public Mesa getMesa() {
+		return mesa;
+	}
+
+	public void setMesa(Mesa mesa) {
+		this.mesa = mesa;
+	}
+
+	public String getPermisos() {
+		return permiso;
+	}
+
+	public void setPermisos(String permiso) {
+		this.permiso = permiso;
+	}
+
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority(rol.toString()));
-        return roles;
+	    public Collection<? extends GrantedAuthority> getAuthorities() {
+	        List<GrantedAuthority> roles = new ArrayList<>();
+	        roles.add(new SimpleGrantedAuthority(rol.toString()));
+	        return roles;
+	    }
+
+	public List<Negocio> getNegocios() {
+		return negocios;
+	}
+
+	public void setNegocios(List<Negocio> negocios) {
+		this.negocios = negocios;
 	}
 
 	@Override
 	public String getPassword() {
 		// TODO Auto-generated method stub
-		return null;
+		return password;
 	}
 
 	@Override
 	public String getUsername() {
 		// TODO Auto-generated method stub
-		return null;
+		return username;
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public Long getId() {
@@ -185,6 +226,7 @@ public class Usuario implements UserDetails {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
+
 	
 }

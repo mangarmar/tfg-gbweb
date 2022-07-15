@@ -1,0 +1,31 @@
+	<!DOCTYPE html >
+	<html xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org">
+	<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" th:href="@{/css/formUser.css}" />
+	<link rel="stylesheet" th:href="@{/css/style.css}" />
+	
+
+	<title>Iniciar Sesión</title>
+	</head>
+	<body>
+	
+		<header th:replace="comun/header.html::header"></header>
+		
+		<div class="form-register" role="main">
+			<form  th:action="@{/login}" method="post">        
+				<h1 style="float:center">Iniciar Sesion</h2>
+				<br>    
+				<label for="username"><h2>Usuario</h2></label>
+				<input type="text" id="username" name="username" class="controls" placeholder="Usuario" required autofocus>
+				<label for="password" ><h2>Contraseña</h2></label>
+				<input type="password" id="password" name="password" class="controls" placeholder="Contraseña" required>
+				<button class="buttons" type="submit">Entrar</button>
+			</form>
+		</div>
+	
+	</body>
+	</html>
+
+		

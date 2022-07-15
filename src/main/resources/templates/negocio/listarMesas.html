@@ -1,0 +1,71 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" th:href="@{/css/formUser.css}" />
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<meta http-equiv="refresh" content="3">
+<title>Mesas</title>
+</head>
+
+<body>
+
+	<header th:replace="comun/header.html::header"></header>
+	<div>
+		<h1 th:text="${nombreNegocio}"></h1>
+	</div>
+	<a class="back-button" th:href="@{/listarNegocios}">Volver</a>
+	<a sec:authorize="hasAuthority('GERENTE')" class="button" th:href="@{/mesas/añadirMesa/} + ${idNegocio}">Añadir
+		mesa</a>
+		
+		
+
+	<table id="customers">
+		<tr>
+			<th>Código</th>
+			<th>Estado</th>
+			<th sec:authorize="hasAuthority('GERENTE')">Cambiar estado</th>
+			<th sec:authorize="hasAuthority('GERENTE')">Pedidos actuales</th>
+			<th sec:authorize="hasAuthority('GERENTE')">Otros</th>
+			<th sec:authorize="hasAuthority('CLIENTE')">Opciones</th>
+		</tr>
+		<tr th:each="mesa : ${pedidosPorMesa}">
+			<td th:text="${mesa.key.codigo}"></td>
+			
+			<td th:text="${mesa.key.estado}"></td>
+			
+			<td sec:authorize="hasAuthority('GERENTE')">
+				<a th:if="${mesa.key.estado.toString()}=='OCUPADA' or ${mesa.key.estado.toString()}=='PENDIENTE'" class=center-button
+				th:href="@{/mesas/mesaLibre/} + ${idNegocio} + '/' + ${mesa.key.id}">Libre</a>
+				<a th:if="${mesa.key.estado.toString()}=='PENDIENTE'" class=center-button
+				th:href="@{/mesas/mesaOcupada/} + ${idNegocio} + '/' + ${mesa.key.id}">Ocupada</a></td>
+				
+			<td sec:authorize="hasAuthority('GERENTE')" th:if="${mesa.value}!=null">
+				<a class=center-button
+					th:href="@{/mesas/pedido/} + ${idNegocio} + '/' + ${mesa.key.id}">Pedido</a>				
+				<a class=nuevo-pedido
+				   th:href="@{/mesas/pedido/} + ${idNegocio} + '/' + ${mesa.key.id}" th:if="${mesa.value.porServir}==true">¡Nuevo pedido!</a>
+				<a class=center-button
+					th:if="${mesa.value.estadoPedido.toString()}=='PENDIENTE_PAGO'" th:href="@{/mesas/pago/cuenta/} + ${mesa.key.id} + '/' + ${mesa.value.id}">Pagado</a>
+				<a class=center-button
+					th:if="${mesa.value.estadoPedido.toString()}=='PENDIENTE_PAGO'" target="_blank" th:href="@{/mesas/cuenta/} + ${mesa.value.id}">Ticket</a>	
+			</td>
+			<td sec:authorize="hasAuthority('GERENTE')" th:if="${mesa.value}==null"></td>
+			
+			<td sec:authorize="hasAuthority('GERENTE')">
+				<a class=center-button
+				th:href="@{/mesas/eliminarMesa/} + ${idNegocio} + '/' + ${mesa.key.id}">Eliminar</a></td>
+			<td sec:authorize="hasAuthority('CLIENTE')">
+				<a th:if="${mesa.key.estado.toString()} == 'LIBRE'" class=center-button
+				th:href="@{/mesas/solicitar/} + ${idNegocio} + '/' + ${mesa.key	.id}">Solicitar mesa</a>
+				<h4 th:if="${mesa.key.estado.toString()} == 'PENDIENTE'">Mesa pendiente de aprobación</h4>
+				<a th:if="${mesa.key.estado.toString()} == 'OCUPADA'" class=center-button
+				th:href="@{/pedir/} + ${idNegocio} + '/mesa/' + ${mesa.key.id}">Pedir</a></td>
+		
+		</tr>
+
+	</table>
+
+</body>
+</html>

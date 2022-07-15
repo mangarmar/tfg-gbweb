@@ -1,0 +1,50 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" th:href="@{/css/formUser.css}" />
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<title>Nuevo producto</title>
+</head>
+<body>
+
+
+	<header th:replace="comun/header.html::header"></header>
+		
+	<form class="form-register" th:action="${idNegocio}"
+		th:object="${producto}" method="post">
+		<h4>Datos del producto</h4>
+		<input type="hidden" th:field="*{id}" />
+		
+		 <input th:field="*{nombre}"
+			type="text" class="controls" placeholder="Nombre" name="nombre" />
+		<p class="alert alert-danger" role="alert" th:errors="*{nombre}"></p>
+
+		<input th:field="*{precio}" type="text" class="controls"
+			placeholder="Precio" name="precio" />
+		<p class="alert alert-danger" role="alert" th:errors="*{precio}"></p>
+
+		<h3>Tipo</h3><select th:field="*{tipo}" class="controls">
+			<option th:value="Refresco" th:text="Refresco"></option>
+			<option th:value="Alcohol" th:text="Alcohol"></option>
+			<option th:value="Racion" th:text="Racion"></option>
+			<option th:value="Media" th:text="Media"></option>
+			<option th:value="Tapa" th:text="Tapa"></option>
+			<option th:value="Snack" th:text="Snack"></option>
+
+		</select>
+		
+		<h3>Visibilidad</h3><select  th:field="*{visibilidad}" class="controls">
+			<option th:value="True" th:text="Si"></option>
+			<option th:value="False" th:text="No"></option>
+		</select>
+
+
+		<button type="submit" class="buttons">Guardar producto</button>
+
+	</form>
+
+
+</body>
+</html>

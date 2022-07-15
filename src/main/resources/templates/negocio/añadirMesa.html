@@ -1,0 +1,34 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" th:href="@{/css/formUser.css}" />
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<title>Nuevo producto</title>
+</head>
+<body>
+
+
+	<header th:replace="comun/header.html::header"></header>
+	
+	
+	
+	
+	<form class="form-register" th:action="${idNegocio}"
+		th:object="${mesa}" method="post">
+		<h4>Añadir Mesa</h4>
+		<input type="hidden" th:field="*{id}" />
+		
+		 <input th:field="*{codigo}"
+			type="text" class="controls" placeholder="XXX-NNNN" name="codigo" />
+		<p class="alert alert-danger" role="alert" th:errors="*{codigo}"></p>
+
+
+		<button type="submit" class="buttons">Guardar mesa</button>
+
+	</form>
+
+
+</body>
+</html>

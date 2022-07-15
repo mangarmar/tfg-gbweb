@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" href="/css/formUser.css" />
+<link rel="stylesheet" href="/css/style.css" />
+
+<meta charset="utf-8">
+</head>
+<header th:fragment="header" id="main-header">
+
+
+	<nav>
+		
+			
+		<div sec:authorize="!isAuthenticated()">
+			<ul>
+				<li style="float:left"><h2><a href="/listarNegocios">GBWEB</a></h2></li>
+				<li><a href="/login">Iniciar Sesión</a></li>
+				<li><a href="/crearCliente">Registro clientes</a></li>
+				<li><a href="/crearGerente">Registro gerentes</a></li>
+			</ul>
+		</div>
+
+		<div sec:authorize="hasAuthority('CLIENTE') || hasAuthority('CLIENTE_CONFIRMADO')">
+			<ul>
+				<li style="float:left"><h2><a href="/listarNegocios">GBWEB</a></h2></li>
+				<li><a href="/logout">Cerrar Sesión</a></li>
+			</ul>
+		</div>
+
+		<div sec:authorize="hasAuthority('GERENTE')">
+			<ul>
+				<li style="float:left"><h2><a href="/listarNegocios">GBWEB</a></h2></li>
+				<li><a href="/logout">Cerrar Sesión</a></li>
+				<li class="dropdown">
+					<button class="dropbtn">
+						Gestiona tus negocios <i class="fa fa-caret-down"></i>
+					</button>
+					<div class="dropdown-content">
+						<a href="/listarNegocios">Negocios</a>
+						<a href="/crearNegocio">Registra nuevo negocio</a>
+					</div>
+				</li>
+				
+				
+			</ul>
+		</div>
+	</nav>
+
+</header>
