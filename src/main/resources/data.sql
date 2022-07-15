@@ -1,6 +1,6 @@
 
 
-INSERT INTO `usuarios` VALUES (100000,'gerentes','calle gerente','12345678G','gerente@gerente.com','1999-07-18','gerente','$2a$12$Bzs5tApq5iEJ9sVdt1mjy.zSiEUODsKajscptpMoISNpesaVAt6bG',null,'GERENTE','gerente',null);
+INSERT INTO ´usuarios´ VALUES (100000,'gerentes','calle gerente','12345678G','gerente@gerente.com','1999-07-18','gerente','$2a$12$Bzs5tApq5iEJ9sVdt1mjy.zSiEUODsKajscptpMoISNpesaVAt6bG',null,'GERENTE','gerente',null);
 
 INSERT INTO `negocios` VALUES (100000,'Calle Prim','100','A12345678','Carmona','Bar cafetería donde encontrarás un buen ambiente cofrade','forum@gmail.com','/resources/static/images/cafeteria-forum.png','37.473809119236','-5.639010794007065','Forum','26','Sevilla',1, 100000);
 
