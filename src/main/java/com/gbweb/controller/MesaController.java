@@ -287,7 +287,7 @@ public class MesaController {
 			}
 	        ByteArrayInputStream bis = GeneratePdfReport.cuentaPDF(productosServidos);
 
-	        var headers = new HttpHeaders();
+	        HttpHeaders headers = new HttpHeaders();
 	        headers.add("Content-Disposition", "inline; filename=cuenta.pdf");
 
 			 return ResponseEntity
@@ -317,7 +317,7 @@ public class MesaController {
 			}
 	        ByteArrayInputStream bis = GeneratePdfReport.cuentaPDF(productosServidos);
 
-	        var headers = new HttpHeaders();
+	        HttpHeaders headers = new HttpHeaders();
 	        headers.add("Content-Disposition", "inline; filename=cuenta.pdf");
 
 			 return ResponseEntity
