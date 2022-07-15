@@ -1,6 +1,5 @@
 package com.gbweb.service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,8 +19,6 @@ import com.gbweb.entity.Localizacion;
 import com.gbweb.entity.Negocio;
 import com.gbweb.entity.Usuario;
 import com.gbweb.repository.NegocioRepository;
-import com.gbweb.repository.UserRepository;
-import com.itextpdf.text.log.SysoCounter;
 
 @Service
 public class NegocioService {

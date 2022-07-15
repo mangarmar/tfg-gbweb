@@ -7,10 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.gbweb.entity.Mesa;
 import com.gbweb.entity.Negocio;
-import com.gbweb.entity.Producto;
 import com.gbweb.enums.Estado;
 import com.gbweb.repository.MesaRepository;
-import com.gbweb.repository.ProductoRepository;
 
 @Service
 public class MesaService {
