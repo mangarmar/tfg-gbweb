@@ -64,10 +64,7 @@ public class LineaPedidoService {
 	}
 	
 	public void borraLineaPedido(LineaPedido lp) {
-		List<LineaPedido> lps = lineaPedidoRepo.findAll();
-		List<LineaPedido> lpBorrar = lps.stream().filter(x->x.getPedido().equals(lp)).collect(Collectors.toList());
-		
-		lineaPedidoRepo.deleteAll(lpBorrar);
+		lineaPedidoRepo.delete(lp);
 	}
 	
 	public List<LineaPedido> findTodosPorPedido(Pedido pedidoActivo) {

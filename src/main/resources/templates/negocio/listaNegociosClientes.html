@@ -12,6 +12,14 @@
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>    
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
 <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script> 
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js');
+        });
+    }
+</script>
+<link rel="manifest"  th:href="@{../../../manifest.json}">
 
 	
 <title>Bares disponibles</title>
@@ -43,7 +51,7 @@
 		    attribution: '© OpenStreetMap'
 		}).addTo(map);
 		
-		let geojson_url = "https://a9ae-217-29-106-99.eu.ngrok.io/api/negocios";
+		let geojson_url = "http://localhost:8000/api/negocios";
 		
 		fetch(
 				geojson_url
