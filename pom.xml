@@ -17,11 +17,12 @@
 
 	<properties>
 		<java.version>11</java.version>
-
 		<jacoco.version>0.8.5</jacoco.version>
 		<spring-format.version>0.0.19</spring-format.version>
 		<selenium.version>3.141.59</selenium.version>
 		<rest-assured.version>3.0.2</rest-assured.version>
+		<junit.jupiter.version>5.0.2</junit.jupiter.version>
+   		<junit.platform.version>1.0.2</junit.platform.version>
 	</properties>
 
 	<dependencies>

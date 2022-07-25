@@ -76,7 +76,7 @@ public class ProductoController {
 		model.addAttribute("media", media);
 		model.addAttribute("tapa", tapa);
 		model.addAttribute("snack", snack);
-		model.addAttribute("usuario", usuarioActual());
+		model.addAttribute("usuario", userService.usuarioActual());
 
 		return "producto/listaProductos";
 
@@ -110,12 +110,12 @@ public class ProductoController {
 		model.addAttribute("media", media.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
 		model.addAttribute("tapa", tapa.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
 		model.addAttribute("snack", snack.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
-		model.addAttribute("usuario", usuarioActual());
+		model.addAttribute("usuario", userService.usuarioActual());
 		model.addAttribute("codigoMesa", mesaService.findById(idMesa).getCodigo());
 		model.addAttribute("idNegocio", idNegocio);
 		
 		
-		System.out.println(usuarioActual().getMesa());
+		System.out.println(userService.usuarioActual().getMesa());
 		System.out.println(mesaService.findById(idMesa).getCodigo());
 
 
@@ -237,7 +237,7 @@ public class ProductoController {
 		model.addAttribute("productosServidos",productosServidos);
 		model.addAttribute("precioTotalNoServido", precioTotalNoServido);
 		model.addAttribute("precioTotal", precioTotalServido);
-		model.addAttribute("usuario", usuarioActual());
+		model.addAttribute("usuario", userService.usuarioActual());
 		model.addAttribute("idNegocio", idNegocio);
 		model.addAttribute("idPedido", idPedido);
 		
@@ -397,21 +397,7 @@ public class ProductoController {
 
 	}
 
-	
-	public Usuario usuarioActual() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		UserDetails userDetails = null;
-		Usuario user = null;
-		if (principal instanceof UserDetails) {
-			userDetails = (UserDetails) principal;
-			String userName = userDetails.getUsername();
-			user = this.userService.findByUsername(userName);
-		} else {
-			user = null;
-		}
-		return user;
-	}
-	
+
 	
 
 

@@ -104,7 +104,7 @@ public class MesaController {
 		Negocio negocio = negocioService.findNegocioById(idNegocio);
 		List<Mesa> mesas = negocio.getMesas();
 		Map<Mesa, Pedido> pedidosPorMesa = new LinkedHashMap<>();
-		Usuario usuario = usuarioActual();
+		Usuario usuario = userService.usuarioActual();
 		Boolean ok = false;
 		
 		if(usuario.getMesa()!=null) {
@@ -150,12 +150,17 @@ public class MesaController {
 			model.addAttribute("mesa", mesa);
 			return "negocio/añadirMesa";
 		} else {
+			if(!mesaService.añadirMesa(mesa, idNegocio)) {
+				model.addAttribute("message", "Este código ya existe");
+				return "negocio/añadirMesa";
+			}else {
+				mesaService.añadirMesa(mesa, idNegocio);
+				return "redirect:/mesas/"+idNegocio;
+			}
 			
-			mesaService.añadirMesa(mesa, idNegocio);
 
 		}
 	
-		return "redirect:/mesas/"+idNegocio;
 
 	}
 	
@@ -169,15 +174,15 @@ public class MesaController {
 		}	
 		mesaService.save(mesa);
 		mesaService.actualizarEstado(mesa, idNegocio, Estado.LIBRE);
-		if(usuarioActual().getRol().equals(ROL.GERENTE)) {
+		if(userService.usuarioActual().getRol().equals(ROL.GERENTE)) {
 			Usuario usuario =  userService.findByMesa(mesa.getCodigo());
 			usuario.setPermisos(null);
 			usuario.setMesa(null);
 			userService.save(usuario);
 		}else {
-			usuarioActual().setPermisos(null);	
-			usuarioActual().setMesa(null);
-			userService.save(usuarioActual());
+			userService.usuarioActual().setPermisos(null);	
+			userService.usuarioActual().setMesa(null);
+			userService.save(userService.usuarioActual());
 		}
 
 		
@@ -191,7 +196,7 @@ public class MesaController {
 		Usuario user = userService.findAllUsers().stream().filter(x->x.getMesa()!=null).filter(x->x.getMesa().getCodigo().equals(mesa.getCodigo())).findFirst().get();
 		
 		user.setPermisos("Aceptado");
-		userService.save(usuarioActual());
+		userService.save(userService.usuarioActual());
 		
 		mesa.setNegocio(negocioService.findNegocioById(idNegocio));
 		mesaService.actualizarEstado(mesa, idNegocio, Estado.OCUPADA);
@@ -216,11 +221,11 @@ public class MesaController {
 	public String solicitarMesa(@PathVariable(value = "idMesa") Long idMesa,
 			@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
 
-		if(usuarioActual().getMesa()==null) {
+		if(userService.usuarioActual().getMesa()==null) {
 		Mesa mesa = mesaService.findById(idMesa);
 		mesaService.actualizarEstado(mesa, idNegocio, Estado.PENDIENTE);
-		usuarioActual().setMesa(mesa);
-		userService.save(usuarioActual());
+		userService.usuarioActual().setMesa(mesa);
+		userService.save(userService.usuarioActual());
 		}else {
 			return "redirect:/mesas/libres/"+idNegocio;
 		}
@@ -257,7 +262,7 @@ public class MesaController {
 		model.addAttribute("productosServidos",productosServidos);
 		model.addAttribute("precioTotalNoServido", precioTotalNoServido);
 		model.addAttribute("precioTotal", precioTotalServido);
-		model.addAttribute("usuario", usuarioActual());
+		model.addAttribute("usuario", userService.usuarioActual());
 		model.addAttribute("idNegocio", idNegocio);
 		model.addAttribute("idMesa", idMesa);
 		
@@ -334,9 +339,9 @@ public class MesaController {
 		 Pedido pedido = pedidoService.findById(idPedido);
 		 pedido.setEstadoPedido(EstadoPedido.PENDIENTE_PAGO);
 		 pedidoService.nuevoPedido(pedido);
-		 usuarioActual().setPermisos(null);
-		 usuarioActual().setMesa(null);
-		 userService.save(usuarioActual());
+		 userService.usuarioActual().setPermisos(null);
+		 userService.usuarioActual().setMesa(null);
+		 userService.save(userService.usuarioActual());
 //		 mesaService.actualizarEstado(mesa, mesa.getNegocio().getId(), Estado.LIBRE);
 		 model.addAttribute("idMesa", idMesa);
 		 model.addAttribute("pedido", pedido);
@@ -364,9 +369,9 @@ public class MesaController {
 		 Mesa mesa = mesaService.findById(idMesa);
 		 pedido.setEstadoPedido(EstadoPedido.ACTIVO);
 		 pedidoService.nuevoPedido(pedido);
-		 usuarioActual().setPermisos("Aceptado");
-		 usuarioActual().setMesa(mesa);
-		 userService.save(usuarioActual());
+		 userService.usuarioActual().setPermisos("Aceptado");
+		 userService.usuarioActual().setMesa(mesa);
+		 userService.save(userService.usuarioActual());
 		 mesaService.actualizarEstado(mesa, mesa.getNegocio().getId(), Estado.OCUPADA);
 		 model.addAttribute("idMesa", idMesa);
 		 model.addAttribute("idPedido", idPedido);
@@ -390,18 +395,6 @@ public class MesaController {
 
 	 
 	
-	public Usuario usuarioActual() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		UserDetails userDetails = null;
-		Usuario user = null;
-		if (principal instanceof UserDetails) {
-			userDetails = (UserDetails) principal;
-			String userName = userDetails.getUsername();
-			user = this.userService.findByUsername(userName);
-		} else {
-			user = null;
-		}
-		return user;
-	}
+
 
 }

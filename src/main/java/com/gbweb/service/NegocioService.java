@@ -37,32 +37,19 @@ public class NegocioService {
 	    return builder.build();
 	}
 
-	public Usuario usuarioActual() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		UserDetails userDetails = null;
-		Usuario user = null;
-		if (principal instanceof UserDetails) {
-			userDetails = (UserDetails) principal;
-			String userName = userDetails.getUsername();
-			user = this.userService.findByUsername(userName);
-		} else {
-			user = null;
-		}
-		return user;
-	}
 	
-	public void creaNegocio(@Valid Negocio negocio) {
+	public Negocio creaNegocio(@Valid Negocio negocio) {
 		
-		usuarioActual().getNegocios().add(negocio);
-		negocio.setUsuario(usuarioActual());
+		userService.usuarioActual().getNegocios().add(negocio);
+		negocio.setUsuario(userService.usuarioActual());
 		Localizacion localizacion = getLocalizacion(negocio.getCalle(), negocio.getNumero(), negocio.getCiudad(), negocio.getProvincia());
 		negocio.setLatitud(localizacion.getLat());
 		negocio.setLongitud(localizacion.getLon());
-		negocioRepo.save(negocio);
+		return negocioRepo.save(negocio);
 		
 	}
 	
-	public void editarNegocio(@Valid Negocio negocio, Long idNegocio) {
+	public Negocio editarNegocio(@Valid Negocio negocio, Long idNegocio) {
 		
 		Negocio negocioAct = findNegocioById(idNegocio);
 		negocioAct.setCapacidad(negocio.getCapacidad());
@@ -76,13 +63,12 @@ public class NegocioService {
 		negocioAct.setNombre(negocio.getNombre());
 
 		Localizacion localizacion = getLocalizacion(negocio.getCalle(), negocio.getNumero(), negocio.getCiudad(), negocio.getProvincia());
-		System.out.println(localizacion.getLat());
 		negocioAct.setLatitud(localizacion.getLat());
         negocioAct.setLongitud(localizacion.getLon());
 		
 		negocioAct.setTipo(negocio.getTipo());
-		negocioAct.setUsuario(usuarioActual());
-		negocioRepo.save(negocioAct);
+		negocioAct.setUsuario(userService.usuarioActual());
+		return negocioRepo.save(negocioAct);
 		
 	}
 
@@ -98,7 +84,7 @@ public class NegocioService {
 	}
 	
 	public List<Negocio> findAll(){
-		return negocioRepo.findAll();
+		return (List<Negocio>) negocioRepo.findAll();
 	}
 
 	
@@ -107,11 +93,23 @@ public class NegocioService {
         String direccion = calle + "," + numero + "," + ciudad + "," + provincia;
         System.out.println(direccion);
         ResponseEntity<Localizacion[]> response = restTemplate.getForEntity("https://geocode.maps.co/search?q=" + direccion, Localizacion[].class);
-        Localizacion[] localizaciones = response.getBody();
-        List<Localizacion> l = Arrays.asList(localizaciones);
-        Localizacion localizacion = l.get(0);    
-        
-    return  localizacion;
+        if (response!=null) {
+	        Localizacion[] localizaciones = response.getBody();
+	        List<Localizacion> l = Arrays.asList(localizaciones);
+	        Localizacion localizacion = l.get(0);
+	        
+	        return  localizacion;
+
+        }else {
+        	Localizacion localizacion = new Localizacion();
+        	localizacion.setLat("1");
+        	localizacion.setLon("1");
+        	return localizacion;
+        }
 }
+    
+    public Negocio save(Negocio n) {
+    	return negocioRepo.save(n);
+    }
     
 }

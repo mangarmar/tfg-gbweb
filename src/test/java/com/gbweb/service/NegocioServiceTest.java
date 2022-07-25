@@ -40,6 +40,9 @@ public class NegocioServiceTest {
 	@MockBean
 	NegocioRepository negocioRepo;
 	
+	@MockBean
+	UserService userService;
+	
 	@Autowired
 	NegocioService negocioService;
 	
@@ -50,28 +53,28 @@ public class NegocioServiceTest {
 	
 
 	
-//	@Test
-//	@WithMockUser(username = "u")
-//	void creaNegocio() {
-//		Usuario u = new Usuario();
-//		u.setUsername("u");
-//		Localizacion l = new Localizacion();
-//		l.setLat("1");
-//		l.setLon("1");
-//		u.setNegocios(new ArrayList<>());
-//		
-//		Negocio n = new Negocio();
-//		n.setLatitud("1");
-//		n.setLongitud("1");
-//		n.setUsuario(u);
-//		
-//	
-//		doReturn(n).when(negocioRepo).save(n);
-//		
-//		Negocio res = negocioService.creaNegocio(n);
-//		
-//		Assertions.assertEquals(res, n);
-//	}
+	@Test
+	void creaNegocio() {
+		Usuario u = new Usuario();
+		u.setUsername("u");
+		Localizacion l = new Localizacion();
+		l.setLat("1");
+		l.setLon("1");
+		u.setNegocios(new ArrayList<>());
+		
+		Negocio n = new Negocio();
+		n.setLatitud("1");
+		n.setLongitud("1");
+		n.setUsuario(u);
+		
+	
+		doReturn(n).when(negocioRepo).save(n);
+		doReturn(u).when(userService).usuarioActual();
+		
+		Negocio res = negocioService.creaNegocio(n);
+		
+		Assertions.assertEquals(res, n);
+	}
 	
 	@Test
 	@DisplayName("Test get localización")
@@ -155,30 +158,34 @@ public class NegocioServiceTest {
 		
 	}
 	
-//	@Test
-//	@WithMockUser
-//	void editarNegocio() {
-//		Negocio negocio = new Negocio();
-//		negocio.setCalle("Calle Prim");
-//		negocio.setNumero("24");
-//		negocio.setCiudad("Carmona");
-//		negocio.setProvincia("Sevilla");
-//		negocio.setCapacidad(100);
-//		negocio.setCif("A12345678");
-//		negocio.setMesas(Arrays.asList(new Mesa()));
-//		negocio.setUsuario(new Usuario());
-//		negocio.setNombre("nombre");
-//		negocio.setEmail("email@gmail.com");
-//		
-//		Negocio negocioAct = new Negocio();
-//		negocioAct.setId(1L);
-//		
-//		
-//		doReturn(Optional.of(negocioAct)).when(negocioRepo).findById(1L);
-//		Negocio res = negocioService.editarNegocio(negocio, 1L);
-//		
-//		Assertions.assertEquals(negocio.getCalle(), "Calle Prim");
-//
-	//}
+	@Test
+	@WithMockUser
+	void editarNegocio() {
+		Usuario u = new Usuario();
+		Negocio negocio = new Negocio();
+		
+		negocio.setId(1L);
+		negocio.setCalle("Calle Prim");
+		negocio.setNumero("24");
+		negocio.setCiudad("Carmona");
+		negocio.setProvincia("Sevilla");
+		negocio.setCapacidad(100);
+		negocio.setCif("A12345678");
+		negocio.setMesas(Arrays.asList(new Mesa()));
+		negocio.setUsuario(new Usuario());
+		negocio.setNombre("nombre");
+		negocio.setEmail("email@gmail.com");
+		u.setNegocios(Arrays.asList(negocio));
+
+		
+		doReturn(u).when(userService).usuarioActual();
+		doReturn(Optional.of(negocio)).when(negocioRepo).findById(1L);
+		doReturn(negocio).when(negocioRepo).save(negocio);
+		
+		Negocio res = negocioService.editarNegocio(negocio, 1L);
+		
+		Assertions.assertEquals(negocio.getCalle(), res.getCalle());
+
+	}
 
 }

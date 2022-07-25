@@ -16,8 +16,8 @@ public class ProductoService {
 	@Autowired
 	ProductoRepository productoRepo;
 
-	public void nuevoProducto(@Valid Producto producto) {
-		productoRepo.save(producto);
+	public Producto nuevoProducto(@Valid Producto producto) {
+		return productoRepo.save(producto);
 	}
 	
 	public List<Producto> findAll(){

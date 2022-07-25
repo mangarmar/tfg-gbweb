@@ -17,6 +17,8 @@ public interface NegocioRepository extends JpaRepository<Negocio, Long> {
 	@Query("SELECT id FROM Negocio WHERE USUARIO_ID = :id")
 	public List<Long> findNegociosByUserId(@Param ("id") Long id);
 	
+	
+	
 
 
 }
