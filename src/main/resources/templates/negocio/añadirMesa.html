@@ -5,14 +5,15 @@
 <meta charset="utf-8">
 <link rel="stylesheet" th:href="@{/css/formUser.css}" />
 <link rel="stylesheet" th:href="@{/css/style.css}" />
-<title>Nuevo producto</title>
+<title>Nueva mesa</title>
 </head>
 <body>
 
 
 	<header th:replace="comun/header.html::header"></header>
 	
-	
+	<div th:if="${message != null }" th:text="${message}"
+            class="error" role="alert"></div>
 	
 	
 	<form class="form-register" th:action="${idNegocio}"
@@ -22,7 +23,7 @@
 		
 		 <input th:field="*{codigo}"
 			type="text" class="controls" placeholder="XXX-NNNN" name="codigo" />
-		<p class="alert alert-danger" role="alert" th:errors="*{codigo}"></p>
+		<p class="error-form" role="alert" th:errors="*{codigo}"></p>
 
 
 		<button type="submit" class="buttons">Guardar mesa</button>

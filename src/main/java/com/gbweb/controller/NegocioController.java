@@ -95,27 +95,32 @@ public class NegocioController {
 			model.addAttribute("negocio", negocio);
 			return "negocio/editarNegocio";
 		} else {
-
-			negocioService.editarNegocio(negocio, idNegocio);
+			try {
+				negocioService.editarNegocio(negocio, idNegocio);
+				return listarNegocios(model);
+			} catch (Exception e) {
+				model.addAttribute("message", "Lo sentimos, no se ha podido encontrar la localización indicada");
+				return "negocio/editarNegocio";
+			}
 
 		}
-		return listarNegocios(model);
+		
 
 	}
 	
 	@GetMapping("/listarNegocios")
 	public String listarNegocios(Model model) {
 		
-		if(usuarioActual()==null) {
+		if(userService.usuarioActual()==null) {
 			List<Negocio> negocios = negocioService.findAll();
 			model.addAttribute("negocios", negocios);
 			return "negocio/listaNegociosClientes";
-		}else if(usuarioActual().getRol().equals(ROL.CLIENTE) || usuarioActual().getRol().equals(ROL.ADMIN)) {
+		}else if(userService.usuarioActual().getRol().equals(ROL.CLIENTE) || userService.usuarioActual().getRol().equals(ROL.ADMIN)) {
 			List<Negocio> negocios = negocioService.findAll();
 			model.addAttribute("negocios", negocios);
 			return "negocio/listaNegociosClientes";
 		}else{
-			List<Negocio> negociosPorUsuario = negocioService.findNegociosByUserId(usuarioActual().getId());
+			List<Negocio> negociosPorUsuario = negocioService.findNegociosByUserId(userService.usuarioActual().getId());
 			model.addAttribute("negocios", negociosPorUsuario);
 			return "negocio/listaNegocios";
 		}
@@ -160,20 +165,6 @@ public class NegocioController {
 	
 	
 
-	
-	public Usuario usuarioActual() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		UserDetails userDetails = null;
-		Usuario user = null;
-		if (principal instanceof UserDetails) {
-			userDetails = (UserDetails) principal;
-			String userName = userDetails.getUsername();
-			user = this.userService.findByUsername(userName);
-		} else {
-			user = null;
-		}
-		return user;
-	}
 	
 	
 	

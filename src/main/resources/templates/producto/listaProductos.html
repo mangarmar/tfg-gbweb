@@ -11,7 +11,10 @@
 <body>
 
 	<header th:replace="comun/header.html::header"></header>
-	<div>
+	
+	<div sec:authorize="hasAuthority('GERENTE')">
+	
+	<div> 
 		<h1 th:text="${nombreNegocio}"></h1>
 	</div>
 	<a class="back-button" th:href="@{/listarNegocios}">Volver</a>
@@ -19,23 +22,16 @@
 	<a sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/mesas/libres/} + ${idNegocio}">Mesas libres</a>
 	<a th:if="${usuario.mesa!=null}" sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/mesas/estado/} + ${idNegocio}">Mi mesa</a>
 		
-	<div th:if="${snacks!=null and !snacks.isEmpty()}">
+	<div th:if="${snack!=null and !snack.isEmpty()}">
 	<br><br><br>
 	<table id="customers">
-		
-		<tr>
 		<h2>Snacks</h2>
-			<th style="width: 18.75%">Nombre</th>
-			<th style="width: 18.75%">Precio</th>
-			<th style="width: 18.75%">Tipo</th>
-			<th style="width: 18.75%">Visible</th>
-			<th style="width: 30%">Opciones</th>
+			<br>
 		</tr>
-		<tr th:each="producto : ${snacks}">
-			<td th:if="producto.visibilidad == true" style="width: 18.75%" th:text="${producto.nombre}"></td>
+		<tr  th:each="producto : ${snack}">
+			<td style="width: 18.75%" th:text="${producto.nombre}"></td>
 			<td style="width: 18.75%" th:text="${producto.precio}"></td>
-			<td	style="width: 18.75%" th:text="${producto.tipo}"></td>
-			<td style="width: 18.75%" sec:authorize="hasAuthority('GERENTE')"  th:text="${producto.visibilidad}"></td>
+			<td style="width: 18.75%" sec:authorize="hasAuthority('GERENTE')" th:text="${producto.visibilidad}"></td>
 			<td style="width: 30%" sec:authorize="hasAuthority('GERENTE')"><a class=center-button
 				th:href="@{/editarProducto/} + ${idNegocio} + '/' + ${producto.id}">Editar</a>
 				<a class=center-button
@@ -163,8 +159,115 @@
 	</div>
 	<br><br><br>	
 	
-	
-	
+	</div>
+	<div sec:authorize="hasAuthority('CLIENTE') or !isAuthenticated()">
+		<div> 
+		<h1 th:text="${nombreNegocio}"></h1>
+	</div>
+	<a class="back-button" th:href="@{/listarNegocios}">Volver</a>
+	<a sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/mesas/libres/} + ${idNegocio}">Mesas libres</a>
+	<a th:if="${usuario.mesa!=null}" sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/mesas/estado/} + ${idNegocio}">Mi mesa</a>
+		
+	<div th:if="${snack!=null and !snack.isEmpty()}">
+	<br><br><br>
+	<table id="customers">
+		<h2>Snacks</h2>
+			<br>
+		</tr>
+		<tr  th:each="producto : ${snack}">
+			<td style="width: 18.75%" th:text="${producto.nombre}"></td>
+			<td th:if="${producto.visibilidad}==true" style="width: 18.75%" th:text="${producto.precio}"></td>
+			<td th:if="${producto.visibilidad}==false" style="width: 18.75%">No disponible temporalmente</td>
+		</tr>
 
+	</table>
+	</div>
+	
+	<div th:if="${racion!=null and !racion.isEmpty()}">
+	<br><br><br>
+	<table id="customers">
+		
+		<tr>
+		<h2>Raciones</h2>
+			<br>
+		</tr>
+		<tr th:each="producto : ${racion}">
+			<td style="width: 18.75%" th:text="${producto.nombre}"></td>
+			<td th:if="${producto.visibilidad}==true" style="width: 18.75%" th:text="${producto.precio}"></td>
+			<td th:if="${producto.visibilidad}==false" style="width: 18.75%">No disponible temporalmente</td>
+		</tr>
+
+	</table>
+	</div>
+	
+	<div th:if="${media!=null and !media.isEmpty()}">
+	<br><br><br>
+	<table id="customers">
+		
+		<tr>
+		<h2>Medias</h2>
+			<br>
+		</tr>
+		<tr th:each="producto : ${media}">
+			<td style="width: 18.75%" th:text="${producto.nombre}"></td>
+			<td th:if="${producto.visibilidad}==true" style="width: 18.75%" th:text="${producto.precio}"></td>
+			<td th:if="${producto.visibilidad}==false" style="width: 18.75%">No disponible temporalmente</td>
+		</tr>
+
+	</table>
+	</div>
+	
+	<div th:if="${tapa!=null and !tapa.isEmpty()}">
+	<br><br><br>
+	<table id="customers">
+		
+		<tr>
+		<h2>Tapas</h2>
+			<br>
+		</tr>
+		<tr th:each="producto : ${tapa}">
+			<td style="width: 18.75%" th:text="${producto.nombre}"></td>
+			<td th:if="${producto.visibilidad}==true" style="width: 18.75%" th:text="${producto.precio}"></td>
+			<td th:if="${producto.visibilidad}==false" style="width: 18.75%">No disponible temporalmente</td>
+		</tr>
+
+	</table>
+	</div>
+	
+	<div th:if="${refrescos!=null and !refrescos.isEmpty()}">
+	<br><br><br>
+	<table id="customers">
+		
+		<tr>
+		<h2>Refrescos</h2>
+			<br>
+		</tr>
+		<tr th:each="producto : ${refrescos}">
+			<td style="width: 18.75%" th:text="${producto.nombre}"></td>
+			<td th:if="${producto.visibilidad}==true" style="width: 18.75%" th:text="${producto.precio}"></td>
+			<td th:if="${producto.visibilidad}==false" style="width: 18.75%">No disponible temporalmente</td>
+		</tr>
+
+	</table>
+	</div>
+	
+	<div th:if="${alcohol!=null and !alcohol.isEmpty()}">
+	<br><br><br>
+	<table id="customers">
+		
+		<tr>
+		<h2>Bebidas alcohólicas</h2>
+			<br>
+		</tr>
+		<tr th:each="producto : ${alcohol}">
+			<td style="width: 18.75%" th:text="${producto.nombre}"></td>
+			<td th:if="${producto.visibilidad}==true" style="width: 18.75%" th:text="${producto.precio}"></td>
+			<td th:if="${producto.visibilidad}==false" style="width: 18.75%">No disponible temporalmente</td>
+		</tr>
+
+	</table>
+	</div>
+	<br><br><br>	
+	</div>
 </body>
 </html>

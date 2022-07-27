@@ -17,8 +17,8 @@ public class PedidoService {
 	@Autowired
 	PedidoRepository pedidoRepo;
 	
-	public void nuevoPedido(@Valid Pedido pedido) {
-		pedidoRepo.save(pedido);
+	public Pedido nuevoPedido(@Valid Pedido pedido) {
+		return pedidoRepo.save(pedido);
 	}
 	
 	public void borrarProductosPedido(List<Producto> productos, Long idPedido) {
@@ -28,7 +28,6 @@ public class PedidoService {
 	}
 
 	public Pedido findById(Long idPedido) {
-		
 		return pedidoRepo.findById(idPedido).orElse(null);
 	}
 

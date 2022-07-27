@@ -23,7 +23,7 @@
 		<a th:if="${usuario.mesa!=null}" sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/pedido/negocio/} + ${idNegocio}+@{/mesa/}+${usuario.mesa.id}">Confirmar pedido</a>	
 		<a th:if="${usuario.mesa!=null}" sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/pedido/cuenta/} + ${idNegocio}+@{/mesa/}+${usuario.mesa.id}">Cuenta total</a>	
 			
-		<div th:if="${snacks!=null and !snacks.isEmpty()}">
+		<div th:if="${snack!=null and !snack	.isEmpty()}">
 		<br><br><br>
 		<table id="customers">
 			
@@ -31,10 +31,9 @@
 			<h2>Snacks</h2>
 				<br>
 			</tr>
-			<tr th:each="producto : ${snacks}">
+			<tr th:each="producto : ${snack}">
 				<td style="width: 18.75%" th:text="${producto.nombre}"></td>
 				<td style="width: 18.75%" th:text="${producto.precio}"></td>
-				<td	style="width: 18.75%" th:text="${producto.tipo}"></td>
 				<td style="width: 18.75%" sec:authorize="hasAuthority('GERENTE')"  th:text="${producto.visibilidad}"></td>
 				<td style="width: 30%" sec:authorize="hasAuthority('GERENTE')"><a class=center-button
 					th:href="@{/editarProducto/} + ${idNegocio} + '/' + ${producto.id}">Editar</a>

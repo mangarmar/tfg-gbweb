@@ -41,23 +41,23 @@ public class UserService implements UserDetailsService {
 	}
 
 	@Transactional
-	public void creaCliente(@Valid Usuario cliente) {
+	public Usuario creaCliente(@Valid Usuario cliente) {
 		
 		String password = passw.encode(cliente.getPassword());
 		cliente.setPassword(password);
 		cliente.setNegocios(null);
 		cliente.setRol(ROL.CLIENTE);
-		userRepo.save(cliente);
+		return userRepo.save(cliente);
 
 	}
 
 	@Transactional
-	public void creaGerente(@Valid Usuario gerente) {
+	public Usuario creaGerente(@Valid Usuario gerente) {
 		
 		String password = passw.encode(gerente.getPassword());
 		gerente.setPassword(password);
 		gerente.setRol(ROL.GERENTE);
-		userRepo.save(gerente);
+		return userRepo.save(gerente);
 
 	}
 
@@ -94,8 +94,8 @@ public class UserService implements UserDetailsService {
 		return usuariosValidos.get(0);
 	}
 
-	public void save(Usuario u) {
-		this.userRepo.save(u);
+	public Usuario save(Usuario u) {
+		return this.userRepo.save(u);
 	}
 
 	public void eliminarUsuario(Usuario u) {

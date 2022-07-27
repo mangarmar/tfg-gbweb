@@ -55,7 +55,7 @@ public class UserController {
 
 	@GetMapping("/crearGerente")
 	public String crearGerente(Model model) {
-		model.addAttribute("actual", usuarioActual());
+		model.addAttribute("actual", userService.usuarioActual());
 		model.addAttribute("gerente", new Usuario());
 		return "gerente/formularioGerente";
 	}
@@ -74,22 +74,6 @@ public class UserController {
 		}
 		return "redirect:/crearNegocio";
 
-	}
-
-	
-
-	public Usuario usuarioActual() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		UserDetails userDetails = null;
-		Usuario user = null;
-		if (principal instanceof UserDetails) {
-			userDetails = (UserDetails) principal;
-			String userName = userDetails.getUsername();
-			user = this.userService.findByUsername(userName);
-		} else {
-			user = null;
-		}
-		return user;
 	}
 
 }

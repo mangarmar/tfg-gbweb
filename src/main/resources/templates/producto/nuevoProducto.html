@@ -19,16 +19,16 @@
 		
 		 <input th:field="*{nombre}"
 			type="text" class="controls" placeholder="Nombre" name="nombre" />
-		<p class="alert alert-danger" role="alert" th:errors="*{nombre}"></p>
+		<p class="error-form" role="alert" th:errors="*{nombre}"></p>
 
 		<input th:field="*{precio}" type="text" class="controls"
 			placeholder="Precio" name="precio" />
-		<p class="alert alert-danger" role="alert" th:errors="*{precio}"></p>
+		<p class="error-form" role="alert" th:errors="*{precio}"></p>
 
 		<h3>Tipo</h3><select th:field="*{tipo}" class="controls">
 			<option th:value="Refresco" th:text="Refresco"></option>
 			<option th:value="Alcohol" th:text="Alcohol"></option>
-			<option th:value="Racion" th:text="Racion"></option>
+			<option th:value="Ración" th:text="Ración"></option>
 			<option th:value="Media" th:text="Media"></option>
 			<option th:value="Tapa" th:text="Tapa"></option>
 			<option th:value="Snack" th:text="Snack"></option>

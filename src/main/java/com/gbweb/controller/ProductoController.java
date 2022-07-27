@@ -1,3 +1,4 @@
+
 package com.gbweb.controller;
 
 import java.util.ArrayList;
@@ -75,7 +76,7 @@ public class ProductoController {
 		model.addAttribute("media", media);
 		model.addAttribute("tapa", tapa);
 		model.addAttribute("snack", snack);
-		model.addAttribute("usuario", usuarioActual());
+		model.addAttribute("usuario", userService.usuarioActual());
 
 		return "producto/listaProductos";
 
@@ -103,18 +104,18 @@ public class ProductoController {
 		}
 		model.addAttribute("nombreNegocio", negocioService.findNegocioById(idNegocio).getNombre());
 		model.addAttribute("idNegocio", idNegocio);
-		model.addAttribute("refrescos", refrescos);
-		model.addAttribute("alcohol", alcohol);
-		model.addAttribute("racion", racion);
-		model.addAttribute("media", media);
-		model.addAttribute("tapa", tapa);
-		model.addAttribute("snack", snack);
-		model.addAttribute("usuario", usuarioActual());
+		model.addAttribute("refrescos", refrescos.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
+		model.addAttribute("alcohol", alcohol.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
+		model.addAttribute("racion", racion.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
+		model.addAttribute("media", media.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
+		model.addAttribute("tapa", tapa.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
+		model.addAttribute("snack", snack.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
+		model.addAttribute("usuario", userService.usuarioActual());
 		model.addAttribute("codigoMesa", mesaService.findById(idMesa).getCodigo());
 		model.addAttribute("idNegocio", idNegocio);
 		
 		
-		System.out.println(usuarioActual().getMesa());
+		System.out.println(userService.usuarioActual().getMesa());
 		System.out.println(mesaService.findById(idMesa).getCodigo());
 
 
@@ -236,7 +237,7 @@ public class ProductoController {
 		model.addAttribute("productosServidos",productosServidos);
 		model.addAttribute("precioTotalNoServido", precioTotalNoServido);
 		model.addAttribute("precioTotal", precioTotalServido);
-		model.addAttribute("usuario", usuarioActual());
+		model.addAttribute("usuario", userService.usuarioActual());
 		model.addAttribute("idNegocio", idNegocio);
 		model.addAttribute("idPedido", idPedido);
 		
@@ -254,10 +255,45 @@ public class ProductoController {
 		
 		LineaPedido lp = lineaPedidoService.findById(idProducto);
 		lp.setServido(true);
-		lineaPedidoService.save(lp);
+		lineaPedidoService.save(lp);	
+		return "redirect:/mesas/pedido/"+idNegocio+"/"+idMesa;
 
-
+	}
+	
+	@RequestMapping("/pedido/sumar/{idNegocio}/{idMesa}/{idProducto}")
+	public String sumarProducto(@PathVariable(value = "idProducto") Long idProducto,@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") Long idMesa,
+			Model model) {
 		
+		LineaPedido lp = lineaPedidoService.findById(idProducto);
+		lp.setCantidad(lp.getCantidad()+1);
+		lineaPedidoService.save(lp);	
+		return "redirect:/mesas/pedido/"+idNegocio+"/"+idMesa;
+
+	}
+	
+	@RequestMapping("/pedido/restar/{idNegocio}/{idMesa}/{idProducto}")
+	public String restarProducto(@PathVariable(value = "idProducto") Long idProducto,@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") Long idMesa,
+			Model model) {
+		
+		LineaPedido lp = lineaPedidoService.findById(idProducto);
+		if(lp.getCantidad()>0) {
+			lp.setCantidad(lp.getCantidad()-1);
+			lineaPedidoService.save(lp);
+		}else if(lp.getCantidad()==0) {
+			lineaPedidoService.borraLineaPedido(lp);
+		}
+			
+		return "redirect:/mesas/pedido/"+idNegocio+"/"+idMesa;
+
+	}
+	
+	@RequestMapping("/pedido/eliminar/{idNegocio}/{idMesa}/{idProducto}")
+	public String eliminarProducto(@PathVariable(value = "idProducto") Long idProducto,@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") Long idMesa,
+			Model model) {
+		
+		LineaPedido lp = lineaPedidoService.findById(idProducto);
+		lineaPedidoService.borraLineaPedido(lp);
+			
 		return "redirect:/mesas/pedido/"+idNegocio+"/"+idMesa;
 
 	}
@@ -361,21 +397,7 @@ public class ProductoController {
 
 	}
 
-	
-	public Usuario usuarioActual() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		UserDetails userDetails = null;
-		Usuario user = null;
-		if (principal instanceof UserDetails) {
-			userDetails = (UserDetails) principal;
-			String userName = userDetails.getUsername();
-			user = this.userService.findByUsername(userName);
-		} else {
-			user = null;
-		}
-		return user;
-	}
-	
+
 	
 
 

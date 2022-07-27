@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -48,7 +49,7 @@ public class Usuario implements UserDetails {
 	
 	@NotEmpty(message = "Debes escribir una contraseña")
 	@Pattern(regexp = "^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$",
-	message = "La contraseña debe tener al menos 8 caracteres,un dígito,una minúscula y una mayúscula.")
+	message = "Al menos 8 caracteres,un dígito,una minúscula y una mayúscula")
 	private String password;
 	
 	@NotEmpty(message = "Porfavor, introduzca un nombre")
@@ -63,7 +64,8 @@ public class Usuario implements UserDetails {
 	@Pattern(regexp = "[0-9]{8}[A-Za-z]{1}", message = "Porfavor, introduzca un DNI válido")
 	private String dni;
 	
-	@Past
+	@Past(message = "La fecha debe ser pasada")
+	@NotNull(message = "Porfavor, introduzca una fecha válida")
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaNacimiento;
 	
