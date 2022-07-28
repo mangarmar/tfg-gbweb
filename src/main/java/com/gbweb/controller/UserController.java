@@ -2,6 +2,7 @@ package com.gbweb.controller;
 
 import javax.validation.Valid;
 
+import org.progressify.spring.annotations.StaleWhileRevalidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,9 +26,10 @@ public class UserController {
 	@Autowired
 	UserService userService;
 
+	@StaleWhileRevalidate
 	@GetMapping("/")
 	public String index() {
-		return "negocio/listaNegociosClientes";	
+		return "comun/index";	
 	}
 
 	@GetMapping("/crearCliente")
