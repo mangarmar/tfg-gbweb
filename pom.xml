@@ -26,6 +26,11 @@
 	</properties>
 
 	<dependencies>
+		<dependency> 
+		    <groupId>org.progressify</groupId> 
+		    <artifactId>progressify-spring</artifactId> 
+		    <version>0.2.0</version> 
+		</dependency>
 		<dependency>
            	<groupId>com.lowagie</groupId>
             <artifactId>itext</artifactId>
