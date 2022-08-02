@@ -3,7 +3,8 @@
 	xmlns:sec="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" th:href="@{/css/formUser.css}" />
 <link rel="stylesheet" th:href="@{/css/style.css}" />
 <script src="https://unpkg.com/leaflet@1.0.2/dist/leaflet.js"></script>
@@ -26,27 +27,17 @@
 <body>
 
 	<header th:replace="comun/header.html::header"></header>		
-	<div id="map" class="map-style"></div>
+	<div id="map" style="z-index: -1;" class="map-style"></div>
 	<script>
 		var coords = [37.47254112573115, -5.638665440677341]; // the geographic center of our map
 		var zoomLevel = 17; // the map scale. See: http://wiki.openstreetmap.org/wiki/Zoom_levels
 		
 		var map = L.map('map').setView(coords, zoomLevel);
 		
-		var lc = L.control.locate({
-		    strings: {
-		        title: "Tu ubicación",
-		        popup: "Tu posición aproximada"
-		    },
-		    locateOptions: {
-	               enableHighAccuracy: true
-			},
-		    drawCircle: false,
-		    initialZoomLevel: 20
-		}).addTo(map);
+
 		
 		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		    maxZoom: 17,
+		    maxZoom: 25,
 		    attribution: '© OpenStreetMap'
 		}).addTo(map);
 		

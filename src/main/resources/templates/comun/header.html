@@ -2,50 +2,42 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org">
 <head>
-<link rel="stylesheet" href="/css/formUser.css" />
-<link rel="stylesheet" href="/css/style.css" />
 
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <header th:fragment="header" id="main-header">
 
 
-	<nav>
+		<div class="topnav" id="myTopnav">
+			<a href="/" class="active">GBWEB</a>
+		    <a sec:authorize="!isAuthenticated()" href="/login">Iniciar sesión</a>
+		    <a sec:authorize="!isAuthenticated()" href="/crearCliente">Registro clientes</a>
+		    <a sec:authorize="!isAuthenticated()" href="/crearGerente">Registro gerentes</a>
+	
+	
+		    <a sec:authorize="hasAuthority('CLIENTE')" href="/logout">Cerrar Sesión</a>
+	
+		    
+			<a sec:authorize="hasAuthority('GERENTE')"href="/listarNegocios">Negocios</a>
+			<a sec:authorize="hasAuthority('GERENTE')" href="/crearNegocio">Registra nuevo negocio</a>
+			<a sec:authorize="hasAuthority('GERENTE')" href="/logout">Cerrar Sesión</a>
+	
+		    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+				    <i class="fa fa-bars" aria-hidden="true"></i>
+			</a>
+      	</div>
+
 		
-			
-		<div sec:authorize="!isAuthenticated()">
-			<ul>
-				<li style="float:left"><h2><a href="/listarNegocios">GBWEB</a></h2></li>
-				<li><a href="/login">Iniciar Sesión</a></li>
-				<li><a href="/crearCliente">Registro clientes</a></li>
-				<li><a href="/crearGerente">Registro gerentes</a></li>
-			</ul>
-		</div>
-
-		<div sec:authorize="hasAuthority('CLIENTE') || hasAuthority('CLIENTE_CONFIRMADO')">
-			<ul>
-				<li style="float:left"><h2><a href="/listarNegocios">GBWEB</a></h2></li>
-				<li><a href="/logout">Cerrar Sesión</a></li>
-			</ul>
-		</div>
-
-		<div sec:authorize="hasAuthority('GERENTE')">
-			<ul>
-				<li style="float:left"><h2><a href="/listarNegocios">GBWEB</a></h2></li>
-				<li><a href="/logout">Cerrar Sesión</a></li>
-				<li class="dropdown">
-					<button class="dropbtn">
-						Gestiona tus negocios <i class="fa fa-caret-down"></i>
-					</button>
-					<div class="dropdown-content">
-						<a href="/listarNegocios">Negocios</a>
-						<a href="/crearNegocio">Registra nuevo negocio</a>
-					</div>
-				</li>
-				
-				
-			</ul>
-		</div>
-	</nav>
-
+<script>
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
 </header>
