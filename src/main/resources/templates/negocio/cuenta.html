@@ -13,11 +13,14 @@
 <body>
 
 	<header th:replace="comun/header.html::header"></header>
+	
+	<div th:if="${ok}==true">
+	
 	<h1 sec:authorize="hasAuthority('CLIENTE')">Cuenta</h1>
 	<h1 sec:authorize="hasAuthority('GERENTE')">Pedido</h1>
-	
-	<a sec:authorize="hasAuthority('GERENTE')" class="back-button" th:href="@{/mesas/}+${idNegocio}">Volver</a><br><br><br>
-
+	<div sec:authorize="hasAuthority('GERENTE')">
+		<a class="back-button" th:href="@{/mesas/}+${idNegocio}">Volver</a><br><br><br>
+	</div>
 	<div th:if="${productosServidos!=null and !productosServidos.isEmpty()}">
 
 		<table id="customers">
@@ -42,11 +45,11 @@
 			</tr>
 		</table>
 			<a sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/mesas/solicitar/cuenta/} + ${idMesa} + '/' + ${idPedido}">Solicitar cuenta</a>		
+			<br><br><br><br>
 	</div>
 	
 	
 	<div th:if="${productosNoServidos!=null and !productosNoServidos.isEmpty()}">
-	<br><br><br><br>
 		<table id="customers">
 		<h2>No servido</h2>
 			<br>
@@ -71,4 +74,15 @@
 			</tr>
 		</table>	
 	</div>
+	
+	</div>
+	
+	<div th:unless="${ok}==true">
+		<br><br>
+   		<h1>Lo sentimos, no tiene ningun pedido activo en este momento</h1>
+   		<br>
+   		<h1><a style="" href="/">Ir al inicio</a></h1>
+   		
+	</div>
+	
 	

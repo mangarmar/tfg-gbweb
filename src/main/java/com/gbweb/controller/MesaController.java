@@ -124,8 +124,7 @@ public class MesaController {
 
 		}else {
 			model.addAttribute("message", "Han rechazado tu solicitud, lo sentimos");
-			model.addAttribute("nombreNegocio", negocio.getNombre());
-			return "error/mesaLiberada";
+			return "comun/index";
 		}
 		
 
@@ -237,8 +236,9 @@ public class MesaController {
 	@RequestMapping("/pedido/{idNegocio}/{idMesa}")
 	public String cuenta(@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") Long idMesa,
 			Model model) {
-		
+		Boolean ok = false;
 		Pedido pedidoActivo = mesaService.findById(idMesa).getPedidos().stream().filter(x->(x.getEstadoPedido().toString().equals("ACTIVO")) || x.getEstadoPedido().toString().equals("PENDIENTE_PAGO")).findFirst().orElse(null);
+		if(pedidoActivo!=null) {
 		List<LineaPedido> lineaPedidos = pedidoActivo.getLineaPedidos();
 		List<LineaPedido> productosNoServidos = new ArrayList<LineaPedido>();
 		List<LineaPedido> productosServidos = new ArrayList<LineaPedido>();
@@ -256,7 +256,7 @@ public class MesaController {
 				}
 			}
 		}
-		
+		model.addAttribute("ok", true);
 		model.addAttribute("nombreNegocio", negocioService.findNegocioById(idNegocio).getNombre());
 		model.addAttribute("productosNoServidos", productosNoServidos);
 		model.addAttribute("productosServidos",productosServidos);
@@ -265,10 +265,12 @@ public class MesaController {
 		model.addAttribute("usuario", userService.usuarioActual());
 		model.addAttribute("idNegocio", idNegocio);
 		model.addAttribute("idMesa", idMesa);
-		
-
 
 		return "negocio/cuenta";
+		}else {
+			model.addAttribute("ok",ok);	
+			return "negocio/cuenta";
+			}
 
 	}
 

@@ -68,12 +68,16 @@ public class NegocioController {
 			model.addAttribute("negocio", negocio);
 			return "negocio/formularioNegocio";
 		} else {
-			
-			negocioService.creaNegocio(negocio);
+			try {
+				negocioService.editarNegocio(negocio, negocio.getId());
+				return "redirect:/listarNegocios";
+			} catch (Exception e) {
+				model.addAttribute("message", "Lo sentimos, no se ha podido encontrar la localización indicada");
+				return "negocio/editarNegocio";
+			}
 		
 		}
-		redirectAttributes.addFlashAttribute("alert", 11);
-		return "redirect:/listarNegocios";
+		
 
 
 	}

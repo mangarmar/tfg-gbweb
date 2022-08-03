@@ -17,7 +17,7 @@
 	<div>
 		<h1 th:text="${nombreNegocio}"></h1>
 	</div>
-	<a class="back-button" th:href="@{/listarNegocios}">Volver</a>
+	
 	<a sec:authorize="hasAuthority('GERENTE')" class="button" th:href="@{/mesas/añadirMesa/} + ${idNegocio}">Añadir
 		mesa</a>
 		
