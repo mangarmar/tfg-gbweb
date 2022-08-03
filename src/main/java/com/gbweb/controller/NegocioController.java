@@ -69,11 +69,11 @@ public class NegocioController {
 			return "negocio/formularioNegocio";
 		} else {
 			try {
-				negocioService.editarNegocio(negocio, negocio.getId());
+				negocioService.creaNegocio(negocio);
 				return "redirect:/listarNegocios";
 			} catch (Exception e) {
 				model.addAttribute("message", "Lo sentimos, no se ha podido encontrar la localización indicada");
-				return "negocio/editarNegocio";
+				return "negocio/formularioNegocio";
 			}
 		
 		}
