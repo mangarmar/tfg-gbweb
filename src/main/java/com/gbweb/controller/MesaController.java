@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +66,7 @@ public class MesaController {
 	@RequestMapping("/{idNegocio}")
 	public String listarMesas(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
 		Negocio negocio = negocioService.findNegocioById(idNegocio);
-		List<Mesa> mesas = negocio.getMesas();
+		List<Mesa> mesas = negocio.getMesas().stream().filter(x->x.getActiva().equals(true)).collect(Collectors.toList());
 		Map<Mesa, Pedido> pedidosPorMesa = new LinkedHashMap<>();
 		for(int i = 0;i<mesas.size();i++) {
 			Pedido pedido = mesas.get(i).getPedidos().stream().filter(x->(x.getEstadoPedido().toString().equals("ACTIVO")) || x.getEstadoPedido().toString().equals("PENDIENTE_PAGO")).findFirst().orElse(null);
@@ -74,6 +76,10 @@ public class MesaController {
 		model.addAttribute("nombreNegocio", negocio.getNombre());
 		model.addAttribute("idNegocio", idNegocio);
 		model.addAttribute("pedidosPorMesa", pedidosPorMesa);
+		if(model.getAttribute("message")!=null) {
+			model.addAttribute("message");
+		}
+		
 
 		return "negocio/listarMesas";
 
@@ -82,7 +88,7 @@ public class MesaController {
 	@RequestMapping("/libres/{idNegocio}")
 	public String listarMesasLibres(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
 		Negocio negocio = negocioService.findNegocioById(idNegocio);
-		List<Mesa> mesas = negocio.getMesas();
+		List<Mesa> mesas = negocio.getMesas().stream().filter(x->x.getActiva().equals(true)).collect(Collectors.toList());
 		Map<Mesa, Pedido> pedidosPorMesa = new LinkedHashMap<>();
 		for(int i = 0;i<mesas.size();i++) {
 			if(mesas.get(i).getEstado().toString().equals("LIBRE")) {
@@ -119,6 +125,7 @@ public class MesaController {
 			model.addAttribute("idNegocio", idNegocio);
 			model.addAttribute("pedidosPorMesa", pedidosPorMesa);
 			model.addAttribute("usuario", usuario);
+			
 			
 			return "negocio/listarMesas";
 
@@ -208,11 +215,19 @@ public class MesaController {
 	public String eliminarMesa(@PathVariable(value = "idMesa") Long idMesa,
 			@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
 
-		Mesa mesaAEliminar = mesaService.findById(idMesa);
-		negocioService.findNegocioById(idNegocio).getMesas().remove(mesaAEliminar);
-		mesaService.eliminarMesa(mesaAEliminar);
 		
-		return "redirect:/mesas/"+idNegocio;
+		Mesa mesaAEliminar = mesaService.findById(idMesa);
+		Pedido pedidoActivo = mesaAEliminar.getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);	
+		
+		if(pedidoActivo==null) {
+			mesaAEliminar.setActiva(false);
+			mesaService.save(mesaAEliminar);
+			return "redirect:/mesas/"+idNegocio;
+		}else {
+			model.addAttribute("message", "No se pueden borrar mesas con pedidos activos");
+			return listarMesas(idNegocio, model);
+		}
+		
 
 	}
 	

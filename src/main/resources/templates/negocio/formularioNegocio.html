@@ -12,7 +12,9 @@
 <body>
 
 	<header th:replace="comun/header.html::header"></header>
-
+	
+	<div th:if="${message != null }" th:text="${message}"
+            class="error" role="alert"></div>
 	
 	<form class="form-register" th:action="@{crearNegocio}" th:object="${negocio}" method="post">
 		<h4>Datos del negocio</h4>

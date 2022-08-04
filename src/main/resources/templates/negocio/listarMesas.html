@@ -18,6 +18,8 @@
 		<h1 th:text="${nombreNegocio}"></h1>
 	</div>
 	
+	<div th:if="${message != null }" th:text="${message}" class="error" role="alert"></div>
+	
 	<a sec:authorize="hasAuthority('GERENTE')" class="button" th:href="@{/mesas/añadirMesa/} + ${idNegocio}">Añadir
 		mesa</a>
 		

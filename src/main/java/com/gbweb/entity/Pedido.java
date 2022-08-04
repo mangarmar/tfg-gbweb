@@ -33,7 +33,7 @@ public class Pedido implements Serializable {
 	private List<Producto> productos;
 	
 	@ManyToOne
-    @JoinColumn(name="mesa_id", nullable=false)
+    @JoinColumn(name="mesa_id", nullable=true)
     private Mesa mesa;
 		
 	private EstadoPedido estadoPedido;

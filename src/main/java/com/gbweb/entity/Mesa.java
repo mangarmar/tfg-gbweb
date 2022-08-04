@@ -32,6 +32,7 @@ public class Mesa implements Serializable {
 	@NotEmpty(message="Introduzca el código de la mesa")
 	private String codigo;
 
+	private Boolean activa = true;
 	
 	private Estado estado;
 	
@@ -77,6 +78,15 @@ public class Mesa implements Serializable {
 
 	public Negocio getNegocio() {
 		return negocio;
+	}
+	
+
+	public Boolean getActiva() {
+		return activa;
+	}
+
+	public void setActiva(Boolean activa) {
+		this.activa = activa;
 	}
 
 	public void setNegocio(Negocio negocio) {
