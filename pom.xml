@@ -16,7 +16,7 @@
 	<description>TFG Sistema de Gestión de Bares</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.runtime.version>11</java.runtime.version>
 		<jacoco.version>0.8.5</jacoco.version>
 		<spring-format.version>0.0.19</spring-format.version>
 		<selenium.version>3.141.59</selenium.version>
@@ -190,8 +190,6 @@
 			<plugin> 
 			    <artifactId>maven-compiler-plugin</artifactId> 
 			    <configuration> 
-			        <source>11</source>
-        			<target>11</target>
 			        <annotationProcessorPaths> 
 			            <path> 
 			                <groupId>org.progressify</groupId> 
