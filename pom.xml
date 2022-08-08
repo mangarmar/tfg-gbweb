@@ -24,7 +24,6 @@
 		<junit.jupiter.version>5.0.2</junit.jupiter.version>
    		<junit.platform.version>1.0.2</junit.platform.version>
 	</properties>
-
 	<dependencies>
 		<dependency> 
 		    <groupId>org.progressify</groupId> 
@@ -204,25 +203,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.2</version>
-        <executions>
-            <execution>
-                <goals>
-                    <goal>prepare-agent</goal>
-                </goals>
-            </execution>
-            <execution>
-                <id>report</id>
-                <phase>prepare-package</phase>
-                <goals>
-                    <goal>report</goal>
-                </goals>
-            </execution>
-        </executions>
-      </plugin>
 		</plugins>
 	</build>
 

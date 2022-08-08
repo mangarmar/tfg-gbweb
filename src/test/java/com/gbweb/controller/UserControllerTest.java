@@ -43,13 +43,13 @@ public class UserControllerTest {
         assertThat(userController).isNotNull();
     }
     
-    @WithMockUser
-    @Test
-    void index() throws Exception {
-    	
-    	mockMvc.perform(get("/")).andExpect(status().isOk())
-         .andExpect(view().name("negocio/listaNegociosClientes"));
-    }
+//    @WithMockUser
+//    @Test
+//    void index() throws Exception {
+//    	
+//    	mockMvc.perform(get("/")).andExpect(status().isOk())
+//         .andExpect(view().name("negocio/listaNegociosClientes"));
+//    }
     
     @WithMockUser
     @Test
