@@ -33,7 +33,6 @@ import com.gbweb.service.NegocioService;
 import com.gbweb.service.PedidoService;
 import com.gbweb.service.ProductoService;
 import com.gbweb.service.UserService;
-import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

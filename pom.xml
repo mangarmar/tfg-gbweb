@@ -82,9 +82,9 @@
             <scope>runtime</scope>
         </dependency>
 		<dependency>
-		    <groupId>com.microsoft.sqlserver</groupId>
-		    <artifactId>mssql-jdbc</artifactId>
-		    <version>10.2.0.jre11</version>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -163,8 +163,6 @@
 			<version>7.2.0</version>
 			<type>pom</type>
 		</dependency>
-
-
 		<dependency>
 			<groupId>com.mailjet</groupId>
 			<artifactId>mailjet-client</artifactId>
@@ -187,7 +185,7 @@
 		</dependency>
 
 	</dependencies>
-
+			
 	<build>
 		<plugins>
 			<plugin> 
@@ -205,24 +203,26 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			 </plugin>
-			 <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
-				<configuration>
-				    <source>8</source>
-				    <target>8</target>
-				    <testSource>8</testSource>
-				    <testTarget>8</testTarget>
-				    <showDeprecation>true</showDeprecation>
-				    <compilerArgument>-Xlint:unchecked</compilerArgument>
-				</configuration>
-            		</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.2</version>
+        <executions>
+            <execution>
+                <goals>
+                    <goal>prepare-agent</goal>
+                </goals>
+            </execution>
+            <execution>
+                <id>report</id>
+                <phase>prepare-package</phase>
+                <goals>
+                    <goal>report</goal>
+                </goals>
+            </execution>
+        </executions>
+      </plugin>
 		</plugins>
 	</build>
 
