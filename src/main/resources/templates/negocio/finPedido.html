@@ -7,8 +7,11 @@
 <link rel="stylesheet" th:href="@{/css/style.css}" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<meta http-equiv="refresh" content="1">
-<title>¡Gracias!</title>
+<script type="text/javascript">
+window.location.hash="no-back-button";
+window.location.hash="Again-No-back-button";//esta linea es necesaria para chrome
+window.onhashchange=function(){window.location.hash="no-back-button";}
+</script><title>¡Gracias!</title>
 </head>
 
 <body>
@@ -28,12 +31,7 @@
 			<a sec:authorize="hasAuthority('CLIENTE')" th:href="@{/mesas/cancelar/cuenta/} + ${idMesa} + '/' + ${idPedido}">Volver</a>
 		</h2>
 	
-		
-		
-				
-		
-		
-
 
 </body>
+
 </html>

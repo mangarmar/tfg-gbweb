@@ -22,11 +22,11 @@ public class LineaPedido {
 	private Boolean servido;
 	
 	@ManyToOne
-    @JoinColumn(name="pedido_id"/*, nullable=false*/)
+    @JoinColumn(name="pedido_id")
     private Pedido pedido;
 	
 	@ManyToOne
-    @JoinColumn(name="producto_id")
+    @JoinColumn(name="producto_id", nullable = true)
     private Producto producto;
 
 	

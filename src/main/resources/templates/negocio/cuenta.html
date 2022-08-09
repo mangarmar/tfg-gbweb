@@ -66,9 +66,9 @@
 				<td style="width: 18.75%" th:text="${producto.precio}"></td>
 				<td style="width: 18.75%" th:text="${producto.servido}"></td>
 				<td sec:authorize="hasAuthority('GERENTE')">
+					<a class=center-button th:href="@{/pedido/servir/} + ${idNegocio} + '/' + ${idMesa} + '/' + ${producto.id} ">Servido</a>
 					<a class=center-button th:href="@{/pedido/sumar/} + ${idNegocio} + '/' + ${idMesa} + '/' + ${producto.id} ">+</a>
 					<a class=center-button th:href="@{/pedido/restar/} + ${idNegocio} + '/' + ${idMesa} + '/' + ${producto.id} ">-</a>
-					<a class=center-button th:href="@{/pedido/servir/} + ${idNegocio} + '/' + ${idMesa} + '/' + ${producto.id} ">Servido</a>
 					<a class=center-button th:href="@{/pedido/eliminar/} + ${idNegocio} + '/' + ${idMesa} + '/' + ${producto.id} ">Eliminar</a>
 				</td>
 			</tr>

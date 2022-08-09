@@ -14,6 +14,7 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -33,6 +34,7 @@ public class Usuario implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	
 	@NotEmpty(message = "Se debe introducir un nombre de usuario")
 	private String username;
 	
@@ -49,6 +51,7 @@ public class Usuario implements UserDetails {
 	@Length(max= 35 , message= "Este campo no puede contener mas de 35 caractéres")
 	private String apellidos;
 	
+	@Column(unique = true)
 	@NotEmpty(message = "Porfavor, introduzca un DNI")
 	@Pattern(regexp = "[0-9]{8}[A-Za-z]{1}", message = "Porfavor, introduzca un DNI válido")
 	private String dni;
@@ -61,6 +64,7 @@ public class Usuario implements UserDetails {
 	@NotEmpty(message = "Porfavor, introduzca una dirección")
 	private String direccion;
 	
+	@Column(unique = true)
 	@NotEmpty(message = "Porfavor, introduzca un email")
 	@Email(message = "Porfavor, introduzca un email válido")
 	private String email;

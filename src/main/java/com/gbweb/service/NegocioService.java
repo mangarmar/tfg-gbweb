@@ -55,7 +55,6 @@ public class NegocioService {
 		negocioAct.setCapacidad(negocio.getCapacidad());
 		negocioAct.setCif(negocio.getCif());
 		negocioAct.setDescripcion(negocio.getDescripcion());
-		negocioAct.setEmail(negocio.getEmail());
 		negocioAct.setCalle(negocio.getCalle());
 		negocioAct.setNumero(negocio.getNumero());
 		negocioAct.setCiudad(negocio.getCiudad());

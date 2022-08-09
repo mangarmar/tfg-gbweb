@@ -1,6 +1,7 @@
 package com.gbweb.controller;
 
 import java.io.ByteArrayInputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,6 +45,8 @@ import com.gbweb.util.GeneratePdfReport;
 @RequestMapping("/mesas")
 public class MesaController {
 	
+	private static final DecimalFormat df = new DecimalFormat("0.00");
+
 	
 	@Autowired
 	LineaPedidoService lineaPedidoService;
@@ -82,6 +85,22 @@ public class MesaController {
 		
 
 		return "negocio/listarMesas";
+
+	}
+	
+	@RequestMapping("/eliminarMesa/{idNegocio}")
+	public String listarMesasParaEliminar(@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
+		Negocio negocio = negocioService.findNegocioById(idNegocio);
+		List<Mesa> mesas = negocio.getMesas().stream().filter(x->x.getActiva().equals(true)).collect(Collectors.toList());
+		
+		model.addAttribute("nombreNegocio", negocio.getNombre());
+		model.addAttribute("idNegocio", idNegocio);
+		model.addAttribute("mesas", mesas);
+		if(model.getAttribute("message")!=null) {
+			model.addAttribute("message");
+		}
+		
+		return "negocio/eliminarMesas";
 
 	}
 	
@@ -222,10 +241,10 @@ public class MesaController {
 		if(pedidoActivo==null) {
 			mesaAEliminar.setActiva(false);
 			mesaService.save(mesaAEliminar);
-			return "redirect:/mesas/"+idNegocio;
+			return "redirect:/mesas/eliminarMesa/"+idNegocio;
 		}else {
 			model.addAttribute("message", "No se pueden borrar mesas con pedidos activos");
-			return listarMesas(idNegocio, model);
+			return listarMesasParaEliminar(idNegocio, model);
 		}
 		
 
@@ -275,8 +294,8 @@ public class MesaController {
 		model.addAttribute("nombreNegocio", negocioService.findNegocioById(idNegocio).getNombre());
 		model.addAttribute("productosNoServidos", productosNoServidos);
 		model.addAttribute("productosServidos",productosServidos);
-		model.addAttribute("precioTotalNoServido", precioTotalNoServido);
-		model.addAttribute("precioTotal", precioTotalServido);
+		model.addAttribute("precioTotalNoServido", df.format(precioTotalNoServido));
+		model.addAttribute("precioTotal", df.format(precioTotalServido));
 		model.addAttribute("usuario", userService.usuarioActual());
 		model.addAttribute("idNegocio", idNegocio);
 		model.addAttribute("idMesa", idMesa);

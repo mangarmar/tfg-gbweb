@@ -24,13 +24,14 @@
 		<a sec:authorize="hasAuthority('GERENTE')" class="button" th:href="@{/añadirProducto/} + ${idNegocio}">Añadir producto</a>
 		<a th:if="${usuario.mesa!=null}" sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/mesas/estado/} + ${idNegocio}">Mi mesa</a>
 		<a th:if="${usuario.mesa!=null}" sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/pedido/cuenta/} + ${idNegocio}+@{/mesa/}+${usuario.mesa.id}">Cuenta total</a>	
+		<br><br>
+		<a th:if="${usuario.mesa!=null}" sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/pedido/negocio/} + ${idNegocio}+@{/mesa/}+${usuario.mesa.id}">Confirmar comanda</a>	
 			
 		<div th:if="${snack!=null and !snack.isEmpty()}">
 		<br><br><br>
 		<table id="customers">
 			
 			<tr>
-			<a th:if="${usuario.mesa!=null}" sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/pedido/negocio/} + ${idNegocio}+@{/mesa/}+${usuario.mesa.id}">Confirmar pedido</a>	
 			<br>
 			<h2>Snacks</h2>
 				<br>
@@ -49,7 +50,7 @@
 					<form th:action="@{/añadirAlPedido/pedir/}+ ${idNegocio} +'/mesa/'+ ${idMesa} +'/producto/' + ${producto.id}" 
 						th:object="${cantidad}" method="post">
 						<input class="input-menu" type="number" required="required" min="1" name="cantidad" placeholder="Cantidad"/>
-						<button class="button-menu" type="submit">Añadir</button>
+						<button class="button-menu" type="submit">Añadir comanda</button>
 					</form>
 
 				</td>
@@ -80,7 +81,7 @@
 					<form th:action="@{/añadirAlPedido/pedir/}+ ${idNegocio} +'/mesa/'+ ${idMesa} +'/producto/' + ${producto.id}" 
 						th:object="${cantidad}" method="post">
 						<input class="input-menu" type="number" required="required" min="1" name="cantidad" placeholder="Cantidad"/>
-						<button class="button-menu" type="submit">Añadir</button>
+						<button class="button-menu" type="submit">Añadir comanda</button>
 					</form>
 
 				</td>
@@ -111,7 +112,7 @@
 					<form th:action="@{/añadirAlPedido/pedir/}+ ${idNegocio} +'/mesa/'+ ${idMesa} +'/producto/' + ${producto.id}" 
 						th:object="${cantidad}" method="post">
 						<input class="input-menu" type="number" required="required" min="1" name="cantidad" placeholder="Cantidad"/>
-						<button class="button-menu" type="submit">Añadir</button>
+						<button class="button-menu" type="submit">Añadir comanda</button>
 					</form>
 
 				</td>
@@ -142,7 +143,7 @@
 					<form th:action="@{/añadirAlPedido/pedir/}+ ${idNegocio} +'/mesa/'+ ${idMesa} +'/producto/' + ${producto.id}" 
 						th:object="${cantidad}" method="post">
 						<input class="input-menu" type="number" required="required" min="1" name="cantidad" placeholder="Cantidad"/>
-						<button class="button-menu" type="submit">Añadir</button>
+						<button class="button-menu" type="submit">Añadir comanda</button>
 					</form>
 
 				</td>
@@ -173,7 +174,7 @@
 					<form th:action="@{/añadirAlPedido/pedir/}+ ${idNegocio} +'/mesa/'+ ${idMesa} +'/producto/' + ${producto.id}" 
 						th:object="${cantidad}" method="post">
 						<input class="input-menu" type="number" required="required" min="1" name="cantidad" placeholder="Cantidad"/>
-						<button class="button-menu" type="submit">Añadir</button>
+						<button class="button-menu" type="submit">Añadir comanda</button>
 					</form>
 
 				</td>
@@ -204,7 +205,7 @@
 					<form th:action="@{/añadirAlPedido/pedir/}+ ${idNegocio} +'/mesa/'+ ${idMesa} +'/producto/' + ${producto.id}" 
 						th:object="${cantidad}" method="post">
 						<input class="input-menu" type="number" required="required" min="1" name="cantidad" placeholder="Cantidad"/>
-						<button class="button-menu" type="submit">Añadir</button>
+						<button class="button-menu" type="submit">Añadir comanda</button>
 					</form>
 
 				</td>

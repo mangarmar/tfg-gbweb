@@ -23,7 +23,7 @@
 			type="text" class="controls" placeholder="Nombre" name="nombre" />
 		<p class="error-form" role="alert" th:errors="*{nombre}"></p>
 
-		<input th:field="*{precio}" type="text" class="controls"
+		<input th:field="*{precio}" type="number" step="0.01" min=0 max=1000 class="controls"
 			placeholder="Precio" name="precio" />
 		<p class="error-form" role="alert" th:errors="*{precio}"></p>
 

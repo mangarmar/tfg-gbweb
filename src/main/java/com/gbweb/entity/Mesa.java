@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.UniqueElements;
 
@@ -21,7 +22,7 @@ public class Mesa implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	
+	@Pattern(regexp = "[A-Z]{3}-[0-9]{4}", message = "Patrón correcto: 3 letras mayúsculas, un guión y 4 números")
 	@NotEmpty(message="Introduzca el código de la mesa")
 	private String codigo;
 

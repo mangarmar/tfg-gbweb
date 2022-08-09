@@ -29,19 +29,12 @@ public class Negocio {
 
 	@Size(min = 25, max = 250)
 	private String descripcion;
-	
-
-	private String imagen = "/resources/static/images/default-image.png";
-	
+		
 
 	@NotNull
 	@Min(1)
 	private Integer capacidad;
-	
 
-	@Email
-	@NotEmpty
-	private String email;
 
 	private Tipo tipo;
 	
@@ -149,14 +142,6 @@ public class Negocio {
 		this.descripcion = descripcion;
 	}
 
-	public String getImagen() {
-		return imagen;
-	}
-
-	public void setImagen(String imagen) {
-		this.imagen = imagen;
-	}
-
 	public Integer getCapacidad() {
 		return capacidad;
 	}
@@ -165,13 +150,6 @@ public class Negocio {
 		this.capacidad = capacidad;
 	}
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
 
 	public String getCalle() {
 		return calle;

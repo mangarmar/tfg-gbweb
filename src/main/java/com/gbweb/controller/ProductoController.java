@@ -1,6 +1,7 @@
 
 package com.gbweb.controller;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.gbweb.entity.LineaPedido;
 import com.gbweb.entity.Mesa;
+import com.gbweb.entity.Negocio;
 import com.gbweb.entity.Pedido;
 import com.gbweb.entity.Producto;
 import com.gbweb.entity.Usuario;
@@ -38,6 +41,9 @@ import com.gbweb.service.UserService;
 
 @Controller
 public class ProductoController {
+	
+	private static final DecimalFormat df = new DecimalFormat("0.00");
+
 	
 	@Autowired
 	LineaPedidoService lineaPedidoService;
@@ -161,7 +167,7 @@ public class ProductoController {
 			}
 
 			model.addAttribute("lineaPedidos", lineaPedidos);
-			model.addAttribute("precioTotal", precioTotal);
+			model.addAttribute("precioTotal", df.format(precioTotal));
 			
 			return "negocio/comanda";
 		} else {
@@ -244,8 +250,8 @@ public class ProductoController {
 		model.addAttribute("nombreNegocio", negocioService.findNegocioById(idNegocio).getNombre());
 		model.addAttribute("productosNoServidos", productosNoServidos);
 		model.addAttribute("productosServidos",productosServidos);
-		model.addAttribute("precioTotalNoServido", precioTotalNoServido);
-		model.addAttribute("precioTotal", precioTotalServido);
+		model.addAttribute("precioTotalNoServido", df.format(precioTotalNoServido));
+		model.addAttribute("precioTotal",df.format(precioTotalServido));
 		model.addAttribute("usuario", userService.usuarioActual());
 		model.addAttribute("idNegocio", idNegocio);
 		model.addAttribute("idPedido", idPedido);
@@ -321,6 +327,7 @@ public class ProductoController {
 	public String añadirProducto(@PathVariable(value = "idNegocio") Long idNegocio,
 			@Valid @ModelAttribute("producto") Producto producto, BindingResult result, Model model) {
 
+	
 		if (result.hasErrors()) {
 			model.addAttribute("producto", producto);
 			return "producto/nuevoProducto";
@@ -358,6 +365,10 @@ public class ProductoController {
 			@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
 
 		Producto productoAEliminar = productoService.findById(idProducto);
+		List<LineaPedido> contieneProducto = productoAEliminar.getLineaPedidos();
+		contieneProducto.forEach(lp ->{
+			lp.setProducto(null);
+		});
 		negocioService.findNegocioById(idNegocio).getProductos().remove(productoAEliminar);
 		productoService.remove(productoAEliminar);
 		

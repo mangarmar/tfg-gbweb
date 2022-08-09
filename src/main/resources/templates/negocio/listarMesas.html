@@ -20,8 +20,8 @@
 	
 	<div th:if="${message != null }" th:text="${message}" class="error" role="alert"></div>
 	
-	<a sec:authorize="hasAuthority('GERENTE')" class="button" th:href="@{/mesas/añadirMesa/} + ${idNegocio}">Añadir
-		mesa</a>
+	<a sec:authorize="hasAuthority('GERENTE')" class="button" th:href="@{/mesas/añadirMesa/} + ${idNegocio}">Añadir mesa</a>
+	<a sec:authorize="hasAuthority('GERENTE')" class="button" th:href="@{/mesas/eliminarMesa/} + ${idNegocio}">Eliminar mesas</a>
 		
 		
 
@@ -31,7 +31,6 @@
 			<th>Estado</th>
 			<th sec:authorize="hasAuthority('GERENTE')">Cambiar estado</th>
 			<th sec:authorize="hasAuthority('GERENTE')">Pedidos actuales</th>
-			<th sec:authorize="hasAuthority('GERENTE')">Otros</th>
 			<th sec:authorize="hasAuthority('CLIENTE')">Opciones</th>
 		</tr>
 		<tr th:each="mesa : ${pedidosPorMesa}">
@@ -57,9 +56,6 @@
 			</td>
 			<td sec:authorize="hasAuthority('GERENTE')" th:if="${mesa.value}==null"></td>
 			
-			<td sec:authorize="hasAuthority('GERENTE')">
-				<a class=center-button
-				th:href="@{/mesas/eliminarMesa/} + ${idNegocio} + '/' + ${mesa.key.id}">Eliminar</a></td>
 			<td sec:authorize="hasAuthority('CLIENTE')">
 				<a th:if="${mesa.key.estado.toString()} == 'LIBRE'" class=center-button
 				th:href="@{/mesas/solicitar/} + ${idNegocio} + '/' + ${mesa.key	.id}">Solicitar mesa</a>

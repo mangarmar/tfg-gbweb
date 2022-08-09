@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,6 +64,13 @@ public class NegocioController {
 	@PostMapping("/crearNegocio")
 	public String nuevoNegocio(@Valid @ModelAttribute("negocio") Negocio negocio, BindingResult result, Model model
 			,RedirectAttributes redirectAttributes) {
+		
+		List<Negocio> negocios = negocioService.findAll();
+		Boolean existeCIF = negocios.stream().anyMatch(x->x.getCif().equals(negocio.getCif()));
+		
+		if(existeCIF) {	
+			result.addError(new FieldError("negocio", "cif", "El CIF introducido ya existe"));
+		}
 		
 		if (result.hasErrors()) {
 			model.addAttribute("negocio", negocio);
