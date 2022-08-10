@@ -76,8 +76,10 @@ public class Usuario implements UserDetails {
     @JsonIgnore
     private List<Negocio> negocios;
     
-
     private String permiso;
+    
+    @OneToMany(mappedBy="usuario")
+    private List<Pedido> pedidos;
     
     @OneToOne
     @JoinColumn(name="codigo_mesa", referencedColumnName = "codigo")
@@ -220,6 +222,14 @@ public class Usuario implements UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
 
 

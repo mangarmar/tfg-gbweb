@@ -14,14 +14,19 @@
 <body>
 
 	<header th:replace="comun/header.html::header"></header>
+
+
+	<div sec:authorize="hasAuthority('GERENTE')">
+	
 	<div>
 		<h1 th:text="${nombreNegocio}"></h1>
 	</div>
 	
 	<div th:if="${message != null }" th:text="${message}" class="error" role="alert"></div>
 	
+	
 	<a class="back-button" th:href="@{/mesas/}+${idNegocio}">Volver</a>
-
+	
 	<table id="customers">
 		<tr>
 			<th>Código</th>
@@ -39,6 +44,10 @@
 		</tr>
 
 	</table>
+	</div>
+	<div sec:authorize="hasAuthority('CLIENTE') or hasAuthority('null')">
+	<h1>Ups no puedes hacer eso, ve al <a href="/">inicio</a></h1>
+	</div>
 
 </body>
 </html>

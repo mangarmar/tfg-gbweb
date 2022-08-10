@@ -326,7 +326,10 @@ public class MesaController {
 				}
 			
 			}
-	        ByteArrayInputStream bis = GeneratePdfReport.cuentaPDF(productosServidos);
+			
+			Negocio negocio = pedidoActivo.getMesa().getNegocio();
+			Mesa mesa = pedidoActivo.getMesa();
+	        ByteArrayInputStream bis = GeneratePdfReport.cuentaPDF(productosServidos, negocio, mesa, precioTotalServido);
 
 	        HttpHeaders headers = new HttpHeaders();
 	        headers.add("Content-Disposition", "inline; filename=cuenta.pdf");
@@ -356,7 +359,10 @@ public class MesaController {
 				}
 			
 			}
-	        ByteArrayInputStream bis = GeneratePdfReport.cuentaPDF(productosServidos);
+			
+			Negocio negocio = pedidoActivo.getMesa().getNegocio();
+			Mesa mesa = pedidoActivo.getMesa();
+	        ByteArrayInputStream bis = GeneratePdfReport.facturaPDF(pedidoActivo, productosServidos, negocio, mesa, precioTotalServido);
 
 	        HttpHeaders headers = new HttpHeaders();
 	        headers.add("Content-Disposition", "inline; filename=cuenta.pdf");

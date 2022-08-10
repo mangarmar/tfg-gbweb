@@ -106,6 +106,7 @@ public class ProductoController {
 		
 		if(pedidoActivo==false && usuario.getMesa()!=null) {
 			Pedido pedido = new Pedido();
+			pedido.setUsuario(usuario);
 			pedido.setEstadoPedido(EstadoPedido.ACTIVO);
 			pedido.setMesa(mesaService.findById(idMesa));
 			pedidoService.nuevoPedido(pedido);

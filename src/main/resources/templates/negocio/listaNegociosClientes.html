@@ -19,8 +19,11 @@
 </head>
 <body>
 
-	<header th:replace="comun/header.html::header"></header>		
+	<header th:replace="comun/header.html::header"></header>	
+	<div th:if="${message != null }" th:text="${message}"
+            class="error" role="alert"></div>	
 	<div id="map" style="z-index: -1;" class="map-style"></div>
+		
 	<script>
 		var coords = [37.47254112573115, -5.638665440677341]; // the geographic center of our map
 		var zoomLevel = 17; // the map scale. See: http://wiki.openstreetmap.org/wiki/Zoom_levels

@@ -24,6 +24,10 @@ public class Pedido implements Serializable {
 	private List<Producto> productos;
 	
 	@ManyToOne
+    @JoinColumn(name="usuario_id", nullable=true)
+	private Usuario usuario;
+	
+	@ManyToOne
     @JoinColumn(name="mesa_id", nullable=true)
     private Mesa mesa;
 		
@@ -73,8 +77,14 @@ public class Pedido implements Serializable {
 	public void setProductos(List<Producto> productos) {
 		this.productos = productos;
 	}
-	
 
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
 
 	public Boolean getPorServir() {
 		porServir = this.lineaPedidos.stream().filter(x->x.getServido()!=null).anyMatch(x->x.getServido().equals(false));
