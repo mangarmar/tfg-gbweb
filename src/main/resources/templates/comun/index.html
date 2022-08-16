@@ -37,7 +37,17 @@
 		
 		var map = L.map('map').setView(coords, zoomLevel);
 		
-
+		var lc = L.control.locate({
+		    strings: {
+		        title: "Tu ubicación",
+		        popup: "Tu posición aproximada"
+		    },
+		    locateOptions: {
+	               enableHighAccuracy: true
+			},
+		    drawCircle: false,
+		    initialZoomLevel: 17
+		}).addTo(map);
 		
 		L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		    maxZoom: 25,
