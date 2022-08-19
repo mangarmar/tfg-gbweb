@@ -50,9 +50,11 @@
 				<a class=nuevo-pedido
 				   th:href="@{/mesas/pedido/} + ${idNegocio} + '/' + ${mesa.key.id}" th:if="${mesa.value.porServir}==true">¡Nuevo pedido!</a>
 				<a class=center-button
-					th:if="${mesa.value.estadoPedido.toString()}=='PENDIENTE_PAGO'" th:href="@{/mesas/pago/cuenta/} + ${mesa.key.id} + '/' + ${mesa.value.id}">Pagado</a>
+					th:if="${mesa.value.estadoPedido.toString()}=='PENDIENTE_PAGO_TARJETA'" th:href="@{/mesas/pago/cuenta/} + ${mesa.key.id} + '/' + ${mesa.value.id}">Tarjeta</a>
 				<a class=center-button
-					th:if="${mesa.value.estadoPedido.toString()}=='PENDIENTE_PAGO'" target="_blank" th:href="@{/mesas/factura/} + ${mesa.value.id}">Ticket</a>	
+					th:if="${mesa.value.estadoPedido.toString()}=='PENDIENTE_PAGO_EFECTIVO'" th:href="@{/mesas/pago/cuenta/} + ${mesa.key.id} + '/' + ${mesa.value.id}">Efectivo</a>
+				<a class=center-button
+					th:if="${mesa.value.estadoPedido.toString()}=='PENDIENTE_PAGO_EFECTIVO' or ${mesa.value.estadoPedido.toString()}=='PENDIENTE_PAGO_TARJETA'" target="_blank" th:href="@{/mesas/factura/} + ${mesa.value.id}">Ticket</a>	
 			</td>
 			<td sec:authorize="hasAuthority('GERENTE')" th:if="${mesa.value}==null"></td>
 			

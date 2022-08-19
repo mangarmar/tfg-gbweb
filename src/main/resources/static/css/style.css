@@ -288,6 +288,8 @@ img {
   display: none;
 }
 
+
+
 @media screen and (max-width: 1080px) {
   .topnav a:not(:first-child) {display: none;}
   .topnav a.icon {
@@ -304,11 +306,18 @@ img {
   	}
   	
 	.center-button{
-		 display: block !important;
+		font-size: 0.8em;
+		display: block !important;
 	}
   
 	.nuevo-pedido{
-		 display: block !important;
+		font-size: 0.8em;
+		display: block !important;
+	}
+	
+	.add-button{
+		font-size: 0.8em;
+		display: inline-block;
 	}
   
 

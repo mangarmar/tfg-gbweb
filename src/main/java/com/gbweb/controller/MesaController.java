@@ -72,7 +72,7 @@ public class MesaController {
 		List<Mesa> mesas = negocio.getMesas().stream().filter(x->x.getActiva().equals(true)).collect(Collectors.toList());
 		Map<Mesa, Pedido> pedidosPorMesa = new LinkedHashMap<>();
 		for(int i = 0;i<mesas.size();i++) {
-			Pedido pedido = mesas.get(i).getPedidos().stream().filter(x->(x.getEstadoPedido().toString().equals("ACTIVO")) || x.getEstadoPedido().toString().equals("PENDIENTE_PAGO")).findFirst().orElse(null);
+			Pedido pedido = mesas.get(i).getPedidos().stream().filter(x->(x.getEstadoPedido().toString().equals("ACTIVO")) || x.getEstadoPedido().toString().equals("PENDIENTE_PAGO_TARJETA") || x.getEstadoPedido().toString().equals("PENDIENTE_PAGO_EFECTIVO")).findFirst().orElse(null);
 			pedidosPorMesa.put(mesas.get(i), pedido);
 		}
 		
@@ -263,7 +263,7 @@ public class MesaController {
 			return "redirect:/mesas/libres/"+idNegocio;
 		}
 		
-		return "redirect:/listarProductos/"+idNegocio;
+		return "redirect:/mesas/estado/"+idNegocio;
 
 	}
 	
@@ -375,11 +375,29 @@ public class MesaController {
 	    }
 
 	 
-	 @GetMapping("/solicitar/cuenta/{idMesa}/{idPedido}")
-	    public String solicitarCuenta(@PathVariable(value = "idMesa") Long idMesa,@PathVariable(value = "idPedido") Long idPedido, Model model) {
+	 @GetMapping("/solicitar/cuenta/tarjeta/{idMesa}/{idPedido}")
+	    public String solicitarCuentaTarjeta(@PathVariable(value = "idMesa") Long idMesa,@PathVariable(value = "idPedido") Long idPedido, Model model) {
 		 Mesa mesa = mesaService.findById(idMesa);
 		 Pedido pedido = pedidoService.findById(idPedido);
-		 pedido.setEstadoPedido(EstadoPedido.PENDIENTE_PAGO);
+		 pedido.setEstadoPedido(EstadoPedido.PENDIENTE_PAGO_TARJETA);
+		 pedidoService.nuevoPedido(pedido);
+		 userService.usuarioActual().setPermisos(null);
+		 userService.usuarioActual().setMesa(null);
+		 userService.save(userService.usuarioActual());
+//		 mesaService.actualizarEstado(mesa, mesa.getNegocio().getId(), Estado.LIBRE);
+		 model.addAttribute("idMesa", idMesa);
+		 model.addAttribute("pedido", pedido);
+		 model.addAttribute("idPedido", idPedido);
+		 
+		return "redirect:/mesas/espera/cuenta/"+idMesa+"/"+idPedido;
+		 
+	    }
+	 
+	 @GetMapping("/solicitar/cuenta/efectivo/{idMesa}/{idPedido}")
+	    public String solicitarCuentaEfectivo(@PathVariable(value = "idMesa") Long idMesa,@PathVariable(value = "idPedido") Long idPedido, Model model) {
+		 Mesa mesa = mesaService.findById(idMesa);
+		 Pedido pedido = pedidoService.findById(idPedido);
+		 pedido.setEstadoPedido(EstadoPedido.PENDIENTE_PAGO_EFECTIVO);
 		 pedidoService.nuevoPedido(pedido);
 		 userService.usuarioActual().setPermisos(null);
 		 userService.usuarioActual().setMesa(null);

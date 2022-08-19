@@ -127,7 +127,8 @@ public class ProductoController {
 			model.addAttribute("codigoMesa", mesaService.findById(idMesa).getCodigo());
 			model.addAttribute("idNegocio", idNegocio);
 			
-			return "producto/carta";
+			listarPedido(idNegocio, idMesa, model);
+			return "producto/cartaYComanda";
 		}else {
 			model.addAttribute("ok", ok);
 			return "redirect:/";
@@ -206,7 +207,7 @@ public class ProductoController {
 		nuevoPedido.getProductos().add(lineaPedido.getProducto());
 		pedidoService.nuevoPedido(nuevoPedido);
 		
-		return "redirect:/pedido/negocio/"+lineaPedido.getPedido().getMesa().getNegocio().getId()+"/mesa/"+lineaPedido.getPedido().getMesa().getId();
+		return "redirect:/pedir/"+nuevoPedido.getMesa().getNegocio().getId()+"/mesa/"+nuevoPedido.getMesa().getId();
 
 	}
 	
@@ -218,7 +219,21 @@ public class ProductoController {
 		nuevoPedido.getProductos().remove(lineaPedido.getProducto());
 		pedidoService.nuevoPedido(nuevoPedido);
 		
-		return "redirect:/pedido/negocio/"+lineaPedido.getPedido().getMesa().getNegocio().getId()+"/mesa/"+lineaPedido.getPedido().getMesa().getId();
+		return "redirect:/pedir/"+nuevoPedido.getMesa().getNegocio().getId()+"/mesa/"+nuevoPedido.getMesa().getId();
+
+	}
+	
+	@GetMapping("/pedido/eliminar/{idPedido}")
+	public String eliminarProductoAComanda(@PathVariable(value = "idPedido") Long idPedido, Model model) {
+		
+		LineaPedido lineaPedido = lineaPedidoService.findById(idPedido);
+		Pedido nuevoPedido = lineaPedido.getPedido();
+		for(int i=0;i<lineaPedido.getCantidad();i++) {
+			nuevoPedido.getProductos().remove(lineaPedido.getProducto());
+		}
+		pedidoService.nuevoPedido(nuevoPedido);
+		
+		return "redirect:/pedir/"+nuevoPedido.getMesa().getNegocio().getId()+"/mesa/"+nuevoPedido.getMesa().getId();
 
 	}
 

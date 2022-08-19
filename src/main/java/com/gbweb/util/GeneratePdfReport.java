@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.text.DecimalFormat;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -32,6 +33,8 @@ public class GeneratePdfReport {
 
     private static final Logger logger = LoggerFactory.getLogger(GeneratePdfReport.class);
 
+	private static final DecimalFormat df = new DecimalFormat("0.00");
+    
     public static ByteArrayInputStream cuentaPDF(List<LineaPedido> productos, Negocio negocio, Mesa mesa, Double precioTotalServido) {
 
         Document document = new Document();
@@ -73,7 +76,10 @@ public class GeneratePdfReport {
                 cell = new PdfPCell(new Phrase(String.valueOf(producto.getPrecio()+" €")));
                 table.addCell(cell);
                 
-                cell = new PdfPCell(new Phrase(String.valueOf((producto.getPrecio()*producto.getCantidad())+" €")));
+                Double precioTotal = producto.getPrecio()*producto.getCantidad();
+               
+                
+                cell = new PdfPCell(new Phrase(df.format(precioTotal)));
                 table.addCell(cell);
             }
 
@@ -100,7 +106,7 @@ public class GeneratePdfReport {
             
             document.add(table);
             document.add(new Paragraph("---------------------------------------------------------------------------------------------------------------------------------- "));
-            document.add(new Paragraph("                                                                                 Precio total:                      "+String.valueOf(precioTotalServido)+" €"));
+            document.add(new Paragraph("                                                                                 Precio total:                      "+df.format(precioTotalServido)+" €"));
 
             document.add(new Paragraph(" "));
             document.add(new Paragraph(" "));
@@ -162,8 +168,10 @@ public class GeneratePdfReport {
                 cell = new PdfPCell(new Phrase(String.valueOf(producto.getPrecio()+" €")));
                 table.addCell(cell);
                 
-                cell = new PdfPCell(new Phrase(String.valueOf((producto.getPrecio()*producto.getCantidad())+" €")));
-                table.addCell(cell);
+                Double precioTotal = producto.getPrecio()*producto.getCantidad();
+               
+                
+                cell = new PdfPCell(new Phrase(df.format(precioTotal)));table.addCell(cell);
             }
 
             DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -198,7 +206,7 @@ public class GeneratePdfReport {
             
             document.add(table);
             document.add(new Paragraph("---------------------------------------------------------------------------------------------------------------------------------- "));
-            document.add(new Paragraph("                                                                                 Precio total:                      "+String.valueOf(precioTotalServido)+" €"));
+            document.add(new Paragraph("                                                                                 Precio total:                      "+df.format(precioTotalServido)+" €"));
 
             document.add(new Paragraph(" "));
             document.add(new Paragraph(" "));

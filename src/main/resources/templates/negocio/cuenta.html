@@ -44,7 +44,8 @@
 				<td style="border: 0px;" th:text="${precioTotal}"></td>
 			</tr>
 		</table>
-			<a sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/mesas/solicitar/cuenta/} + ${idMesa} + '/' + ${idPedido}">Solicitar cuenta</a>		
+			<a sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/mesas/solicitar/cuenta/tarjeta/} + ${idMesa} + '/' + ${idPedido}">Pagar con tarjeta</a>		
+			<a sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/mesas/solicitar/cuenta/efectivo/} + ${idMesa} + '/' + ${idPedido}">Pagar con efectivo</a>		
 			<br><br><br><br>
 	</div>
 	
