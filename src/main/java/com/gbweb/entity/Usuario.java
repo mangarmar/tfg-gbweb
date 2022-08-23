@@ -38,7 +38,7 @@ public class Usuario implements UserDetails {
 	@NotEmpty(message = "Se debe introducir un nombre de usuario")
 	private String username;
 	
-	@NotEmpty(message = "Debes escribir una contraseña")
+	@NotEmpty
 	@Pattern(regexp = "^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$",
 	message = "Al menos 8 caracteres,un dígito,una minúscula y una mayúscula")
 	private String password;
