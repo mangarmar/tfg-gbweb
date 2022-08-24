@@ -30,13 +30,11 @@
 				<th style="width: 18.75%">Nombre</th>
 				<th style="width: 18.75%">Cantidad</th>
 				<th style="width: 18.75%">Precio unitario</th>
-				<th style="width: 18.75%">Servido</th>
 			</tr>
 			<tr  th:each="producto : ${productosServidos}">
 				<td style="width: 18.75%" th:text="${producto.nombre}"></td>
 				<td style="width: 18.75%" th:text="${producto.cantidad}"></td>
 				<td style="width: 18.75%" th:text="${producto.precio}"></td>
-				<td style="width: 18.75%" th:text="${producto.servido}"></td>
 			</tr>
 			<tr style="background-color:#f2f2f2;">
 				<td style="border: 0px;"></td>
@@ -58,14 +56,12 @@
 				<th style="width: 18.75%">Nombre</th>
 				<th style="width: 18.75%">Cantidad</th>
 				<th style="width: 18.75%">Precio unitario</th>
-				<th style="width: 18.75%">Servido</th>
 				<th sec:authorize="hasAuthority('GERENTE')" style="width: 18.75%">Opciones</th>
 			</tr>
 			<tr  th:each="producto : ${productosNoServidos}">
 				<td style="width: 18.75%" th:text="${producto.nombre}"></td>
 				<td style="width: 18.75%" th:text="${producto.cantidad}"></td>
 				<td style="width: 18.75%" th:text="${producto.precio}"></td>
-				<td style="width: 18.75%" th:text="${producto.servido}"></td>
 				<td sec:authorize="hasAuthority('GERENTE')">
 					<a class=center-button th:href="@{/pedido/servir/} + ${idNegocio} + '/' + ${idMesa} + '/' + ${producto.id} ">Servido</a>
 					<a class=center-button th:href="@{/pedido/sumar/} + ${idNegocio} + '/' + ${idMesa} + '/' + ${producto.id} ">+</a>
