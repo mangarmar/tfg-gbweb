@@ -1,0 +1,53 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" th:href="@{/css/formUser.css}" />
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<meta http-equiv="refresh" content="3">
+<title>Eliminar mesas</title>
+</head>
+
+<body>
+
+	<header th:replace="comun/header.html::header"></header>
+
+
+	<div sec:authorize="hasAuthority('GERENTE')">
+	
+	<div>
+		<h1 th:text="${nombreNegocio}"></h1>
+	</div>
+	
+	<div th:if="${message != null }" th:text="${message}" class="error" role="alert"></div>
+	
+	
+	<a class="back-button" th:href="@{/mesas/}+${idNegocio}">Volver</a>
+	
+	<table id="customers">
+		<tr>
+			<th>Código</th>
+			<th>Estado</th>
+			<th>Eliminar</th>
+		</tr>
+		<tr th:each="mesa : ${mesas}">
+			<td th:text="${mesa.codigo}"></td>
+			
+			<td th:text="${mesa.estado}"></td>
+			
+			<td sec:authorize="hasAuthority('GERENTE')">
+				<a class=center-button
+				th:href="@{/mesas/eliminarMesa/} + ${idNegocio} + '/' + ${mesa.id}">Eliminar</a></td>	
+		</tr>
+
+	</table>
+	</div>
+	<div sec:authorize="hasAuthority('CLIENTE') or hasAuthority('null')">
+	<h1>Ups no puedes hacer eso, ve al <a href="/">inicio</a></h1>
+	</div>
+
+</body>
+</html>

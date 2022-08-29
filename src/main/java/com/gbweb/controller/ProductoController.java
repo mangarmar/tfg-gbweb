@@ -1,6 +1,7 @@
 
 package com.gbweb.controller;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,8 +11,6 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -38,6 +37,9 @@ import com.gbweb.service.UserService;
 
 @Controller
 public class ProductoController {
+	
+	private static final DecimalFormat df = new DecimalFormat("0.00");
+
 	
 	@Autowired
 	LineaPedidoService lineaPedidoService;
@@ -93,33 +95,40 @@ public class ProductoController {
 		List<Producto> tapa =  productos.stream().filter(x->x.getTipo() ==  TipoProducto.Tapa).collect(Collectors.toList());
 		List<Producto> snack =  productos.stream().filter(x->x.getTipo() ==  TipoProducto.Snack).collect(Collectors.toList());
 
+		Boolean ok = false;
+		Usuario usuario = userService.usuarioActual();
 		Mesa mesa = mesaService.findById(idMesa);
 		boolean pedidoActivo = mesa.getPedidos().stream().anyMatch(x->x.getEstadoPedido().equals(EstadoPedido.ACTIVO));
 		
-		if(pedidoActivo==false) {
+		if(pedidoActivo==false && usuario.getMesa()!=null) {
 			Pedido pedido = new Pedido();
+			pedido.setUsuario(usuario);
 			pedido.setEstadoPedido(EstadoPedido.ACTIVO);
 			pedido.setMesa(mesaService.findById(idMesa));
 			pedidoService.nuevoPedido(pedido);
 		}
-		model.addAttribute("nombreNegocio", negocioService.findNegocioById(idNegocio).getNombre());
-		model.addAttribute("idNegocio", idNegocio);
-		model.addAttribute("refrescos", refrescos.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
-		model.addAttribute("alcohol", alcohol.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
-		model.addAttribute("racion", racion.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
-		model.addAttribute("media", media.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
-		model.addAttribute("tapa", tapa.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
-		model.addAttribute("snack", snack.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
-		model.addAttribute("usuario", userService.usuarioActual());
-		model.addAttribute("codigoMesa", mesaService.findById(idMesa).getCodigo());
-		model.addAttribute("idNegocio", idNegocio);
 		
-		
-		System.out.println(userService.usuarioActual().getMesa());
-		System.out.println(mesaService.findById(idMesa).getCodigo());
-
-
-		return "producto/carta";
+	
+		if(usuario.getMesa()!=null) {
+			model.addAttribute("ok", true);
+			model.addAttribute("nombreNegocio", negocioService.findNegocioById(idNegocio).getNombre());
+			model.addAttribute("idNegocio", idNegocio);
+			model.addAttribute("refrescos", refrescos.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
+			model.addAttribute("alcohol", alcohol.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
+			model.addAttribute("racion", racion.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
+			model.addAttribute("media", media.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
+			model.addAttribute("tapa", tapa.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
+			model.addAttribute("snack", snack.stream().filter(x->x.getVisibilidad().equals(true)).collect(Collectors.toList()));
+			model.addAttribute("usuario", usuario);
+			model.addAttribute("codigoMesa", mesaService.findById(idMesa).getCodigo());
+			model.addAttribute("idNegocio", idNegocio);
+			
+			listarPedido(idNegocio, idMesa, model);
+			return "producto/cartaYComanda";
+		}else {
+			model.addAttribute("ok", ok);
+			return "redirect:/";
+		}
 
 	}
 	
@@ -156,11 +165,13 @@ public class ProductoController {
 			}
 
 			model.addAttribute("lineaPedidos", lineaPedidos);
-			model.addAttribute("precioTotal", precioTotal);
+			model.addAttribute("precioTotal", df.format(precioTotal));
+			
+			return "negocio/comanda";
 		} else {
-		//	System.out.println("TONTO");
+			return "redirect:/";
 		}
-		return "negocio/comanda";
+			
 	}
 	
 	@GetMapping("/pedido/confirmar/negocio/{idNegocio}/mesa/{idMesa}")
@@ -192,7 +203,7 @@ public class ProductoController {
 		nuevoPedido.getProductos().add(lineaPedido.getProducto());
 		pedidoService.nuevoPedido(nuevoPedido);
 		
-		return "redirect:/pedido/negocio/"+lineaPedido.getPedido().getMesa().getNegocio().getId()+"/mesa/"+lineaPedido.getPedido().getMesa().getId();
+		return "redirect:/pedir/"+nuevoPedido.getMesa().getNegocio().getId()+"/mesa/"+nuevoPedido.getMesa().getId();
 
 	}
 	
@@ -204,15 +215,30 @@ public class ProductoController {
 		nuevoPedido.getProductos().remove(lineaPedido.getProducto());
 		pedidoService.nuevoPedido(nuevoPedido);
 		
-		return "redirect:/pedido/negocio/"+lineaPedido.getPedido().getMesa().getNegocio().getId()+"/mesa/"+lineaPedido.getPedido().getMesa().getId();
+		return "redirect:/pedir/"+nuevoPedido.getMesa().getNegocio().getId()+"/mesa/"+nuevoPedido.getMesa().getId();
+
+	}
+	
+	@GetMapping("/pedido/eliminar/{idPedido}")
+	public String eliminarProductoAComanda(@PathVariable(value = "idPedido") Long idPedido, Model model) {
+		
+		LineaPedido lineaPedido = lineaPedidoService.findById(idPedido);
+		Pedido nuevoPedido = lineaPedido.getPedido();
+		for(int i=0;i<lineaPedido.getCantidad();i++) {
+			nuevoPedido.getProductos().remove(lineaPedido.getProducto());
+		}
+		pedidoService.nuevoPedido(nuevoPedido);
+		
+		return "redirect:/pedir/"+nuevoPedido.getMesa().getNegocio().getId()+"/mesa/"+nuevoPedido.getMesa().getId();
 
 	}
 
 	@RequestMapping("/pedido/cuenta/{idNegocio}/mesa/{idMesa}")
 	public String cuenta(@PathVariable(value = "idNegocio") Long idNegocio,@PathVariable(value = "idMesa") Long idMesa,
 			Model model) {
-		
 		Pedido pedidoActivo = mesaService.findById(idMesa).getPedidos().stream().filter(x->x.getEstadoPedido().toString().equals("ACTIVO")).findFirst().orElse(null);
+		Boolean ok = false;
+		if(pedidoActivo!=null) {
 		Long idPedido = pedidoActivo.getId();
 		List<LineaPedido> lineaPedidos = pedidoActivo.getLineaPedidos();
 		List<LineaPedido> productosNoServidos = new ArrayList<LineaPedido>();
@@ -232,18 +258,22 @@ public class ProductoController {
 			}
 		}
 		
+		model.addAttribute("ok", true);
 		model.addAttribute("nombreNegocio", negocioService.findNegocioById(idNegocio).getNombre());
 		model.addAttribute("productosNoServidos", productosNoServidos);
 		model.addAttribute("productosServidos",productosServidos);
-		model.addAttribute("precioTotalNoServido", precioTotalNoServido);
-		model.addAttribute("precioTotal", precioTotalServido);
+		model.addAttribute("precioTotalNoServido", df.format(precioTotalNoServido));
+		model.addAttribute("precioTotal",df.format(precioTotalServido));
 		model.addAttribute("usuario", userService.usuarioActual());
 		model.addAttribute("idNegocio", idNegocio);
 		model.addAttribute("idPedido", idPedido);
 		
-
-
 		return "negocio/cuenta";
+		}else {	
+		return "redirect:/";
+		}
+
+		
 
 	}
 	
@@ -309,6 +339,7 @@ public class ProductoController {
 	public String añadirProducto(@PathVariable(value = "idNegocio") Long idNegocio,
 			@Valid @ModelAttribute("producto") Producto producto, BindingResult result, Model model) {
 
+	
 		if (result.hasErrors()) {
 			model.addAttribute("producto", producto);
 			return "producto/nuevoProducto";
@@ -346,6 +377,10 @@ public class ProductoController {
 			@PathVariable(value = "idNegocio") Long idNegocio, Model model) {
 
 		Producto productoAEliminar = productoService.findById(idProducto);
+		List<LineaPedido> contieneProducto = productoAEliminar.getLineaPedidos();
+		contieneProducto.forEach(lp ->{
+			lp.setProducto(null);
+		});
 		negocioService.findNegocioById(idNegocio).getProductos().remove(productoAEliminar);
 		productoService.remove(productoAEliminar);
 		

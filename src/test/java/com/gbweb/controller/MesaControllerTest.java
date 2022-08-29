@@ -151,21 +151,7 @@ public class MesaControllerTest {
 
     }
     
-    @WithMockUser(authorities = "CLIENTE")
-    @Test
-    void testMiMesaNegativo() throws Exception{
-    	
-    	Negocio n = new Negocio();
-    	Usuario u = new Usuario();
-    	
-    	doReturn(n).when(negocioService).findNegocioById(1L);
-    	doReturn(u).when(userService).usuarioActual();
 
-        mockMvc.perform(get("/mesas/estado/{idNegocio}",1)).andExpect(status().isOk())
-        .andExpect(view().name("error/mesaLiberada"));
-
-    }
-  
     @WithMockUser(authorities = {"GERENTE"})
     @Test
     void testAñadirMesa() throws Exception{ 	
@@ -178,27 +164,6 @@ public class MesaControllerTest {
     }
     
 
-    
-    @WithMockUser(authorities = "GERENTE")
-    @Test
-    void testEliminarMesa() throws Exception{
-    	
-    	Negocio n = new Negocio();
-    	n.setId(1L);
-    	
-    	Mesa m = new Mesa();
-    	m.setId(1L);
-    	m.setNegocio(n);
-    	
-    	List<Mesa> mList = new ArrayList<>();
-    	mList.add(m);
-    	n.setMesas(mList);
-    	
-    	doReturn(m).when(mesaService).findById(1L);
-    	doReturn(n).when(negocioService).findNegocioById(1L);
-    	
-        mockMvc.perform(get("/mesas/eliminarMesa/{idNegocio}/{idMesa}",1,1)).andExpect(status().is3xxRedirection());
-    }
     
     @WithMockUser(authorities = "CLIENTE")
     @Test
@@ -402,11 +367,14 @@ public class MesaControllerTest {
     	
     	Mesa m = new Mesa();
     	m.setId(1L);
+    	n.setMesas(Arrays.asList(m));
+    	m.setNegocio(n);
+    	
     	
     	Pedido p = new Pedido();
     	p.setId(1L);
-    	p.setEstadoPedido(EstadoPedido.ACTIVO);
-    	m.setPedidos(Arrays.asList(p));
+    	p.setEstadoPedido(EstadoPedido.ACTIVO);    	
+    	p.setMesa(m);
     	
     	LineaPedido lp = new LineaPedido();
     	lp.setCantidad(1);
@@ -426,10 +394,12 @@ public class MesaControllerTest {
     	lp2.setProducto(new Producto());
     	lp2.setServido(false);
     	
+
     	p.setLineaPedidos(Arrays.asList(lp, lp2));
     	
     	doReturn(p).when(pedidoService).findById(1L);
     	doReturn(n).when(negocioService).findNegocioById(1L);
+    	doReturn(m).when(mesaService).findById(1L);
 
     	
         mockMvc.perform(get("/mesas/cuenta/{idPedido}",1)).andExpect(status().isOk());
@@ -444,13 +414,23 @@ public class MesaControllerTest {
      	n.setNombre("negocio");
     	n.setId(1L);
     	
+    	Usuario u = new Usuario();
+    	u.setId(1L);
+    	u.setNombre("Nombre");
+    	u.setApellidos("Apellidos");
+    	u.setDni("11111111A");
+    	u.setEmail("email@email.com");
+    	
     	Mesa m = new Mesa();
     	m.setId(1L);
+    	m.setNegocio(n);
     	
     	Pedido p = new Pedido();
     	p.setId(1L);
     	p.setEstadoPedido(EstadoPedido.ACTIVO);
+    	p.setMesa(m);
     	m.setPedidos(Arrays.asList(p));
+    	p.setUsuario(u);
     	
     	LineaPedido lp = new LineaPedido();
     	lp.setCantidad(1);
@@ -483,7 +463,7 @@ public class MesaControllerTest {
     
     @WithMockUser(authorities = "CLIENTE")
     @Test
-    void solicitarCuenta() throws Exception{
+    void solicitarCuentaTarjeta() throws Exception{
     	
     	Usuario u = new Usuario();
     	u.setId(1L);
@@ -506,7 +486,37 @@ public class MesaControllerTest {
     	doReturn(u).when(userService).usuarioActual();
 
     	
-        mockMvc.perform(get("/mesas/solicitar/cuenta/{idMesa}/{idPedido}",1,1)).andExpect(status().is3xxRedirection());
+        mockMvc.perform(get("/mesas/solicitar/cuenta/tarjeta/{idMesa}/{idPedido}",1,1)).andExpect(status().is3xxRedirection());
+
+    	
+    }
+    
+    @WithMockUser(authorities = "CLIENTE")
+    @Test
+    void solicitarCuentaEfectivo() throws Exception{
+    	
+    	Usuario u = new Usuario();
+    	u.setId(1L);
+    	
+     	Negocio n = new Negocio();
+     	n.setNombre("negocio");
+    	n.setId(1L);
+    	
+    	Mesa m = new Mesa();
+    	m.setId(1L);
+    	
+    	Pedido p = new Pedido();
+    	p.setId(1L);
+    	p.setEstadoPedido(EstadoPedido.ACTIVO);
+    	m.setPedidos(Arrays.asList(p));
+    	
+    	
+    	doReturn(m).when(mesaService).findById(1L);
+    	doReturn(p).when(pedidoService).findById(1L);
+    	doReturn(u).when(userService).usuarioActual();
+
+    	
+        mockMvc.perform(get("/mesas/solicitar/cuenta/efectivo/{idMesa}/{idPedido}",1,1)).andExpect(status().is3xxRedirection());
 
     	
     }

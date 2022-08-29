@@ -16,7 +16,7 @@
 	<description>TFG Sistema de Gestión de Bares</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.runtime.version>11</java.runtime.version>
 		<jacoco.version>0.8.5</jacoco.version>
 		<spring-format.version>0.0.19</spring-format.version>
 		<selenium.version>3.141.59</selenium.version>
@@ -24,7 +24,6 @@
 		<junit.jupiter.version>5.0.2</junit.jupiter.version>
    		<junit.platform.version>1.0.2</junit.platform.version>
 	</properties>
-
 	<dependencies>
 		<dependency> 
 		    <groupId>org.progressify</groupId> 
@@ -76,6 +75,11 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -158,8 +162,6 @@
 			<version>7.2.0</version>
 			<type>pom</type>
 		</dependency>
-
-
 		<dependency>
 			<groupId>com.mailjet</groupId>
 			<artifactId>mailjet-client</artifactId>
@@ -182,7 +184,7 @@
 		</dependency>
 
 	</dependencies>
-
+			
 	<build>
 		<plugins>
 			<plugin> 
@@ -197,23 +199,6 @@
 			        </annotationProcessorPaths>
 			    </configuration> 
 			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			 </plugin>
-			 <plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
-				<configuration>
-				    <source>8</source>
-				    <target>8</target>
-				    <testSource>8</testSource>
-				    <testTarget>8</testTarget>
-				    <showDeprecation>true</showDeprecation>
-				    <compilerArgument>-Xlint:unchecked</compilerArgument>
-				</configuration>
-            		</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

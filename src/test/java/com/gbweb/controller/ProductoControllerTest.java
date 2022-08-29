@@ -100,10 +100,19 @@ public class ProductoControllerTest {
     	n.setId(1L);
     	n.setProductos(new ArrayList<>());
     	
+    	
+    	Producto pr = new Producto();
+    	pr.setNombre("Nombre");
+    	pr.setPrecio(1.0);
+    	pr.setId(1L);
+    	
+    	
     	Mesa m = new Mesa();
     	m.setId(1L);
+  
     	
     	Pedido p = new Pedido();
+    	p.setProductos(Arrays.asList(pr));
     	p.setEstadoPedido(EstadoPedido.ACTIVO);
     	p.setMesa(m);
     	m.setPedidos(Arrays.asList(p));
@@ -115,8 +124,7 @@ public class ProductoControllerTest {
     	doReturn(n).when(negocioService).findNegocioById(1L);
     	doReturn(u).when(userService).usuarioActual();
     	
-        mockMvc.perform(get("/pedir/{idNegocio}/mesa/{idMesa}",1,1)).andExpect(status().isOk())
-        .andExpect(view().name("producto/carta"));
+        mockMvc.perform(get("/pedir/{idNegocio}/mesa/{idMesa}",1,1)).andExpect(status().isOk());
 
     }
     
@@ -132,7 +140,7 @@ public class ProductoControllerTest {
     	m.setId(1L);
     	
     	Pedido p = new Pedido();
-    	p.setEstadoPedido(EstadoPedido.PENDIENTE_PAGO);
+    	p.setEstadoPedido(EstadoPedido.PENDIENTE_PAGO_EFECTIVO);
     	p.setMesa(m);
     	m.setPedidos(Arrays.asList(p));
     	
@@ -143,8 +151,7 @@ public class ProductoControllerTest {
     	doReturn(n).when(negocioService).findNegocioById(1L);
     	doReturn(u).when(userService).usuarioActual();
     	
-        mockMvc.perform(get("/pedir/{idNegocio}/mesa/{idMesa}",1,1)).andExpect(status().isOk())
-        .andExpect(view().name("producto/carta"));
+        mockMvc.perform(get("/pedir/{idNegocio}/mesa/{idMesa}",1,1)).andExpect(status().isOk());
 
     }
     
@@ -432,38 +439,11 @@ public class ProductoControllerTest {
 
     	Negocio n = new Negocio();
     	n.setId(1L);
-    	
        mockMvc.perform(get("/añadirProducto/{idNegocio}",1)).andExpect(status().isOk());
 
     }
     
-//    @WithMockUser(authorities = {"CLIENTE"})
-//    @Test
-//    void testAñadirAlPedido() throws Exception{
-//
-//    	Mesa m = new Mesa();
-//    	m.setId(1L);
-//    	
-//    	Pedido p = new Pedido();
-//    	p.setId(1L);
-//    	p.setEstadoPedido(EstadoPedido.ACTIVO);
-//    	p.setMesa(m);
-//    	m.setPedidos(Arrays.asList(p));
-//    	
-//    	Producto pr = new Producto();
-//    	pr.setId(1L);
-//    	pr.setPedidos(Arrays.asList(p));
-//    	p.setProductos(Arrays.asList(pr));
-//
-//    	Negocio n = new Negocio();
-//    	n.setId(1L);
-//    	
-//    	doReturn(m).when(mesaService).findById(1L);
-//    	doReturn(pr).when(productoService).findById(1L);
-//    	
-//       mockMvc.perform(post("/añadirAlPedido/pedir/{idNegocio}/mesa/{idMesa}/producto/{idProducto}",1,1,1)).andExpect(status().is3xxRedirection());
-//
-//    }
+
     
     @WithMockUser(authorities = {"GERENTE"})
     @Test
@@ -477,6 +457,9 @@ public class ProductoControllerTest {
     	List<Producto> pList = new ArrayList<Producto>();
     	pList.add(p);
     	n.setProductos(pList);
+    	
+    	LineaPedido lp = new LineaPedido();
+    	p.setLineaPedidos(Arrays.asList(lp));
     	
     	doReturn(p).when(productoService).findById(1L);
     	doReturn(n).when(negocioService).findNegocioById(1L);

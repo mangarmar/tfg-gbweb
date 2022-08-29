@@ -5,18 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -25,6 +14,7 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -44,10 +34,11 @@ public class Usuario implements UserDetails {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	
 	@NotEmpty(message = "Se debe introducir un nombre de usuario")
 	private String username;
 	
-	@NotEmpty(message = "Debes escribir una contraseña")
+	@NotEmpty
 	@Pattern(regexp = "^(?=.{8,}$)(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*$",
 	message = "Al menos 8 caracteres,un dígito,una minúscula y una mayúscula")
 	private String password;
@@ -60,6 +51,7 @@ public class Usuario implements UserDetails {
 	@Length(max= 35 , message= "Este campo no puede contener mas de 35 caractéres")
 	private String apellidos;
 	
+	@Column(unique = true)
 	@NotEmpty(message = "Porfavor, introduzca un DNI")
 	@Pattern(regexp = "[0-9]{8}[A-Za-z]{1}", message = "Porfavor, introduzca un DNI válido")
 	private String dni;
@@ -72,6 +64,7 @@ public class Usuario implements UserDetails {
 	@NotEmpty(message = "Porfavor, introduzca una dirección")
 	private String direccion;
 	
+	@Column(unique = true)
 	@NotEmpty(message = "Porfavor, introduzca un email")
 	@Email(message = "Porfavor, introduzca un email válido")
 	private String email;
@@ -83,8 +76,10 @@ public class Usuario implements UserDetails {
     @JsonIgnore
     private List<Negocio> negocios;
     
-
     private String permiso;
+    
+    @OneToMany(mappedBy="usuario")
+    private List<Pedido> pedidos;
     
     @OneToOne
     @JoinColumn(name="codigo_mesa", referencedColumnName = "codigo")
@@ -227,6 +222,14 @@ public class Usuario implements UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
 
 

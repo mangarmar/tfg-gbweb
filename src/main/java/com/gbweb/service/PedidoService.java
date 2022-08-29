@@ -30,6 +30,10 @@ public class PedidoService {
 	public Pedido findById(Long idPedido) {
 		return pedidoRepo.findById(idPedido).orElse(null);
 	}
+	
+	public List<Pedido> findAll() {
+		return (List<Pedido>) pedidoRepo.findAll();
+	}
 
 
 }

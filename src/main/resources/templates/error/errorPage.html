@@ -7,30 +7,22 @@
 <link rel="stylesheet" th:href="@{/css/style.css}" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<title>Nuevo producto</title>
+<meta http-equiv="refresh" content="3">
+<title>Eliminar mesas</title>
 </head>
+
 <body>
 
-
 	<header th:replace="comun/header.html::header"></header>
-	
-	
-	
-	
-	<form class="form-register" th:action="@{}"
-		th:object="${mesa}" method="post">
-		<h4>Añadir Mesa</h4>
-		<input type="hidden" th:field="*{id}" />
-		
-		 <input th:field="*{codigo}"
-			type="text" class="controls" placeholder="XXX-NNNN" name="codigo" />
-		<p class="error-form" role="alert" th:errors="*{codigo}"></p>
 
 
-		<button type="submit" class="buttons">Guardar mesa</button>
-
-	</form>
-
+	<div>
+	<br><br>
+	<div align="center">
+	<img src="/images/engranaje.png" height="150px" width="150px">
+	</div>
+	<h1>Parece la página a la que intentas acceder no correcta.<br><br>Por favor, vaya al inicio <a href="/">inicio</a></h1>
+	</div>
 
 </body>
 </html>

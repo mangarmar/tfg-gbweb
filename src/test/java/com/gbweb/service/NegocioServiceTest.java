@@ -174,7 +174,6 @@ public class NegocioServiceTest {
 		negocio.setMesas(Arrays.asList(new Mesa()));
 		negocio.setUsuario(new Usuario());
 		negocio.setNombre("nombre");
-		negocio.setEmail("email@gmail.com");
 		u.setNegocios(Arrays.asList(negocio));
 
 		

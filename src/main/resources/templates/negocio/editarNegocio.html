@@ -5,6 +5,8 @@
 <meta charset="utf-8">
 <link rel="stylesheet" th:href="@{/css/formUser.css}" />
 <link rel="stylesheet" th:href="@{/css/style.css}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <title>Registro</title>
 </head>
 <body>
@@ -18,7 +20,7 @@
 		<h4>Datos del negocio</h4>
 		<input type="hidden" th:field="*{id}" />
 		
-		<input th:field="*{cif}" type="text" class="controls" placeholder="CIF" name="cif" />
+		<input style="background: gray; color: white;" readonly="readonly" th:field="*{cif}" type="text" class="controls" placeholder="CIF" name="cif" />
 		<p class="error-form" role="alert" th:errors="*{cif}"></p>
 		
 		<input th:field="*{nombre}" type="text" class="controls" placeholder="Nombre" name="nombre" />
@@ -29,9 +31,6 @@
 		
 		<input th:field="*{capacidad}" type="text" class="controls" placeholder="Capacidad" name="capacidad" />
 		<p class="error-form" role="alert" th:errors="*{capacidad}"></p>
-		
-		<input th:field="*{email}" type="text" class="controls" placeholder="Correo electrónico" name="email" />
-		<p class="error-form" role="alert" th:errors="*{email}"></p>
 		
 		<input th:field="*{calle}" type="text" class="controls" placeholder="Calle" name="calle" />
 		<p class="error-form" role="alert" th:errors="*{calle}"></p>

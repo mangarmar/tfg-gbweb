@@ -5,17 +5,22 @@
 <meta charset="utf-8">
 <link rel="stylesheet" th:href="@{/css/formUser.css}" />
 <link rel="stylesheet" th:href="@{/css/style.css}" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <meta http-equiv="refresh" content="2">
 <title>Cuenta</title>
 </head>
 <body>
 
 	<header th:replace="comun/header.html::header"></header>
+	
+	<div th:if="${ok}==true">
+	
 	<h1 sec:authorize="hasAuthority('CLIENTE')">Cuenta</h1>
 	<h1 sec:authorize="hasAuthority('GERENTE')">Pedido</h1>
-	
-	<a sec:authorize="hasAuthority('GERENTE')" class="back-button" th:href="@{/mesas/}+${idNegocio}">Volver</a><br><br><br>
-
+	<div sec:authorize="hasAuthority('GERENTE')">
+		<a class="back-button" th:href="@{/mesas/}+${idNegocio}">Volver</a><br><br><br>
+	</div>
 	<div th:if="${productosServidos!=null and !productosServidos.isEmpty()}">
 
 		<table id="customers">
@@ -25,13 +30,11 @@
 				<th style="width: 18.75%">Nombre</th>
 				<th style="width: 18.75%">Cantidad</th>
 				<th style="width: 18.75%">Precio unitario</th>
-				<th style="width: 18.75%">Servido</th>
 			</tr>
 			<tr  th:each="producto : ${productosServidos}">
 				<td style="width: 18.75%" th:text="${producto.nombre}"></td>
 				<td style="width: 18.75%" th:text="${producto.cantidad}"></td>
 				<td style="width: 18.75%" th:text="${producto.precio}"></td>
-				<td style="width: 18.75%" th:text="${producto.servido}"></td>
 			</tr>
 			<tr style="background-color:#f2f2f2;">
 				<td style="border: 0px;"></td>
@@ -39,12 +42,13 @@
 				<td style="border: 0px;" th:text="${precioTotal}"></td>
 			</tr>
 		</table>
-			<a sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/mesas/solicitar/cuenta/} + ${idMesa} + '/' + ${idPedido}">Solicitar cuenta</a>		
+			<a sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/mesas/solicitar/cuenta/tarjeta/} + ${idMesa} + '/' + ${idPedido}">Pagar con tarjeta</a>		
+			<a sec:authorize="hasAuthority('CLIENTE')" class="button" th:href="@{/mesas/solicitar/cuenta/efectivo/} + ${idMesa} + '/' + ${idPedido}">Pagar con efectivo</a>		
+			<br><br><br><br>
 	</div>
 	
 	
 	<div th:if="${productosNoServidos!=null and !productosNoServidos.isEmpty()}">
-	<br><br><br><br>
 		<table id="customers">
 		<h2>No servido</h2>
 			<br>
@@ -52,21 +56,30 @@
 				<th style="width: 18.75%">Nombre</th>
 				<th style="width: 18.75%">Cantidad</th>
 				<th style="width: 18.75%">Precio unitario</th>
-				<th style="width: 18.75%">Servido</th>
 				<th sec:authorize="hasAuthority('GERENTE')" style="width: 18.75%">Opciones</th>
 			</tr>
 			<tr  th:each="producto : ${productosNoServidos}">
 				<td style="width: 18.75%" th:text="${producto.nombre}"></td>
 				<td style="width: 18.75%" th:text="${producto.cantidad}"></td>
 				<td style="width: 18.75%" th:text="${producto.precio}"></td>
-				<td style="width: 18.75%" th:text="${producto.servido}"></td>
 				<td sec:authorize="hasAuthority('GERENTE')">
+					<a class=center-button th:href="@{/pedido/servir/} + ${idNegocio} + '/' + ${idMesa} + '/' + ${producto.id} ">Servido</a>
 					<a class=center-button th:href="@{/pedido/sumar/} + ${idNegocio} + '/' + ${idMesa} + '/' + ${producto.id} ">+</a>
 					<a class=center-button th:href="@{/pedido/restar/} + ${idNegocio} + '/' + ${idMesa} + '/' + ${producto.id} ">-</a>
-					<a class=center-button th:href="@{/pedido/servir/} + ${idNegocio} + '/' + ${idMesa} + '/' + ${producto.id} ">Servido</a>
 					<a class=center-button th:href="@{/pedido/eliminar/} + ${idNegocio} + '/' + ${idMesa} + '/' + ${producto.id} ">Eliminar</a>
 				</td>
 			</tr>
 		</table>	
 	</div>
+	
+	</div>
+	
+	<div th:unless="${ok}==true">
+		<br><br>
+   		<h1>Lo sentimos, no tiene ningun pedido activo en este momento</h1>
+   		<br>
+   		<h1><a style="" href="/">Ir al inicio</a></h1>
+   		
+	</div>
+	
 	

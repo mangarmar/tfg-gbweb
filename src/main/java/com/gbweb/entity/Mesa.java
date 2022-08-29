@@ -3,15 +3,9 @@ package com.gbweb.entity;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.UniqueElements;
 
@@ -28,10 +22,11 @@ public class Mesa implements Serializable {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	
+	@Pattern(regexp = "[A-Z]{3}-[0-9]{4}", message = "Patrón correcto: 3 letras mayúsculas, un guión y 4 números")
 	@NotEmpty(message="Introduzca el código de la mesa")
 	private String codigo;
 
+	private Boolean activa = true;
 	
 	private Estado estado;
 	
@@ -77,6 +72,15 @@ public class Mesa implements Serializable {
 
 	public Negocio getNegocio() {
 		return negocio;
+	}
+	
+
+	public Boolean getActiva() {
+		return activa;
+	}
+
+	public void setActiva(Boolean activa) {
+		this.activa = activa;
 	}
 
 	public void setNegocio(Negocio negocio) {
