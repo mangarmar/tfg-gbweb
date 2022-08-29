@@ -76,19 +76,20 @@ body {
 
 @media screen and (max-width: 1080px) {
 
-	h1{
-		font-size: 30px;
-	}
+  h1 {
+    font-size: 30px;
+  }
 	
   .form-register{
-  	width: 19em;
+    width: 19em;
   }
   
-  .form-register h4{
-  	font-size: 17px;
+  .form-register h4 {
+    font-size: 17px;
   }
   
-    .form-register p{
-  	font-size: 14px;
+  .form-register p {
+    font-size: 14px;
   }
+
 }

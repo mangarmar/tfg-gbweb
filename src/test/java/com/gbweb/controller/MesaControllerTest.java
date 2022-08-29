@@ -151,21 +151,7 @@ public class MesaControllerTest {
 
     }
     
-//    @WithMockUser(authorities = "CLIENTE")
-//    @Test
-//    void testMiMesaNegativo() throws Exception{
-//    	
-//    	Negocio n = new Negocio();
-//    	Usuario u = new Usuario();
-//    	
-//    	doReturn(n).when(negocioService).findNegocioById(1L);
-//    	doReturn(u).when(userService).usuarioActual();
-//
-//        mockMvc.perform(get("/mesas/estado/{idNegocio}",1)).andExpect(status().isOk())
-//        .andExpect(view().name("error/mesaLiberada"));
-//
-//    }
-  
+
     @WithMockUser(authorities = {"GERENTE"})
     @Test
     void testAñadirMesa() throws Exception{ 	
@@ -178,27 +164,6 @@ public class MesaControllerTest {
     }
     
 
-    
-//    @WithMockUser(authorities = "GERENTE")
-//    @Test
-//    void testEliminarMesa() throws Exception{
-//    	
-//    	Negocio n = new Negocio();
-//    	n.setId(1L);
-//    	
-//    	Mesa m = new Mesa();
-//    	m.setId(1L);
-//    	m.setNegocio(n);
-//    	
-//    	List<Mesa> mList = new ArrayList<>();
-//    	mList.add(m);
-//    	n.setMesas(mList);
-//    	
-//    	doReturn(m).when(mesaService).findById(1L);
-//    	doReturn(n).when(negocioService).findNegocioById(1L);
-//    	
-//        mockMvc.perform(get("/mesas/eliminarMesa/{idNegocio}/{idMesa}",1,1)).andExpect(status().is3xxRedirection());
-//    }
     
     @WithMockUser(authorities = "CLIENTE")
     @Test

@@ -303,7 +303,7 @@ public class MesaController {
 		return "negocio/cuenta";
 		}else {
 			model.addAttribute("ok",ok);	
-			return "negocio/cuenta";
+			return "redirect:/mesas/"+idNegocio;
 			}
 
 	}
